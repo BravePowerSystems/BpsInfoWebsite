@@ -1,0 +1,280 @@
+@use "sass:map";
+@import "../base/variables";
+@import "../base/mixins";
+
+.top-nav {
+    border: 0.5px solid rgb(42, 48, 50); // Border around the navbar
+    border-radius: 0.625rem; // Rounded corners
+    width: 100%;
+
+    .container {
+        display: grid;
+        grid-template-columns: 1fr auto; // Logo on the left, icons and menu on the right
+        align-items: stretch;
+        max-width: 100%;
+
+        // Logo section
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            width: fit-content;
+            cursor: pointer;
+
+            .brave {
+                @include flex-center;
+
+                img {
+                    height: 1.25rem; // Adjust image size
+                    width: auto;
+                }
+
+                span {
+                    font-size: 1rem;
+                    font-weight: bold;
+                    color: #d90101; // White text
+                    letter-spacing: 0.1cap;
+                }
+            }
+
+            .divider {
+                width: 100%; // Full width of the logo container
+                height: 0.5px;
+                background-color: rgb(155, 162, 168); // White divider
+                margin: 0; // Remove margin to minimize space
+                position: relative;
+                bottom: 2px;
+            }
+
+            .power-systems {
+                font-size: 10px;
+                color: $text-color; // White text
+                margin: 0; // Remove margin to minimize space
+                position: relative;
+                bottom: 2px;
+            }
+        }
+
+        // Navigation content (hidden in mobile view by default)
+        .nav-content {
+            display: none;
+        }
+
+        // Icons section
+        .icons {
+            @include flex-center;
+
+            .icon-container {
+                @include flex-center;
+                gap: 0.2rem;
+                .search-icon,
+                .save-icon {
+                    cursor: pointer;
+                    width: auto;
+                    height: 2rem; // Fixed height for all icons
+                    margin-right: 4px;
+
+                    img {
+                        height: 1.2rem;
+                        width: auto;
+                        filter: invert(1); // Ensure icons are white
+                    }
+                }
+
+                .whatsapp-icon {
+                    cursor: pointer;
+                    height: 2rem; // Fixed height for all icons
+                    width: auto;
+                    margin-left: 1px;
+
+                    img {
+                        height: 1rem;
+                        width: auto;
+                        filter: invert(1); // Ensure icons are white
+                    }
+                }
+
+                .hamburger-menu {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    justify-content: center; // Center-align the hamburger lines vertically
+                    gap: 0.3rem; // Space between hamburger lines
+                    width: 2rem; // Fixed width for hamburger menu
+                    cursor: pointer;
+                    max-height: 24px;
+                    padding-bottom: 2px;
+
+                    div {
+                        width: 1.25rem; // Width of hamburger lines
+                        height: 0.05rem;
+                        background-color: $text-color; // White lines
+                    }
+                }
+            }
+        }
+
+        // Hamburger menu
+    }
+}
+
+// Tablet and desktop styles (using mixins for responsiveness)
+@include tablet {
+    .top-nav {
+        padding: 0.5rem 0.75rem;
+
+        .container {
+            justify-content: space-between;
+        }
+    }
+}
+
+@include desktop {
+    .top-nav {
+
+        .container {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+
+            .logo {
+                .brave {
+                    img {
+                        height: 2rem; // Adjust image size
+                        width: auto;
+                    }
+
+                    span {
+                        font-size: 1.25rem;
+
+                    }
+                }
+
+                .power-systems {
+                    font-size: 14px;
+                }
+            }
+
+            .nav-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: stretch;
+                ul {
+                    padding: 0;
+                    @include flex-center;
+                    gap: 1.5rem;
+                    height: 100%;
+                    width: 100%;
+
+                    li {
+                        font-size: 14px;
+                        font-weight: semi-bold;
+                        color: $text-color;
+
+                        a {
+                            text-decoration: none;
+                            color: white;
+                            display: inline-block;
+                            position: relative;
+                            cursor: pointer;
+                        }
+
+                        a::after {
+                            content: '';
+                            position: absolute;
+                            width: 100%;
+                            transform: scaleX(0);
+                            height: 1px;
+                            bottom: 0;
+                            left: 0;
+                            background-color: red;
+                            transform-origin: bottom right;
+                            transition: transform 0.25s ease-out;
+                        }
+
+                        a:hover {
+                            color: red;
+
+                            img {
+                                transform: rotate(180deg);
+                                transition: transform 0.25s ease-out;
+                            }
+
+                            &::after {
+                                transform: scaleX(1);
+                                transform-origin: bottom left;
+                            }
+                        }
+
+                        img {
+                            height: 1rem;
+                            width: auto;
+                        }
+                    }
+                }
+            }
+
+            .icons {
+                .icon-container {
+                    gap: 0.2rem;
+                    div {
+                        img {
+                            position: relative;
+                            top: 2px;
+                        }
+                    }
+
+                    .hamburger-menu {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@include large_desktop {
+    .top-nav {
+
+        .container {
+            .nav-content {
+
+                ul {
+                    li {
+                        font-size: 16px;
+
+                        img {
+                            height: 1.3rem;
+                            width: auto;
+                        }
+                    }
+
+                    gap: 4rem; // Further increase space between nav items for large desktop
+                }
+
+            }
+            .icons{
+                .icon-container{
+                    gap: 0.5rem;
+                    
+                    .save-icon,
+                    .search-icon {
+                        img{
+                        width: 1.5rem;
+                        height: auto;
+                        }
+                    }
+                    .whatsapp-icon{
+                        img{
+                            width: 1.3rem;
+                            height: auto;
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+}
