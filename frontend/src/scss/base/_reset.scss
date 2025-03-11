@@ -1,0 +1,32 @@
+/* Reset common HTML element styles */
+html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, figure, blockquote {
+  margin: 0;            // Remove default margins
+  padding: 0;           // Remove default padding
+}
+
+body {
+  font-family: poppins; // Default font family (can override in typography)
+  line-height: 1.5;        // Improve readability by setting a consistent line height
+  background-color: #ffffff; // Default background color
+  color: #000000;         // Default text color
+}
+
+ul, ol {
+  list-style: none;       // Remove bullet points or numbers from lists
+}
+
+a {
+  text-decoration: none;  // Remove underline from links
+  color: inherit;         // Make links inherit the text color
+}
+
+img {
+  max-width: 100%;        // Ensure images never overflow their container
+  height: auto;           // Maintain image aspect ratio
+}
+
+button {
+  background: none;       // Remove browser-specific button styles
+  border: none;           // Remove border
+  cursor: pointer;        // Ensure buttons have the correct pointer on hover
+}

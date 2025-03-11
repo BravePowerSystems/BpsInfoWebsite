@@ -1,0 +1,27 @@
+@use "sass:map";
+@import "../base/variables";
+
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin tablet {
+    @media (min-width: map.get($breakpoints, tablet)) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: map.get($breakpoints, desktop)) {
+        @content;
+    }
+}
+
+
+@mixin large_desktop {
+    @media (min-width: map.get($breakpoints, large-desktop)) {
+        @content;
+    }
+}
