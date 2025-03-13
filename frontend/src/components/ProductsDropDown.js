@@ -1,12 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../scss/components/ProductsDropDown.scss";
-function ProductsDropDown({ onHoverStart, onHoverEnd }) {
+function ProductsDropDown() {
     return (
         <div
             class="ProductsDropDown"
-            onMouseEnter={onHoverStart}
-            onMouseLeave={onHoverEnd}
         >
             <ul class="transmitter">
                 <Link to="/Products/Transmitters">Transmitters</Link>

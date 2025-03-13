@@ -5,18 +5,19 @@
 
 .ProductsDropDown {
     margin-top: 1rem;
-    border: 0.05px rgb(255, 255, 255, 1) solid;
+    border: 0.05px rgb(0, 0, 0) solid;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     padding: 1rem 1rem;
     border-radius: 10px;
-    background: linear-gradient(90deg,
-            rgba(49, 39, 39, 0.2),
-            rgba(94, 84, 84, 0),
-            rgba(55, 50, 50, 0.2));
-    backdrop-filter: blur(30px);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 2;
     position: absolute;
+    padding: 20px;
 
     a {
         text-decoration: none;
