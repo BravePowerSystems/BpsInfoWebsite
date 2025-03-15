@@ -13,6 +13,10 @@
         align-items: stretch;
         max-width: 100%;
 
+        a {
+            text-decoration: none;
+        }
+
         // Logo section
         .logo {
             display: flex;
@@ -23,11 +27,15 @@
             cursor: pointer;
 
             .brave {
-                @include flex-center;
+                display: flex;
+                align-items: center;
 
                 img {
-                    height: 1.25rem; // Adjust image size
+                    position: relative;
+                    top: 1.5px;
+                    height: 1.3rem; // Adjust image size
                     width: auto;
+                    margin: 0;
                 }
 
                 span {
@@ -39,10 +47,10 @@
             }
 
             .divider {
-                width: 100%; 
+                width: 100%;
                 height: 0.5px;
-                background-color: rgb(70, 71, 71); 
-                margin: 0; 
+                background-color: rgb(70, 71, 71);
+                margin: 0;
                 position: relative;
                 bottom: 2px;
             }
@@ -68,6 +76,7 @@
             .icon-container {
                 @include flex-center;
                 gap: 0.2rem;
+
                 .search-icon,
                 .save-icon {
                     cursor: pointer;
@@ -78,7 +87,7 @@
                     img {
                         height: 1.2rem;
                         width: auto;
-                       
+
                     }
                 }
 
@@ -91,7 +100,7 @@
                     img {
                         height: 1rem;
                         width: auto;
-                       
+
                     }
                 }
 
@@ -109,7 +118,7 @@
                     div {
                         width: 1.25rem; // Width of hamburger lines
                         height: 0.05rem;
-                        background-color: $text-color; 
+                        background-color: $text-color;
                     }
                 }
             }
@@ -140,7 +149,7 @@
             .logo {
                 .brave {
                     img {
-                        height: 2rem; // Adjust image size
+                        height: 1.75rem; // Adjust image size
                         width: auto;
                     }
 
@@ -160,6 +169,7 @@
                 flex-direction: row;
                 justify-content: center;
                 align-items: stretch;
+
                 ul {
                     padding: 0;
                     @include flex-center;
@@ -178,6 +188,10 @@
                             display: inline-block;
                             position: relative;
                             cursor: pointer;
+
+                            img {
+                                filter: invert(100%);
+                            }
                         }
 
                         a::after {
@@ -195,6 +209,7 @@
 
                         a:hover {
                             color: red;
+
                             img {
                                 transform: rotate(180deg);
                                 transition: transform 0.25s ease-out;
@@ -217,6 +232,7 @@
             .icons {
                 .icon-container {
                     gap: 0.2rem;
+
                     div {
                         img {
                             position: relative;
@@ -245,7 +261,7 @@
                         font-size: 16px;
 
                         img {
-                            height: 1.3rem;
+                            height: 1rem;
                             width: auto;
                         }
                     }
@@ -254,23 +270,25 @@
                 }
 
             }
-            .icons{
-                .icon-container{
+
+            .icons {
+                .icon-container {
                     gap: 0.5rem;
-                    
+
                     .save-icon,
                     .search-icon {
-                        img{
-                        width: 1.5rem;
-                        height: auto;
+                        img {
+                            width: 1.5rem;
+                            height: auto;
                         }
                     }
-                    .whatsapp-icon{
-                        img{
+
+                    .whatsapp-icon {
+                        img {
                             width: 1.3rem;
                             height: auto;
                         }
-                        
+
                     }
                 }
             }

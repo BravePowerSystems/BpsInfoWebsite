@@ -21,17 +21,19 @@ export default function TopNav() {
         <div>
             <div className="top-nav">
                 <div className="container">
-                    <div className="logo">
-                        <div className="brave">
-                            <img
-                                src="../images/bpsCompanyIcon.png"
-                                alt="BPS Logo"
-                            />
-                            <span>BRAVE</span>
+                    <Link to="/">
+                        <div className="logo">
+                            <div className="brave">
+                                <img
+                                    src="../images/bpsCompanyIcon1.jpg"
+                                    alt="BPS Logo"
+                                />
+                                <span>BRAVE</span>
+                            </div>
+                            <div className="divider"></div>
+                            <div className="power-systems">POWER SYSTEMS</div>
                         </div>
-                        <div className="divider"></div>
-                        <div className="power-systems">POWER SYSTEMS</div>
-                    </div>
+                    </Link>
 
                     <div className="nav-content">
                         <ul>
