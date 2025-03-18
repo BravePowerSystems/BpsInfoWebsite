@@ -6,7 +6,10 @@
     border: 0.5px solid rgb(42, 48, 50); // Border around the navbar
     border-radius: 0.625rem; // Rounded corners
     width: 100%;
-
+    color:black;
+    position: sticky;
+    top: 0;
+    
     .container {
         display: grid;
         grid-template-columns: 1fr auto; // Logo on the left, icons and menu on the right
@@ -57,7 +60,7 @@
 
             .power-systems {
                 font-size: 10px;
-                color: $text-color; // White text
+                color: $primary-color; // White text
                 margin: 0; // Remove margin to minimize space
                 position: relative;
                 bottom: 2px;
@@ -87,6 +90,7 @@
                     img {
                         height: 1.2rem;
                         width: auto;
+                        // filter: invert(1); // Ensure icons are white
 
                     }
                 }

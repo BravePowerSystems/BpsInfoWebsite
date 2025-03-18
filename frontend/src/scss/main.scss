@@ -3,6 +3,7 @@
 // Override default variables before the import
 $body-bg: $primary-color;
 
+$body-bg: $secondary-color;
 
 @import "../scss/components/TopNav.scss";
 @import "../scss/components/BottomNav.scss";
