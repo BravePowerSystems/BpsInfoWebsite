@@ -3,8 +3,8 @@
 @import "../base/mixins";
 
 .blog-container{
-    background-color: $secondary-color;
-    color: $primary-color;
+    background-color: $primary-color;
+    color: $text-color;
     
     .blog-text-container{
         text-align: center;
