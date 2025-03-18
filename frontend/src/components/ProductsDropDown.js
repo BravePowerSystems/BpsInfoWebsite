@@ -9,91 +9,91 @@ function ProductsDropDown() {
             <ul class="transmitter">
                 <Link to="/Products/Transmitters">Transmitters</Link>
                 <li>
-                    <Link to="/Products/Transmitters/gasFlowPulseTransmitter">
+                    <Link to="/Products/Transmitters/Gas-Flow-Pulse-Transmitter">
                         Gas Flow Pulse Transmitter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/gasLeakTransmitter">
+                    <Link to="/Products/Transmitters/Gas-Leak-Transmitter">
                         Gas Leak Transmitter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/waterFlowTransmitter">
+                    <Link to="/Products/Transmitters/Water-Flow-Transmitter">
                         Water Flow Transmitter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/CO2Transmitter">
+                    <Link to="/Products/Transmitters/CO2-Transmitter">
                         CO2 Transmitter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/waterPH">Water PH</Link>
+                    <Link to="/Products/Transmitters/Water-PH">Water PH</Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/IR_HVAC">IR HVAC</Link>
+                    <Link to="/Products/Transmitters/IR-HVAC">IR HVAC</Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/humidityAndTemperature">
+                    <Link to="/Products/Transmitters/Humidity-And-Temperature">
                         Humidity and Temperature
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/waterLevelTransmitter">
+                    <Link to="/Products/Transmitters/water-Level-Transmitter">
                         Water Level Transmitter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/fuelLevelTransmitter">
+                    <Link to="/Products/Transmitters/fuel-Level-Transmitter">
                         Fuel Level Transmitter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/soilAndMoistureTransmitter">
+                    <Link to="/Products/Transmitters/Soil-and-Moisture-Transmitter">
                         Soil and Moisture Transmitter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Transmitters/TDS_Transmitter">
+                    <Link to="/Products/Transmitters/TDS-Transmitter">
                         TDS Transmitter
                     </Link>
                 </li>
             </ul>
             <ul class="powerMonitor">
-                <Link to="/Products/powerMonitors">Power Monitors</Link>
+                <Link to="/Products/Power-Monitors">Power Monitors</Link>
                 <li>
-                    <Link to="/Products/powerMonitors/IOTEnergyMeter">
+                    <Link to="/Products/Power-Monitors/IOT-Energy-Meter">
                         IOT Energy Meter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/powerMonitors/DCEnergyMeter">
+                    <Link to="/Products/Power-Monitors/DC-Energy-Meter">
                         DC Energy Meter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/powerMonitors/ACEnergyMeter">
+                    <Link to="/Products/Power-Monitors/AC-Energy-Meter">
                         AC Energy Meter
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/powerMonitors/InverterMonitor">
+                    <Link to="/Products/Power-Monitors/Inverter-Monitor">
                         Inverter Monitor
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/powerMonitors/UPSMonitor">
+                    <Link to="/Products/Power-Monitors/UPS-Monitor">
                         UPS Monitor
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/powerMonitors/BatteryMonitor">
+                    <Link to="/Products/Power-Monitors/Battery-Monitor">
                         Battery Monitor
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/powerMonitors/IrrigationPump">
+                    <Link to="/Products/Power-Monitors/Irrigation-Pump">
                         Irrigation Pump
                     </Link>
                 </li>
@@ -101,59 +101,59 @@ function ProductsDropDown() {
             <ul class="controllers">
                 <Link to="/Products/Controllers">Controllers</Link>
                 <li>
-                    <Link to="/Products/Controllers/ServoVoltageStabilizer">
+                    <Link to="/Products/Controllers/Servo-Voltage-Stabilizer">
                         Servo Voltage Stabilizer
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Controllers/TemperatureController">
+                    <Link to="/Products/Controllers/Temperature-Controller">
                         Temperature Controller
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Controllers/HumidityController">
+                    <Link to="/Products/Controllers/Humidity-Controller">
                         Humidity Controller
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Controllers/AMFController">
+                    <Link to="/Products/Controllers/AMF-Controller">
                         AMF Controller
                     </Link>
                 </li>
             </ul>
             <ul class="modules">
-                <Link to="/Products/Modules/IOTAndPLCModule">
+                <Link to="/Products/IOT-and-PLC-Modules">
                     IOT and PLC Module
                 </Link>
 
                 <li>
-                    <Link to="/Products/Modules/PT100AndPT100RTD">
-                        PT100 & PT100 RTD
+                    <Link to="/Products/IOT-and-PLC-Modules/PT100-and-PT100-RTD">
+                        PT100 and PT100 RTD
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Modules/Thermocouple">
+                    <Link to="/Products/IOT-and-PLC-Modules/Thermocouple">
                         Thermocouple
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Modules/IORelayModule">
+                    <Link to="/Products/IOT-and-PLC-Modules/IO-Relay-Module">
                         IO Relay Module
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Modules/EVCharger">EV Charger</Link>
+                    <Link to="/Products/IOT-and-PLC-Modules/EV-Charger">EV Charger</Link>
                 </li>
                 <li>
-                    <Link to="/Products/Modules/ACDimmer">AC Dimmer</Link>
+                    <Link to="/Products/IOT-and-PLC-Modules/AC-Dimmer">AC Dimmer</Link>
                 </li>
                 <li>
-                    <Link to="/Products/Modules/IrrigationPump">
+                    <Link to="/Products/IOT-and-PLC-Modules/Irrigation-Pump">
                         Irrigation Pump
                     </Link>
                 </li>
                 <li>
-                    <Link to="/Products/Modules/PumpController">
+                    <Link to="/Products/IOT-and-PLC-Modules/Pump-Controller">
                         Pump Controller
                     </Link>
                 </li>
