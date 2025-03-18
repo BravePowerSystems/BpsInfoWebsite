@@ -1,0 +1,14 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+
+.category-page {
+    margin-top: 2rem;
+
+    .category-products {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+}
