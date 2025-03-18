@@ -16,7 +16,6 @@
         color: $primary-color;
         cursor: pointer;
     }
-
     a:hover {
         color: red;
     }
@@ -25,21 +24,17 @@
         font-size: 1rem;
         padding: 0%;
     }
-
-
-
     li a,
     p {
-        font-size: 0.9rem;
-        color: rgb(77, 71, 71);
+        font-size: 0.8rem;
+        color: rgb(58, 54, 54);
+        font-weight: 400;
 
     }
-
     p {
         margin: 0;
         margin-top: 4px;
     }
-
     .upper {
         display: flex;
         flex-direction: column;
@@ -52,8 +47,7 @@
         .contact-us-span {
             display: block;
             margin-bottom: 0.5rem;
-            font-size:1rem;
-            font-weight:500;
+            font-weight: 500;
         }
 
 
@@ -109,6 +103,7 @@
             a img {
                 height: 24px;
                 width: auto;
+                filter: invert(100%);
             }
 
             .youtube-link img {

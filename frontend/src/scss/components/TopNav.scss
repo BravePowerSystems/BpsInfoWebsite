@@ -16,6 +16,10 @@
         align-items: stretch;
         max-width: 100%;
 
+        a {
+            text-decoration: none;
+        }
+
         // Logo section
         .logo {
             display: flex;
@@ -26,12 +30,15 @@
             cursor: pointer;
 
             .brave {
-                @include flex-center;
+                display: flex;
+                align-items: center;
 
                 img {
-                    height: 1.25rem; // Adjust image size
+                    position: relative;
+                    top: 1.5px;
+                    height: 1.3rem; // Adjust image size
                     width: auto;
-                    // filter: invert(1);
+                    margin: 0;
                 }
 
                 span {
@@ -43,10 +50,10 @@
             }
 
             .divider {
-                width: 100%; // Full width of the logo container
+                width: 100%;
                 height: 0.5px;
-                background-color: rgb(155, 162, 168); // White divider
-                margin: 0; // Remove margin to minimize space
+                background-color: rgb(70, 71, 71);
+                margin: 0;
                 position: relative;
                 bottom: 2px;
             }
@@ -72,6 +79,7 @@
             .icon-container {
                 @include flex-center;
                 gap: 0.2rem;
+
                 .search-icon,
                 .save-icon {
                     cursor: pointer;
@@ -83,6 +91,7 @@
                         height: 1.2rem;
                         width: auto;
                         // filter: invert(1); // Ensure icons are white
+
                     }
                 }
 
@@ -95,7 +104,7 @@
                     img {
                         height: 1rem;
                         width: auto;
-                        // filter: invert(1); // Ensure icons are white
+
                     }
                 }
 
@@ -113,7 +122,7 @@
                     div {
                         width: 1.25rem; // Width of hamburger lines
                         height: 0.05rem;
-                        background-color: black; // White lines
+                        background-color: $text-color;
                     }
                 }
             }
@@ -144,7 +153,7 @@
             .logo {
                 .brave {
                     img {
-                        height: 2rem; // Adjust image size
+                        height: 1.75rem; // Adjust image size
                         width: auto;
                     }
 
@@ -164,6 +173,7 @@
                 flex-direction: row;
                 justify-content: center;
                 align-items: stretch;
+
                 ul {
                     padding: 0;
                     @include flex-center;
@@ -173,15 +183,19 @@
 
                     li {
                         font-size: 14px;
-                        font-weight: semi-bold;
-                        color: black;
+                        font-weight: 500;
+                        color: $text-color;
 
                         a {
                             text-decoration: none;
-                            color: rgb(0, 0, 0);
+                            color: $text-color;
                             display: inline-block;
                             position: relative;
                             cursor: pointer;
+
+                            img {
+                                filter: invert(100%);
+                            }
                         }
 
                         a::after {
@@ -189,7 +203,7 @@
                             position: absolute;
                             width: 100%;
                             transform: scaleX(0);
-                            height: 1px;
+                            height: 1.3px;
                             bottom: 0;
                             left: 0;
                             background-color: red;
@@ -222,6 +236,7 @@
             .icons {
                 .icon-container {
                     gap: 0.2rem;
+
                     div {
                         img {
                             position: relative;
@@ -250,7 +265,7 @@
                         font-size: 16px;
 
                         img {
-                            height: 1.3rem;
+                            height: 1rem;
                             width: auto;
                         }
                     }
@@ -259,23 +274,25 @@
                 }
 
             }
-            .icons{
-                .icon-container{
+
+            .icons {
+                .icon-container {
                     gap: 0.5rem;
-                    
+
                     .save-icon,
                     .search-icon {
-                        img{
-                        width: 1.5rem;
-                        height: auto;
+                        img {
+                            width: 1.5rem;
+                            height: auto;
                         }
                     }
-                    .whatsapp-icon{
-                        img{
+
+                    .whatsapp-icon {
+                        img {
                             width: 1.3rem;
                             height: auto;
                         }
-                        
+
                     }
                 }
             }
