@@ -1,8 +1,9 @@
 @import "./base/reset";
 @import "./base/variables";
 
+$body-bg: $secondary-color;
 
-@import "./custom";
 @import "../scss/components/TopNav.scss";
 @import "../scss/components/BottomNav.scss";
 @import "../scss/components/ProductsDropDown.scss";
+@import "~bootstrap/scss/bootstrap";

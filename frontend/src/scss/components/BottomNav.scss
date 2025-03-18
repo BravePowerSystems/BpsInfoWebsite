@@ -3,8 +3,8 @@
 @import "../base/mixins";
 
 .bottom-nav {
-    background-color: $primary-color;
-    color: $secondary-color;
+    background-color: $secondary-color;
+    color: $primary-color;
     width: 100%;
     height: auto;
     display: flex;
@@ -13,7 +13,7 @@
     margin-top: 2rem;
     a {
         text-decoration: none;
-        color: $secondary-color;
+        color: $primary-color;
         cursor: pointer;
     }
 
@@ -30,8 +30,8 @@
 
     li a,
     p {
-        font-size: 0.8rem;
-        color: rgb(198, 198, 198);
+        font-size: 0.9rem;
+        color: rgb(77, 71, 71);
 
     }
 
@@ -52,6 +52,8 @@
         .contact-us-span {
             display: block;
             margin-bottom: 0.5rem;
+            font-size:1rem;
+            font-weight:500;
         }
 
 
