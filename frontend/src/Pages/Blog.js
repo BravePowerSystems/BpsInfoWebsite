@@ -1,6 +1,5 @@
 import React from "react";
 
-<<<<<<< HEAD
 import "../scss/pages/Blog.scss"; 
 
 function Blog(props) {
@@ -67,14 +66,5 @@ function Blog(props) {
         </div>
     </div>
 }   
-=======
-function Blog(props) {
-    return (
-        <div>
-            
-        </div>
-    );
-}
->>>>>>> 65ede24115779847c4f1cac60fcc4859ed0a544b
 
 export default Blog;

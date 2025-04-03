@@ -1,0 +1,86 @@
+@use "sass:map";
+@import "../base/variables";
+@import "../base/mixins";
+
+
+.CaseStudyDetails-container{
+    
+    .CaseStudyDetails-components{
+        display: grid;
+        grid-template-columns: 40% 40% 20%;
+        background-color: aquamarine;
+        
+        .CaseStudyDetails-layout1{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-areas: "image1 "
+            "image1 image1 image2"
+            "image1 image1 ";
+        }
+
+        .CaseStudyDetails-layout2{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas: "image3 "
+        }
+
+        .CaseStudyDetails-serialNumber{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40px; 
+            height: 45px; 
+            color: white;
+            text-align: center;
+            position: relative;
+            .square {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: black;
+            }
+        
+            h1 {
+            font-size: 30px;
+            font-weight: bold;
+            z-index: 1;
+            }
+        
+            p {
+            font-size: 6px;
+            text-transform: uppercase;
+            z-index: 1;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            transform: rotate(-90deg);
+            }
+        }
+
+        .CaseStudyDetails-content{
+            padding: 0rem 0.5rem;
+            .CaseStudyDetails-Introduction{
+                margin-left: 0.5rem;
+                margin-top: 0.5rem;
+                overflow-wrap: break-word;
+                white-space: normal;
+                width: 90%;
+                .CaseStudyDetails-title{
+                    font-size: 1rem;
+                    font-weight: bold;
+                }
+                .CaseStudyDetails-description{
+                    font-size: 0.5rem;
+                }
+            }
+        }
+        
+        .CaseStudyDetails-layout2{
+        padding: 0rem 0.5rem;
+        display: grid;
+        grid-template-columns: 50% 50%;
+        }
+
+    }
+}

@@ -4,8 +4,6 @@ import "../scss/pages/Products.scss";
 import ProductsCard from "../components/ProductsCard";
 import useEmblaCarousel from "embla-carousel-react";
 import {
-    PrevButton,
-    NextButton,
     usePrevNextButtons,
 } from "../components/EmblaCarouselArrowButtons";
 import ProductsData from "./ProductsData";
