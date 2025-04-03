@@ -23,12 +23,12 @@ export default function BottomNav() {
                             <Link to="/products">PRODUCTS</Link>
                         </span>
                         <li>
-                            <Link to="/products/transmitters">
+                            <Link to="/products/Transmitters">
                                 Transmitters
                             </Link>
                         </li>
                         <li>
-                            <Link to="/Products/powerMonitors">
+                            <Link to="/Products/Power-Monitors">
                                 Power Monitors
                             </Link>
                         </li>
@@ -36,7 +36,7 @@ export default function BottomNav() {
                             <Link to="/Products/Controllers">Controllers</Link>
                         </li>
                         <li>
-                            <Link to="/Products/Modules/IOTAndPLCModule">
+                            <Link to="/Products/Modules/IOT-and-PLC-Modules">
                                 IOT and PLC Module
                             </Link>
                         </li>
@@ -72,7 +72,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                     >
                         <img
-                            src="../images/icons8-facebook-logo.svg"
+                            src="../images/facebook.svg"
                             alt="Facebook"
                         />
                     </Link>
@@ -82,7 +82,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                     >
                         <img
-                            src="../images/icons8-whatsapp.svg"
+                            src="../images/whatsapp.svg"
                             alt="WhatsApp"
                         />
                     </Link>
@@ -92,7 +92,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                         className="youtube-link"
                     >
-                        <img src="../images/icons8-youtube.svg" alt="YouTube" />
+                        <img src="../images/youtube.svg" alt="YouTube" />
                     </Link>
                 </div>
             </div>

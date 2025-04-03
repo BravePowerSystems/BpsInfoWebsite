@@ -5,6 +5,9 @@
 .layout{
     padding: 1rem 1rem;
     height: 100vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    background-color:#EFF0F6;
 }
 
 @include tablet{

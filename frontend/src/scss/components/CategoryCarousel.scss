@@ -1,0 +1,143 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+
+.category {
+
+    h3 {
+        margin-bottom: 0;
+    }
+
+    .embla {
+        position: relative;
+        margin: auto;
+        --slide-height: 19rem;
+        --slide-spacing: 1rem;
+        --slide-size: 70%;
+    }
+
+    .embla__viewport {
+        overflow: hidden;
+        max-width: 300px;
+
+    }
+
+    .embla__container {
+        display: flex;
+        touch-action: pan-y pinch-zoom;
+        margin-left: calc(var(--slide-spacing) * -1);
+    }
+
+    .embla__slide {
+        transform: translate3d(0, 0, 0);
+        flex: 0 0 var(--slide-size);
+        min-width: 0;
+        padding-left: var(--slide-spacing);
+        position: relative; // Ensures buttons align relative to each product
+    }
+
+    .embla__button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%); // Centers button vertically
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 1); // Slight transparency for visibility
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1; // Ensures buttons stay above content
+
+        &--prev {
+            left: -1.5rem; // Positioned on the left edge
+        }
+
+        &--next {
+            right: -1.5rem; // Positioned on the right edge
+        }
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.8); // Darker on hover
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            filter: invert(100%);
+        }
+    }
+
+    margin-bottom: 1.5rem;
+}
+
+
+
+@include tablet {
+    .category {
+        width: 100%;
+
+        .embla__viewport {
+            max-width: 100%;
+
+            .embla__container {
+                display: flex;
+
+                .embla__slide {
+                    max-width: 240px;
+                }
+            }
+
+        }
+    }
+}
+
+
+@include desktop {
+    .category {
+        .embla {
+            width: 100%;
+            margin: 0;
+
+            .embla__viewport {
+                min-width: 100%;
+
+                .embla__container {
+
+                    .embla__slide {
+                        max-width: 250px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@include large_desktop {
+    .category {
+        .embla {
+            width: 100%;
+            margin: 0;
+
+            .embla__viewport {
+                min-width: 100%;
+
+                .embla__container {
+
+                    .embla__slide {
+                        max-width: 310px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -17,6 +17,12 @@ export default function TopNav() {
         }, 200);
     };
 
+    const handleCloseDropdown = () => {
+        setTimeout(() => {
+            setIsHovered(false);
+        }, 0); 
+    };
+
     return (
         <div>
             <div className="top-nav">
@@ -41,7 +47,7 @@ export default function TopNav() {
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}
                             >
-                                <Link to="/Products">
+                                <Link to="/Products" onClick={handleCloseDropdown}>
                                     PRODUCTS
                                     <img
                                         src="../images/arrow_down.svg"
@@ -97,13 +103,12 @@ export default function TopNav() {
                 </div>
             </div>
 
-            {/* Show dropdown only if hovered */}
             {isHovered && (
                 <div
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                 >
-                    <ProductsDropDown />
+                    <ProductsDropDown onLinkClick={handleCloseDropdown} />
                 </div>
             )}
         </div>
