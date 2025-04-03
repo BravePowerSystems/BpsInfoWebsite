@@ -1,0 +1,111 @@
+// Accordion.scss
+.accordion {
+    --accordion-bg: #fff;
+    --accordion-border: #e1e5eb;
+    --accordion-text: #333;
+    --accordion-icon: #6b7280;
+
+    @media (prefers-color-scheme: dark) {
+        --accordion-bg: #1f2937;
+        --accordion-border: #374151;
+        --accordion-text: #f3f4f6;
+        --accordion-icon: #9ca3af;
+    }
+
+    width: 100%;
+    background: var(--accordion-bg);
+    // border-radius: 0.5rem;
+    overflow: hidden;
+
+    &__item {
+        border-bottom: 1px solid var(--accordion-border);
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &__header {
+        width: 100%;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: transparent;
+        border: none;
+        color: var(--accordion-text);
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(185, 180, 180, 0.5);
+
+            @media (prefers-color-scheme: dark) {
+                background: rgba(231, 231, 231, 0.01);
+            }
+        }
+
+        &-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+    }
+
+   
+    &__title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    &__indicator {
+        transition: transform 0.3s ease;
+        color: var(--accordion-icon);
+        transition: transform 0.3s ease;
+
+        &--rotated {
+            transform: rotate(180deg);
+        }
+
+        svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+    }
+
+    &__content {
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 1.5rem;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+
+        .accordion__item--open & {
+            max-height: fit-content;
+            padding: 1.25rem 1.5rem;
+            
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+    }
+
+    &__rich-text {
+        color: var(--accordion-text);
+        p,
+        ul,
+        ol {
+            &:first-child {
+                margin-top: 0;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &__custom-structure {
+        >*+* {
+            margin-top: 0.75rem;
+        }
+    }
+}
