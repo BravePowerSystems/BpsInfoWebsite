@@ -3,7 +3,6 @@
 @import "../base/mixins";
 
 .bottom-nav {
-    background-color: $primary-color;
     color: $secondary-color;
     width: 100%;
     height: auto;
@@ -11,11 +10,13 @@
     flex-direction: column;
     padding: 1rem;
     margin-top: 2rem;
+
     a {
         text-decoration: none;
         color: $text-color;
         cursor: pointer;
     }
+
     a:hover {
         color: red;
     }
@@ -24,6 +25,7 @@
         font-size: 1rem;
         padding: 0%;
     }
+
     li a,
     p {
         font-size: 0.8rem;
@@ -31,10 +33,12 @@
         font-weight: 400;
 
     }
+
     p {
         margin: 0;
         margin-top: 4px;
     }
+
     .upper {
         display: flex;
         flex-direction: column;
@@ -103,12 +107,15 @@
             a img {
                 height: 24px;
                 width: auto;
-                filter: invert(100%);
             }
 
-            .youtube-link img {
-                height: 28px;
-                width: auto;
+            .youtube-link,
+            .whatsapp-link {
+
+                img {
+                    height: 28px;
+                    width: auto;
+                }
             }
         }
     }
@@ -143,15 +150,7 @@
                 justify-content: center;
                 gap: 1rem;
 
-                a img {
-                    height: 24px;
-                    width: auto;
-                }
-
-                .youtube-link img {
-                    height: 28px;
-                    width: auto;
-                }
+               
             }
         }
     }

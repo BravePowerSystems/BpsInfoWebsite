@@ -72,7 +72,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                     >
                         <img
-                            src="../images/facebook.svg"
+                            src="../images/facebook.png"
                             alt="Facebook"
                         />
                     </Link>
@@ -80,9 +80,10 @@ export default function BottomNav() {
                         to="https://www.whatsapp.com"
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="whatsapp-link"
                     >
                         <img
-                            src="../images/whatsapp.svg"
+                            src="../images/whatsapp.png"
                             alt="WhatsApp"
                         />
                     </Link>
@@ -92,7 +93,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                         className="youtube-link"
                     >
-                        <img src="../images/youtube.svg" alt="YouTube" />
+                        <img src="../images/youtube.png" alt="youtube" />
                     </Link>
                 </div>
             </div>
