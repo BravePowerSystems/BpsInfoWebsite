@@ -1,11 +1,6 @@
 import React from "react";
 import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Products.scss";
-import ProductsCard from "../components/ProductsCard";
-import useEmblaCarousel from "embla-carousel-react";
-import {
-    usePrevNextButtons,
-} from "../components/EmblaCarouselArrowButtons";
 import ProductsData from "./ProductsData";
 import CategoryCarousel from "../components/CategoryCarousel";
  function Products() {
