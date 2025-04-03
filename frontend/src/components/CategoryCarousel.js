@@ -15,7 +15,7 @@ function CategoryCarousel({ categoryName, products }) {
     return (
         <>
             <div className="category">
-                <h3>{categoryName}</h3>
+                <h3>{categoryName.replace(/[^a-zA-Z0-9]/g, " ")}</h3>
 
                 <div className="embla">
                     <button
@@ -24,7 +24,7 @@ function CategoryCarousel({ categoryName, products }) {
                         disabled={prevBtnDisabled}
                     >
                         <img
-                            src="../images/reshot-icon-arrow-left-circle.svg"
+                            src="../images/arrow_left.svg"
                             alt="prev"
                         />
                     </button>
@@ -55,7 +55,7 @@ function CategoryCarousel({ categoryName, products }) {
                         disabled={nextBtnDisabled}
                     >
                         <img
-                            src="../images/reshot-icon-arrow-right-circle.svg"
+                            src="../images/arrow_right.svg"
                             alt="next"
                         />
                     </button>

@@ -9,13 +9,10 @@ import "../scss/pages/CategoryPage.scss";
 function CategoryPage() {
     const { categoryName } = useParams();
 
-    const formattedCategoryName = decodeURIComponent(categoryName).replace(
-        /[^a-zA-Z0-9]/g,
-        " "
-    );
+   
 
     const categoryKeys = ProductsData.map((item) => Object.keys(item)[0]);
-    const isValidCategory = categoryKeys.includes(formattedCategoryName);
+    const isValidCategory = categoryKeys.includes(categoryName);
 
     if (!isValidCategory) {
         return <h1>Category not found</h1>;
@@ -23,7 +20,7 @@ function CategoryPage() {
 
     
     const categoryObj = ProductsData.find(
-    (item) => Object.keys(item)[0] === formattedCategoryName
+    (item) => Object.keys(item)[0] === categoryName
 );
 
 const products = categoryObj ? Object.values(categoryObj)[0] : [];
@@ -35,8 +32,8 @@ const products = categoryObj ? Object.values(categoryObj)[0] : [];
             <div className="category-products">
                
                         <CategoryCarousel
-                            key={formattedCategoryName}
-                            categoryName={formattedCategoryName}
+                            key={categoryName}
+                            categoryName={categoryName}
                             products={products}
                         />
                    
