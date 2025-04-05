@@ -3,29 +3,21 @@
 @import "../base/mixins";
 
 .layout{
-    padding: 1rem 1rem;
     height: 100vh;
     overflow-y: scroll;
     scrollbar-width: none;
-    background-color:#EFF0F6;
+    background-color:#000000;
+    padding: 0.5rem 1rem;
 }
 
 @include tablet{
     .layout{
-        padding: 1.5rem 4rem;
+        padding: 0.5rem 2rem;
     }
 }
 
-
-
-@include desktop {
-    .layout {
-        padding: 1.5rem 5rem;
-    }
-}
-
-@include large_desktop {
-    .layout {
-        padding: 2rem 6rem;
+@include desktop{
+    .layout{
+        padding: 1rem 4rem;
     }
 }
