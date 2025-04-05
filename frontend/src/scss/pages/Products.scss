@@ -1,0 +1,58 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.products-container {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        width: fit-content;
+        color: white;
+    }
+   
+}
+@include tablet {
+    .products-container {
+        align-items: flex-start;
+
+        h1 {
+            font-size: 3rem;
+        }
+
+        h1::before {
+            top: 9rem;
+            left: 2.5rem;
+            font-size: 5rem;
+        }
+    }
+}
+
+@include desktop {
+    .products-container {
+        h1 {
+            font-size: 3.5rem;
+        }
+        h1::before {
+            top: 10rem;
+            left: 2.5rem;
+            font-size: 5.5rem;
+        }      
+    }
+}
+@include large_desktop {
+    .products-container {
+        h1 {
+            font-size: 4rem;
+            margin-top: 2rem;
+        }
+        h1::before {
+            top: 9.5rem;
+            left: 2.5rem;
+            font-size: 6rem;
+        }
+    }
+}

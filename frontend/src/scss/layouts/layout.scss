@@ -1,0 +1,23 @@
+@import "../base/reset";
+@import "../base/variables";
+@import "../base/mixins";
+
+.layout{
+    height: 100vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    background-color:#000000;
+    padding: 0.5rem 1rem;
+}
+
+@include tablet{
+    .layout{
+        padding: 0.5rem 2rem;
+    }
+}
+
+@include desktop{
+    .layout{
+        padding: 1rem 4rem;
+    }
+}

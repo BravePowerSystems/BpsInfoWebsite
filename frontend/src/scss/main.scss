@@ -1,0 +1,12 @@
+@import "./base/reset";
+@import "./base/variables";
+// Override default variables before the import
+$body-bg: $background-color;
+
+
+@import "../scss/components/TopNav.scss";
+@import "../scss/components/BottomNav.scss";
+@import "../scss/components/ProductsDropDown.scss";
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';

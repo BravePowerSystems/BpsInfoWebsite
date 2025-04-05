@@ -1,0 +1,137 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.product {
+    margin: 2rem 0;
+    background-color: white;
+
+    .product-info {
+        .breadcrumbs {
+            color: black;
+            a{
+                color: black;
+                &:hover{
+                    color: red;
+                }
+            }
+
+        }
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding-top: 1rem;
+
+        .product-name {
+            width: 100%;
+            font-size: 1.4rem;
+        }
+
+        .product-image {
+            width: 12rem;
+            height: 12rem;
+            margin: 0 auto;
+        }
+
+        .product-description {
+            font-size: 1rem;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 1rem;
+
+            button {
+                background-color: black;
+                color: white;
+                width: fit-content;
+                padding: 0.5rem;
+                border-radius: 10px;
+                font-size: 12px;
+            }
+        }
+    }
+
+    .product-features {
+        margin-top: 1rem;
+
+        .specs {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+        }
+
+    }
+}
+
+
+
+
+
+@include desktop {
+    .product {
+        height: 35rem;
+        display: flex;
+        justify-content: space-between;
+        border-radius: 32px;
+        
+        .product-features {
+            margin: 0;
+            height: 100%;
+            width: 35%;
+            background-color: #1f2937;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            border-radius: 0 32px 32px 0;
+
+        }
+    }
+}
+
+
+@include large_desktop {
+    .product {
+        height: 80vh;
+        .breadcrumbs{
+            margin-top: 1rem;
+        }
+        .product-info {
+            gap: 2rem;
+            margin: 0 3rem;
+            width: 50%;
+            height: 100%;
+
+            .product-name {
+                font-size: 3rem;
+            }
+
+            .product-image {
+                width: 15rem;
+                height: auto;
+                
+            }
+            
+            .buttons {
+
+                button {
+                    font-size: 1rem;
+                    padding: 0.7rem;
+
+                    &:hover {
+                        background-color: rgb(19, 205, 78);
+                        transition: all 0.3s ease-in-out;
+                    }
+                }
+
+            }
+
+        }
+
+        .product-features {
+            padding: 2rem 1rem;
+            width: 40%;
+        }
+
+    }
+}

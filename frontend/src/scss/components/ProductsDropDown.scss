@@ -1,0 +1,74 @@
+@use "sass:map";
+@import "../base/variables";
+@import "../base/mixins";
+
+
+.ProductsDropDown {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgb(37,36,41);
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    border-radius: 12px; 
+    z-index: 2;
+    position: absolute;
+    left: 3rem;
+    width: 94%;
+    a {
+        text-decoration: none;
+        color: $primary-text-color;
+    }
+
+    a:hover {
+        color: red;
+
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        width: 20vw;
+        padding: 1rem 1.2rem 0.8rem 1rem;
+
+        a {
+            font-size: medium;
+            font-weight: bolder;
+            margin-bottom: 1rem;
+            color: $primary-text-color;
+        }
+
+        li {
+            a {
+                font-size: small;
+                font-weight: normal;
+            }
+
+            margin-bottom: 0.5rem;
+        }
+    }
+
+
+
+}
+
+
+@include large_desktop {
+    .ProductsDropDown {
+        gap: 8rem;
+
+        ul {
+            width: 15vw;
+
+            a {
+                font-size: large;
+            }
+
+            li {
+                a {
+                    font-size: medium;
+                }
+            }
+        }
+    }
+}

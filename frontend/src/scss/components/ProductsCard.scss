@@ -1,0 +1,138 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.card {
+    border-radius: 10px;
+    width: 190px;
+    min-height: 280px;
+    max-height: 280px;
+    overflow: hidden;
+    z-index: 0;
+    transition: transform 0.3s ease-in-out;
+    cursor: grab;
+    margin-top: 1rem;
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+
+        img {
+            width: 150px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .card-title {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            min-height: 30px;
+            max-height: 30px;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            p {
+                font-size: 10px;
+                min-height: 20px;
+                max-height: 20px;
+            }
+
+            a {
+
+                height: 30px;
+                width: 70px;
+                font-size: 1rem;
+                text-align: center;
+                padding: 0%;
+                background-color: black;
+                color: $primary-text-color;
+                &:hover {
+                    filter: brightness(0.8);
+                }
+            }
+        }
+
+    }
+
+    .card-body::before {
+        content: "";
+        position: absolute;
+        top: -16px;
+        right: -16px;
+        width: 32px;
+        height: 32px;
+        border-radius: 32px;
+        background: linear-gradient(135deg, #01f9f5, #1a55f7);
+        transform: scale(0);
+        transform-origin: 50% 50%;
+        transition: transform 0.45s ease-out;
+        z-index: -1;
+    }
+
+
+}
+
+
+.card:hover {
+
+    .card-body::before {
+        transform: scale(28);
+
+    }
+
+    .card-body {
+
+        .card-title,
+        .card-content {
+            color: $primary-text-color;
+        }
+    }
+
+    transform: translate(5px, -5px);
+
+}
+
+
+@include tablet {
+    .card {
+        width: 210px;
+        min-height: 300px;
+        max-height: 300px;
+
+        .card-body {
+
+            .card-title {
+                min-height: 20px;
+            }
+        }
+
+    }
+}
+
+@include desktop {
+    .card {
+        width: 230px;
+        min-height: 300px;
+        max-height: 300px;
+
+        .card-body {
+
+            .card-content {
+
+                .card-text {
+                    font-size: 14px;
+                    min-height: 40px;
+                    max-height: 40px;
+                }
+            }
+
+        }
+    }
+}
