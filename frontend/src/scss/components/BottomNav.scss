@@ -3,17 +3,17 @@
 @import "../base/mixins";
 
 .bottom-nav {
-    color: $secondary-color;
+    color: white;
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
     margin-top: 2rem;
 
+    background-color: black;
     a {
         text-decoration: none;
-        color: $text-color;
+        color: white;
         cursor: pointer;
     }
 
@@ -29,7 +29,7 @@
     li a,
     p {
         font-size: 0.8rem;
-        color: rgb(58, 54, 54);
+        color: rgb(185, 182, 182);
         font-weight: 400;
 
     }
@@ -109,14 +109,13 @@
                 width: auto;
             }
 
-            .youtube-link,
-            .whatsapp-link {
-
-                img {
+            .youtube-link{
+                img{
                     height: 28px;
                     width: auto;
                 }
             }
+
         }
     }
 }

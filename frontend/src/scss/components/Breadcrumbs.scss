@@ -6,12 +6,13 @@
      align-items: center;
      gap: 2px;
      width: fit-content;
+     color: $primary-text-color;
 
      a {
          text-decoration: none;
-         color: $text-color;
-         font-size: 1rem;
-
+         font-size: 1.2rem;
+         color:$primary-text-color;
+        margin-right:5px;
          &:hover {
              color: red;
          }
