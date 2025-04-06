@@ -13,6 +13,10 @@
         width: fit-content;
         color: white;
     }
+
+    .category-products{
+        width: 100%;
+    }
    
 }
 @include tablet {
@@ -23,11 +27,7 @@
             font-size: 3rem;
         }
 
-        h1::before {
-            top: 9rem;
-            left: 2.5rem;
-            font-size: 5rem;
-        }
+       
     }
 }
 
@@ -36,11 +36,7 @@
         h1 {
             font-size: 3.5rem;
         }
-        h1::before {
-            top: 10rem;
-            left: 2.5rem;
-            font-size: 5.5rem;
-        }      
+            
     }
 }
 @include large_desktop {
@@ -49,10 +45,6 @@
             font-size: 4rem;
             margin-top: 2rem;
         }
-        h1::before {
-            top: 9.5rem;
-            left: 2.5rem;
-            font-size: 6rem;
-        }
+       
     }
 }
