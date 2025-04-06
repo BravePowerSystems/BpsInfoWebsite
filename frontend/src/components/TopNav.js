@@ -25,13 +25,14 @@ export default function TopNav() {
 
     return (
         <motion.div
-        initial={{ y: "-100vh" }}
-        animate={{ y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        initial={{ opacity:0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1,delay: 1, ease: "easeOut" }}
+        exit={ { opacity: 0 }}
         >
             <div className="top-nav">
                 <div className="container">
-                    <Link to="/" onClick={() => window.location.href = '/'}>
+                    <Link to="/" >
                         <div className="logo">
                             <div className="brave">
                                 <img
