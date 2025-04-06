@@ -4,8 +4,9 @@ import { useParams } from "react-router-dom";
 import ProductsData from "./ProductsData";
 import "../scss/pages/Product.scss";
 import Accordion from "../components/Accordion";
-import EnquirePopup from "../components/EnquirePopup";
-import AnimatedOverlay from "../components/AnimatedOverlay";
+import ProductModal from "../components/ProductModal";
+import {motion} from "motion/react";
+import CategoryCarousel from "../components/CategoryCarousel.js";
 const featureItems = [
     {
         title: "Gas Flow pulse transmitter",
@@ -28,8 +29,9 @@ const featureItems = [
 ];
 
 export default function Product() {
-    const [isPopupOpen, setPopupOpen] = useState(false);
-    const { productName, categoryName } = useParams();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    const { categoryName, productName} = useParams();
     const CategoryItem = ProductsData.find(
         (item) => Object.keys(item)[0] === categoryName
     );
@@ -52,16 +54,34 @@ export default function Product() {
     }
 
     const handleEnquireClick = () => {
-        setPopupOpen(true);
+        setIsModalOpen(true);
     };
 
-    const handleClosePopup = () => {
-        setPopupOpen(false);
+    const handleModalClose = () => {
+        setIsModalOpen(false);
     };
+
+
+
+    const categoryKeys = ProductsData.map((item) => Object.keys(item)[0]);
+    const isValidCategory = categoryKeys.includes(categoryName);
+
+    if (!isValidCategory) {
+        return <h1>Category not found</h1>;
+    }
+
+    const categoryObj = ProductsData.find(
+        (item) => Object.keys(item)[0] === categoryName
+    );
+
+    const products = categoryObj ? Object.values(categoryObj)[0] : [];
 
     return (
-        <AnimatedOverlay delay={1} duration={1.5}>
-            <div className="product">
+        <div className="product-page">
+            <motion.div
+                
+                className="product"
+            >
                 <section className="product-info">
                     <Breadcrumbs />
                     <h2 className="product-name">{cleanName}</h2>
@@ -90,13 +110,25 @@ export default function Product() {
                 <section className="product-features">
                     <Accordion items={featureItems} />
                 </section>
-                {isPopupOpen && (
-                    <EnquirePopup
+                {isModalOpen && (
+                    <ProductModal
                         productName={cleanName}
-                        onClose={handleClosePopup}
+                        onClose={handleModalClose}
                     />
                 )}
-            </div>
-        </AnimatedOverlay>
+            </motion.div>
+            <motion.div className="related-products">
+                <h2 className="related-products-title">
+                    Related Products
+                </h2>
+            <CategoryCarousel
+                key={categoryName}
+                categoryName={categoryName}
+                products={products}
+            />
+            </motion.div>
+
+        </div>
+        
     );
 }

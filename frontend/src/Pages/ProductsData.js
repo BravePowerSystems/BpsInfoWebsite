@@ -152,10 +152,10 @@ const ProductsData = [
     {
         "IOT-and-PLC-Modules": [
             {
-                title: "PT100 & PT100 RTD",
+                title: "PT100 and PT100 RTD",
                 img: "images/iot_plc/pt100.jpg",
                 description: "Highly accurate temperature sensor module.",
-                link: "/Products/IOT-and-PLC-Modules/PT100-and-PT100RTD",
+                link: "/Products/IOT-and-PLC-Modules/PT100-and-PT100-RTD",
             },
             {
                 title: "Thermocouple",

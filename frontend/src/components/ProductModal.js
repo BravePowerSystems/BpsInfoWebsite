@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import "../scss/components/EnquirePopup.scss";
-function EnquirePopup({ productName, onClose }) {
+import React, { useState, useEffect } from "react";
+import "../scss/components/ProductModal.scss";
+import { motion } from "motion/react";
+const ProductModal = ({ productName, onClose }) => {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -16,6 +17,23 @@ function EnquirePopup({ productName, onClose }) {
         { value: "quote", label: "Request a Quote" },
         { value: "custom", label: "Custom Solution" },
     ];
+
+    // Handle Escape key press
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") {
+                onClose();
+            }
+        };
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [onClose]);
+
+    // Focus trap for accessibility
+    useEffect(() => {
+        const modal = document.querySelector(".modal-content");
+        if (modal) modal.focus();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,21 +53,40 @@ function EnquirePopup({ productName, onClose }) {
     };
 
     return (
-        <div className="popup-overlay">
-            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                <button className="popup-close" onClick={onClose}>
-                    ×
+        <motion.div
+            initial={{ opacity: 0, y: -100 }}
+            animate={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 1, type: "spring" },
+            }}
+            className="modal-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+        >
+            <div
+                className="modal-content"
+                onClick={(e) => e.stopPropagation()}
+                tabIndex="-1"
+            >
+                <button
+                    className="modal-close"
+                    onClick={onClose}
+                    aria-label="Close modal"
+                >
+                    <img src="../../images/close.png" alt="Close" />
                 </button>
 
-                <h3>Enquire about {productName}</h3>
-                <p className="popup-subtitle">
+                <h3 id="modal-title">Enquire about {productName}</h3>
+                <p className="modal-subtitle">
                     Reach out and we will get in touch within 24 hours
                 </p>
 
                 <form onSubmit={handleSubmit} className="enquiry-form">
                     <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="firstName">First Name*</label>
+                            <label htmlFor="firstName">First Name</label>
                             <input
                                 type="text"
                                 id="firstName"
@@ -57,11 +94,12 @@ function EnquirePopup({ productName, onClose }) {
                                 value={formData.firstName}
                                 onChange={handleChange}
                                 required
+                                aria-required="true"
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="lastName">Last Name*</label>
+                            <label htmlFor="lastName">Last Name</label>
                             <input
                                 type="text"
                                 id="lastName"
@@ -69,12 +107,13 @@ function EnquirePopup({ productName, onClose }) {
                                 value={formData.lastName}
                                 onChange={handleChange}
                                 required
+                                aria-required="true"
                             />
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="email">Email Address*</label>
+                    <div className="form-group-single">
+                        <label htmlFor="email">Email Address</label>
                         <input
                             type="email"
                             id="email"
@@ -82,6 +121,7 @@ function EnquirePopup({ productName, onClose }) {
                             value={formData.email}
                             onChange={handleChange}
                             required
+                            aria-required="true"
                         />
                     </div>
 
@@ -109,14 +149,15 @@ function EnquirePopup({ productName, onClose }) {
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="enquiryType">Enquiry Type*</label>
+                    <div className="form-group-single">
+                        <label htmlFor="enquiryType">Enquiry Type</label>
                         <select
                             id="enquiryType"
                             name="enquiryType"
                             value={formData.enquiryType}
                             onChange={handleChange}
                             required
+                            aria-required="true"
                         >
                             {enquiryTypes.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -133,8 +174,8 @@ function EnquirePopup({ productName, onClose }) {
                     </div>
                 </form>
             </div>
-        </div>
+        </motion.div>
     );
-}
+};
 
-export default EnquirePopup;
+export default ProductModal;

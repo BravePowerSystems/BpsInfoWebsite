@@ -1,0 +1,175 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 2rem 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    .modal-content {
+        background:rgb(0,0,0,0.6);
+        padding: 2rem;
+        border-radius: 8px;
+        color: $primary-text-color;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        position: relative;
+
+        &:focus {
+            outline: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            filter: invert(1);
+            img {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+        }
+
+        .enquiry-form {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch; // Changed from center
+            gap: 1.5rem;
+            width: 100%;
+            color: $primary-text-color;
+            .form-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                width: 100%;
+
+                .form-group {
+                    flex: 1 1 calc(50% - 1rem); // Dynamic width with gap consideration
+                    min-width: 200px; // Minimum width before wrapping
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+
+                    label {
+                        font-weight: 500;
+                    }
+
+                    input,
+                    select {
+                        padding: 0.75rem;
+                        border-radius: 8px;
+                        width: 100%;
+                        border: 1px solid #ddd;
+                        transition: border-color 0.3s;
+
+                        &:focus {
+                            border-color: purple;
+                            outline: none;
+                        }
+                    }
+                }
+            }
+
+            .form-group-single {
+                flex: 1 1 100%; // Takes full width
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                label {
+                    font-weight: 500;
+                }
+
+                input,
+                select {
+                    padding: 0.75rem;
+                    border-radius: 8px;
+                    border: 1px solid #ddd;
+                    width: 100%;
+
+                    &:focus {
+                        border-color: purple;
+                        outline: none;
+                    }
+                }
+            }
+
+            .form-actions {
+                margin-top: 1rem;
+                align-self: flex-end;
+
+                button {
+                    background-color: rgb(34, 113, 240);
+                    color: white;
+                    padding: 0.75rem 1.5rem;
+                    border-radius: 4px;
+                    border: none;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                    font-weight: 500;
+
+                    &:hover {
+                        background-color: green;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include tablet {
+    .modal-overlay {
+        .modal-content {
+            width: 80%;
+            padding: 2.5rem;
+
+            .enquiry-form {
+                .form-row {
+                    gap: 1.5rem;
+
+                    .form-group {
+                        flex: 1 1 calc(50% - 1.5rem); // Adjust for larger gap
+                        min-width: 250px; // Slightly larger min-width on tablets
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include desktop {
+    .modal-overlay {
+        .modal-content {
+            width: 70%;
+            max-width: 900px;
+
+            .enquiry-form {
+                .form-row {
+                    gap: 2rem;
+
+                    .form-group {
+                        flex: 1 1 calc(50% - 2rem); // Adjust for larger gap
+                        min-width: 300px; // Larger min-width on desktop
+                    }
+                }
+
+                .form-group-single {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+}

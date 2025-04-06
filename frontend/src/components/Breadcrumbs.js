@@ -10,7 +10,7 @@ function Breadcrumbs() {
 
     return (
         <div className="breadcrumbs">
-            <Link to="/">Home</Link>
+            <Link to="/" >Home</Link>
             {pathSegments.map((segment, index) => {
                 const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
 

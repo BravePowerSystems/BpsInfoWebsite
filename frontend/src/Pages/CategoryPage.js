@@ -2,12 +2,10 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import ProductsData from "./ProductsData";
 import Breadcrumbs from "../components/Breadcrumbs";
-import CategoryCarousel from "../components/CategoryCarousel";
 import "../scss/components/CategoryCarousel.scss";
 import "../scss/pages/CategoryPage.scss";
 import { motion } from "motion/react";
-import { ContainerVariants, childrenVariants } from "../Pages/Products";
-
+import CategoryCarousel from "../components/CategoryCarousel";
 function CategoryPage() {
     const { categoryName } = useParams();
 
@@ -27,17 +25,11 @@ function CategoryPage() {
     return (
         <motion.div
             className="category-page"
-            initial="hidden"
-            animate="visible"
-            variants={ContainerVariants}
         >
-            <motion.div variants={childrenVariants}>
+            <motion.div>
                 <Breadcrumbs />
             </motion.div>
-            <motion.div
-                className="category-products"
-                variants={childrenVariants}
-            >
+            <motion.div className="category-products">
                 <CategoryCarousel
                     key={categoryName}
                     categoryName={categoryName}
