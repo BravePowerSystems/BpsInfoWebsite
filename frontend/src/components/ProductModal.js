@@ -1,0 +1,181 @@
+import React, { useState, useEffect } from "react";
+import "../scss/components/ProductModal.scss";
+import { motion } from "motion/react";
+const ProductModal = ({ productName, onClose }) => {
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        company: "",
+        phone: "",
+        enquiryType: "general",
+    });
+
+    const enquiryTypes = [
+        { value: "general", label: "General Enquiry" },
+        { value: "technical", label: "Technical Support" },
+        { value: "quote", label: "Request a Quote" },
+        { value: "custom", label: "Custom Solution" },
+    ];
+
+    // Handle Escape key press
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") {
+                onClose();
+            }
+        };
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [onClose]);
+
+    // Focus trap for accessibility
+    useEffect(() => {
+        const modal = document.querySelector(".modal-content");
+        if (modal) modal.focus();
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Form submitted:", formData);
+        alert(
+            `Thank you for your enquiry about ${productName}! We'll contact you soon.`
+        );
+        onClose();
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: -100 }}
+            animate={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 1, type: "spring" },
+            }}
+            className="modal-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+        >
+            <div
+                className="modal-content"
+                onClick={(e) => e.stopPropagation()}
+                tabIndex="-1"
+            >
+                <button
+                    className="modal-close"
+                    onClick={onClose}
+                    aria-label="Close modal"
+                >
+                    <img src="../../images/close.png" alt="Close" />
+                </button>
+
+                <h3 id="modal-title">Enquire about {productName}</h3>
+                <p className="modal-subtitle">
+                    Reach out and we will get in touch within 24 hours
+                </p>
+
+                <form onSubmit={handleSubmit} className="enquiry-form">
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="firstName">First Name</label>
+                            <input
+                                type="text"
+                                id="firstName"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                required
+                                aria-required="true"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="lastName">Last Name</label>
+                            <input
+                                type="text"
+                                id="lastName"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                required
+                                aria-required="true"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-group-single">
+                        <label htmlFor="email">Email Address</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            aria-required="true"
+                        />
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="company">Company Name</label>
+                            <input
+                                type="text"
+                                id="company"
+                                name="company"
+                                value={formData.company}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="phone">Phone Number</label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-group-single">
+                        <label htmlFor="enquiryType">Enquiry Type</label>
+                        <select
+                            id="enquiryType"
+                            name="enquiryType"
+                            value={formData.enquiryType}
+                            onChange={handleChange}
+                            required
+                            aria-required="true"
+                        >
+                            {enquiryTypes.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-actions">
+                        <button type="submit" className="submit-btn">
+                            Submit Enquiry
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </motion.div>
+    );
+};
+
+export default ProductModal;
