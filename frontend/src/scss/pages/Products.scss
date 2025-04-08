@@ -11,15 +11,13 @@
         font-size: 2.5rem;
         font-weight: 600;
         width: fit-content;
+        color: white;
     }
-    h1::before {
-        content: "PRODUCTS";
-        opacity: 0.1;
-        position: absolute;
-        top: 8.3rem;
-        right: 0.7rem;
-        font-size: 3.7rem;
+
+    .category-products{
+        width: 100%;
     }
+   
 }
 @include tablet {
     .products-container {
@@ -29,11 +27,7 @@
             font-size: 3rem;
         }
 
-        h1::before {
-            top: 9rem;
-            left: 2.5rem;
-            font-size: 5rem;
-        }
+       
     }
 }
 
@@ -42,22 +36,15 @@
         h1 {
             font-size: 3.5rem;
         }
-        h1::before {
-            top: 10rem;
-            left: 2.5rem;
-            font-size: 5.5rem;
-        }      
+            
     }
 }
 @include large_desktop {
     .products-container {
         h1 {
             font-size: 4rem;
+            margin-top: 2rem;
         }
-        h1::before {
-            top: 9.5rem;
-            left: 2.5rem;
-            font-size: 6rem;
-        }
+       
     }
 }

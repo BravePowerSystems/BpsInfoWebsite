@@ -3,30 +3,35 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Products.scss";
 import ProductsData from "./ProductsData";
 import CategoryCarousel from "../components/CategoryCarousel";
- function Products() {
-    return (
-        <div className="products-container">
-            <div className="path">
-                <Breadcrumbs />
-            </div>
+import {  motion } from "motion/react";
 
-            <h1>PRODUCTS</h1>
+function Products() {
+    return (
+        <motion.div
+            className="products-container"
+            
+        >
+            <motion.div className="path" >
+                <Breadcrumbs />
+            </motion.div>
+            <motion.h1 >PRODUCTS</motion.h1>
 
             {ProductsData.map((categoryObj, index) => {
                 const [categoryName, products] = Object.entries(categoryObj)[0];
-
                 return (
-                    <CategoryCarousel
-                        key={categoryName || index}
-                        categoryName={categoryName}
-                        products={products}
-                    />
+                    <motion.div
+                        className="category-products"
+                        key={index}
+                    >
+                        <CategoryCarousel
+                            categoryName={categoryName}
+                            products={products}
+                        />
+                    </motion.div>
                 );
             })}
-        </div>
+        </motion.div>
     );
 }
-
-
 
 export default Products;

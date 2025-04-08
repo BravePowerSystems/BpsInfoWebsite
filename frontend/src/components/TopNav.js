@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import ProductsDropDown from "./ProductsDropDown";
-
+import {motion} from "motion/react";
 export default function TopNav() {
     const [isHovered, setIsHovered] = useState(false);
     const timeoutRef = useRef(null);
@@ -24,14 +24,19 @@ export default function TopNav() {
     };
 
     return (
-        <div>
+        <motion.div
+        initial={{ opacity:0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1,delay: 1, ease: "easeOut" }}
+        exit={ { opacity: 0 }}
+        >
             <div className="top-nav">
                 <div className="container">
-                    <Link to="/">
+                    <Link to="/" >
                         <div className="logo">
                             <div className="brave">
                                 <img
-                                    src="../images/bpsCompanyIcon1.jpg"
+                                    src="../images/bpsCompanyIcon.png"
                                     alt="BPS Logo"
                                 />
                                 <span>BRAVE</span>
@@ -111,6 +116,6 @@ export default function TopNav() {
                     <ProductsDropDown onLinkClick={handleCloseDropdown} />
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 }

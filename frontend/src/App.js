@@ -15,15 +15,15 @@ function App() {
         <Router>
             <Layout>
                 <div className="App">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/Products" element={<Products />} />
-                        <Route path="/Products/:categoryName" element={<CategoryPage />} />
-                        <Route path="/Products/:categoryName/:productName" element={<Product />} />
-                        <Route path="/Blog" element={<Blog />} />
-                        <Route path="/CaseStudyDetails" element={<CaseStudyDetails />} />
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/Products" element={<Products />} />
+                            <Route path="/Products/:categoryName"element={<CategoryPage />} />
+                            <Route path="/Products/:categoryName/:productName"element={<Product />}/>
+                            <Route path="/Blog" element={<Blog />} />
+                            <Route path="/CaseStudyDetails"element={<CaseStudyDetails />} />
                         <Route path="/Wishlist" element={<Wishlist/>} />
-                    </Routes>
+                        </Routes>
                 </div>
             </Layout>
         </Router>

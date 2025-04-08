@@ -2,9 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ProductsData from "../Pages/ProductsData";
 import "../scss/components/ProductsDropDown.scss";
+import {motion} from "motion/react";
 function ProductsDropDown({ onLinkClick }) {
+
     return (
-        <div class="ProductsDropDown">
+        <motion.div class="ProductsDropDown"
+        initial={{ opacity: 0}
+        }
+        animate={{ opacity: 1, transition: { duration: 0.5, type:"tween" }}}>
+
             {ProductsData.map((categoryObj) => {
                 const [categoryName, products] = Object.entries(categoryObj)[0];
 
@@ -35,7 +41,7 @@ function ProductsDropDown({ onLinkClick }) {
                     </ul>
                 );
             })}
-        </div>
+        </motion.div>
     );
 }
 

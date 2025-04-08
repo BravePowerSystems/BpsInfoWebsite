@@ -1,7 +1,7 @@
 @import "./base/reset";
 @import "./base/variables";
 // Override default variables before the import
-$body-bg: $primary-color;
+$body-bg: $background-color;
 
 
 @import "../scss/components/TopNav.scss";
