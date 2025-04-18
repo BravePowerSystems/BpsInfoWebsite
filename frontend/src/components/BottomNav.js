@@ -1,11 +1,16 @@
 /*************  ✨ Codeium Command 🌟  *************/
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "motion/react";
 export default function BottomNav() {
     return (
-        <div className="bottom-nav">
+        <motion.div
+            className="bottom-nav"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1 }}
+        >
             <div className="upper">
-               
                 <div className="about-us">
                     <ul>
                         <span className="about-us-span">ABOUT US</span>
@@ -71,10 +76,7 @@ export default function BottomNav() {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <img
-                            src="../images/facebook.png"
-                            alt="Facebook"
-                        />
+                        <img src="../images/facebook.png" alt="Facebook" />
                     </Link>
                     <Link
                         to="https://www.whatsapp.com"
@@ -82,10 +84,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                         className="whatsapp-link"
                     >
-                        <img
-                            src="../images/whatsapp.png"
-                            alt="WhatsApp"
-                        />
+                        <img src="../images/whatsapp.png" alt="WhatsApp" />
                     </Link>
                     <Link
                         to="https://www.youtube.com"
@@ -97,6 +96,6 @@ export default function BottomNav() {
                     </Link>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
