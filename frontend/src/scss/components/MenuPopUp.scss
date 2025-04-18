@@ -1,0 +1,139 @@
+@use "sass:map";
+@import "../base/variables";
+@import "../base/mixins";
+
+.products-dropdown-container {
+    position: absolute;
+    z-index: 1000;
+
+    .MenuPopUp {
+        margin-top: 0.5rem; // Reduced margin to be closer to nav item
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        background: rgb(37, 36, 41, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        width: fit-content;
+
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        a {
+            text-decoration: none;
+            color: $primary-text-color;
+        }
+
+        a:hover {
+            color: red;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 1rem 1.2rem 0.8rem 1rem;
+
+            a {
+                font-size: medium;
+                font-weight: bolder;
+                margin-bottom: 1rem;
+                color: $primary-text-color;
+            }
+
+            li {
+                a {
+                    font-size: small;
+                    font-weight: normal;
+                }
+
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+
+
+
+}
+
+
+.resources-dropdown-container {
+    z-index: 1000;
+    position: absolute;
+
+    .resources-list {
+        margin-top: 0.5rem; // Reduced margin to be closer to nav item
+        display: flex;
+        flex-direction: column;
+        background: rgb(37, 36, 41, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        width: fit-content;
+        position: relative;
+        left: 30rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        a {
+            text-decoration: none;
+            color: $primary-text-color;
+        }
+
+        a:hover {
+            color: red;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+
+            gap: 2px;
+
+            a {
+                font-size: medium;
+                font-weight: bolder;
+                margin-bottom: 1rem;
+                color: $primary-text-color;
+            }
+
+            li {
+                a {
+                    font-size: small;
+                    font-weight: normal;
+                }
+
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+}
+
+
+@include large_desktop {
+    .products-dropdown-container {
+
+
+        .MenuPopUp {
+            gap: 9rem;
+
+            ul {
+
+                a {
+                    font-size: large;
+                }
+
+                li {
+                    a {
+                        font-size: medium;
+                    }
+                }
+            }
+        }
+    }
+
+    .resources-dropdown-container {
+        .resources-list {
+            padding: 1rem;
+            left: 35rem;
+        }
+    }
+}
