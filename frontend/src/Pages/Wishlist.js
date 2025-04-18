@@ -41,7 +41,7 @@ function Wishlist() {
 
                     <div className="wishlist-item">
                         <div className="item-image">
-                            <img src="../images/gasFlowPulseTransmitter.png" alt="product image" className="product-image" />
+                            <img src="../images/gasFlowPulseTransmitter.png" alt="product-image" className="product-image" />
                         </div>
                         <div className="item-details">
                             <h2 className="item-title">Gas flow pulse transmitter</h2>
@@ -56,7 +56,7 @@ function Wishlist() {
 
                     <div className="wishlist-item">
                         <div className="item-image">
-                            <img src="../images/gasFlowPulseTransmitter.png" alt="product image" className="product-image" />
+                            <img src="../images/gasFlowPulseTransmitter.png" alt="product-image" className="product-image" />
                         </div>
                         <div className="item-details">
                             <h2 className="item-title">Gas flow pulse transmitter</h2>

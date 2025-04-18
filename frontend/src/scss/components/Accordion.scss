@@ -1,20 +1,19 @@
 // Accordion.scss
 .accordion {
-    --accordion-bg: #fff;
+    --accordion-bg: transparent;
     --accordion-border: #e1e5eb;
     --accordion-text: #333;
     --accordion-icon: #6b7280;
 
     @media (prefers-color-scheme: dark) {
-        --accordion-bg: #1f2937;
+        --accordion-bg: transparent;
         --accordion-border: #374151;
         --accordion-text: #f3f4f6;
         --accordion-icon: #9ca3af;
     }
 
     width: 100%;
-    background: var(--accordion-bg);
-    // border-radius: 0.5rem;
+    background: transparent;
     overflow: hidden;
 
     &__item {

@@ -1,13 +1,15 @@
 import React from "react";
 import TopNav from "../components/TopNav";
 import BottomNav from "../components/BottomNav";
+import ColorCursor from "../components/ColorCursor";
 import "../scss/layouts/layout.scss";
  function Layout({ children }) {
     return (
         <div className="layout">
-            <TopNav />
+            <ColorCursor />
+                <TopNav />
             {children}
-            <BottomNav />
+                <BottomNav />
         </div>
     );
 }

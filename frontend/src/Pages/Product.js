@@ -7,6 +7,15 @@ import Accordion from "../components/Accordion";
 import ProductModal from "../components/ProductModal";
 import {motion} from "motion/react";
 import CategoryCarousel from "../components/CategoryCarousel.js";
+import { fadeInUpVariants } from "../components/HeroSection.js";
+const motionConfig = {
+    product: {
+        variants: fadeInUpVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.2 },
+    },
+};
 const featureItems = [
     {
         title: "Gas Flow pulse transmitter",
@@ -81,6 +90,7 @@ export default function Product() {
             <motion.div
                 
                 className="product"
+                {...motionConfig.product}
             >
                 <section className="product-info">
                     <Breadcrumbs />
@@ -117,7 +127,7 @@ export default function Product() {
                     />
                 )}
             </motion.div>
-            <motion.div className="related-products">
+            <div className="related-products">
                 <h2 className="related-products-title">
                     Related Products
                 </h2>
@@ -126,7 +136,7 @@ export default function Product() {
                 categoryName={categoryName}
                 products={products}
             />
-            </motion.div>
+            </div>
 
         </div>
         
