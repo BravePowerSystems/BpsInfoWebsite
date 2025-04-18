@@ -4,13 +4,14 @@
 .product-page {
     .product {
         margin: 2rem 0;
-        background-color: white;
+        background: transparent;
+        backdrop-filter: blur(10px); // Added for better readability
         .product-info {
             .breadcrumbs {
-                color: black;
+                color: $primary-text-color; // Changed from black to white
 
                 a {
-                    color: black;
+                    color: $primary-text-color; // Changed from black to white
 
                     &:hover {
                         color: red;
@@ -27,17 +28,34 @@
             .product-name {
                 width: 100%;
                 font-size: 1.4rem;
+                color: $primary-text-color; // Added to ensure visibility
+                background: linear-gradient(90deg, #fff0f3, #678df6);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
 
             .product-image {
                 width: 12rem;
                 height: 12rem;
                 margin: 0 auto;
+                filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.25));
             }
-
+            .product-description-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0 1rem;
+                h4 {
+                    font-size: 1.2rem;
+                    color: $primary-text-color; // Added to ensure visibility
+                }
+            
             .product-description {
                 font-size: 1rem;
+                color: $primary-text-color; // Added to ensure visibility
             }
+        }
 
             .buttons {
                 display: flex;
@@ -46,18 +64,23 @@
                 gap: 1rem;
 
                 button {
-                    background-color: black;
-                    color: white;
+                    background-color: rgb(56, 55, 55); // Changed from black
+                    color: $primary-text-color;
                     width: fit-content;
                     padding: 0.5rem;
                     border-radius: 10px;
                     font-size: 12px;
+
+                    &:hover {
+                        background-color: rgb(19, 205, 78);
+                    }
                 }
             }
         }
 
         .product-features {
             margin-top: 1rem;
+           
 
             .specs {
                 display: flex;
@@ -91,16 +114,15 @@
             height: 35rem;
             display: flex;
             justify-content: space-between;
-            border-radius: 32px;
+            border-radius: 28px 32px 32px 28px;
 
             .product-features {
                 margin: 0;
                 height: 100%;
                 width: 35%;
-                background-color: #1f2937;
                 overflow-y: scroll;
                 scrollbar-width: none;
-                border-radius: 0 32px 32px 0;
+                border-radius: 0 28px 28px 0;
 
             }
         }

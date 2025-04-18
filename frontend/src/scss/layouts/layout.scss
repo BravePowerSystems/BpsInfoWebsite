@@ -2,22 +2,22 @@
 @import "../base/variables";
 @import "../base/mixins";
 
-.layout{
+.layout {
     height: 100vh;
     overflow-y: scroll;
     scrollbar-width: none;
-    background-color:#000000;
+    background: linear-gradient(135deg, #0c1828 0%, #000000 50%, #0c1828 100%);
     padding: 0.5rem 1rem;
 }
 
-@include tablet{
-    .layout{
+@include tablet {
+    .layout {
         padding: 0.5rem 2rem;
     }
 }
 
-@include desktop{
-    .layout{
+@include desktop {
+    .layout {
         padding: 1rem 4rem;
     }
 }
