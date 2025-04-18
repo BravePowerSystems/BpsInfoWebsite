@@ -1,12 +1,35 @@
 import React from "react";
-
+import { motion } from "motion/react";
 import "../scss/pages/CaseStudy.scss";
-
+const fadeInLeftVariants = {
+    hidden: { opacity: 0, x: -40 },
+    visible: { opacity: 1, x: 0 },
+};
+const fadeInRightVariants = {
+    hidden: { opacity: 0, x: 40 },
+    visible: { opacity: 1, x: 0 },
+};
+const motionConfig = {
+    component1: {
+        variants: fadeInLeftVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.4 },
+    },
+    component2: {
+        variants: fadeInRightVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.6 },
+    },
+};
 function CaseStudy() {
     return (
         <div className="container">
             <div className="components">
-                <div className="component1">
+                <motion.div className="component1"
+                {...motionConfig.component1}
+                >
                     <div className="left-images">
                     
                         <img src="../images/pic1.jpeg" alt="iot" className="image1"/>  
@@ -32,9 +55,11 @@ function CaseStudy() {
                         <img src="../images/pic4.jpg" alt="iot" className="image4"/>
                     </div>
 
-                </div>
+                </motion.div>
 
-                <div className="component2">
+                <motion.div className="component2"
+                {...motionConfig.component2}
+                >
 
                 <div className="content1">
                     <div className="serialNumber1">
@@ -58,9 +83,11 @@ function CaseStudy() {
                   
                     </div>
 
-                </div>
+                </motion.div>
 
-                <div className="component1">
+                <motion.div className="component1"
+                {...motionConfig.component1}
+                >
                     <div className="left-images">
                     
                         <img src="../images/pic1.jpeg" alt="iot" className="image1"/>  
@@ -87,9 +114,11 @@ function CaseStudy() {
                         <img src="../images/pic4.jpg" alt="iot" className="image4"/>
                     </div>
 
-                </div>
+                </motion.div>
 
-                <div className="component2">
+                <motion.div className="component2"
+                {...motionConfig.component2}
+                >
 
                 <div className="content1">
                     <div className="serialNumber1">
@@ -113,7 +142,7 @@ function CaseStudy() {
                   
                     </div>
 
-                </div>
+                </motion.div>
 
             </div>
         </div>

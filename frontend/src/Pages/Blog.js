@@ -1,19 +1,34 @@
 import React from "react";
 
 import "../scss/pages/Blog.scss"; 
-
+import {motion} from "motion/react";
+import { fadeInUpVariants } from "../components/HeroSection";
+const motionConfig = {
+    blogTextContainer: {
+        variants: fadeInUpVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.4 },
+    },
+    blog: {
+        variants: fadeInUpVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.6 },
+    },
+};
 function Blog(props) {
     return <div className="blog-container">
 
-        <div className="blog-text-container" >
+        <motion.div className="blog-text-container"
+        {...motionConfig.blogTextContainer} >
             <h1 className="blog-text">Blog</h1>
             <p className="blog-discover">Discover all our blog posts</p>
             <p className="blog-quote">Discover the achievments taht set us apart. From groundbreaking projects to industry accolades, we take pride in our accomplishments.</p>
-        </div>
+        </motion.div>
 
-        <div className="blog-featured-breaker"></div>
-
-        <div className="blog">  
+        <motion.div className="blog"
+        {...motionConfig.blog}>  
         <div className="blog-card">
             <div className="blog-content">
              <h3 className="blog-title">Lorem ipsum dolor</h3>
@@ -63,7 +78,7 @@ function Blog(props) {
             </div>  
         <div className="blog-breaker"></div>
 
-        </div>
+        </motion.div>
     </div>
 }   
 

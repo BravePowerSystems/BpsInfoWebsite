@@ -72,7 +72,7 @@
             text-transform: uppercase;
             z-index: 1;
             position: absolute;
-            top:60%;
+            top:50%;
             left: 0px;
             transform: rotate(-90deg);
             }
@@ -108,7 +108,7 @@
     .component2{
         display: grid;
         grid-template-columns: auto auto;
-        background-color: rgb(0, 0, 0);
+        background-color: transparent;
         padding: 1.5rem 0.5rem;
         .serialNumber1{
             display: flex;
@@ -117,14 +117,12 @@
             justify-content: center;
             width: 25px; 
             height:30px; 
-            color: rgb(0, 0, 0);
             text-align: center;
             position: relative;
             .square1{
             width: 100%;
             height: 100%;
             position: absolute;
-            background-color: rgb(255, 255, 255);
             }
         
             h1 {
@@ -132,6 +130,7 @@
             font-weight: bold;
             z-index: 1;
             padding-left: 0.3rem;
+            color: white;
             }
         
             p {
@@ -139,10 +138,11 @@
             text-transform: uppercase;
             z-index: 1;
             position: absolute;
-            top:60%;
+            top:50%;
             left: 0px;
             transform: rotate(-90deg);
             padding-left: 0.1rem;
+            color: white;
             }
         }
         .content1{
