@@ -14,7 +14,7 @@ const motionConfig = {
         variants: fadeInLeftVariants,
         initial: "hidden",
         animate: "visible",
-        transition: { duration: 0.8, delay: 0.4 },
+        transition: { duration: 0.8, delay: 0.4},
     },
     component2: {
         variants: fadeInRightVariants,

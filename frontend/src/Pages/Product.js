@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
+import { useModal } from "../context/ModalContext";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { useParams } from "react-router-dom";
 import ProductsData from "./ProductsData";
 import "../scss/pages/Product.scss";
 import Accordion from "../components/Accordion";
-import ProductModal from "../components/ProductModal";
 import {motion} from "motion/react";
 import CategoryCarousel from "../components/CategoryCarousel.js";
 import { fadeInUpVariants } from "../components/HeroSection.js";
@@ -38,7 +38,7 @@ const featureItems = [
 ];
 
 export default function Product() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { openProductModal } = useModal();
     
     const { categoryName, productName} = useParams();
     const CategoryItem = ProductsData.find(
@@ -63,11 +63,7 @@ export default function Product() {
     }
 
     const handleEnquireClick = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleModalClose = () => {
-        setIsModalOpen(false);
+        openProductModal(cleanName);
     };
 
 
@@ -120,12 +116,6 @@ export default function Product() {
                 <section className="product-features">
                     <Accordion items={featureItems} />
                 </section>
-                {isModalOpen && (
-                    <ProductModal
-                        productName={cleanName}
-                        onClose={handleModalClose}
-                    />
-                )}
             </motion.div>
             <div className="related-products">
                 <h2 className="related-products-title">

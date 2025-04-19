@@ -2,10 +2,34 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import ProductsData from "./ProductsData";
 import Breadcrumbs from "../components/Breadcrumbs";
-import "../scss/components/CategoryCarousel.scss";
-import "../scss/pages/CategoryPage.scss";
+
 import { motion } from "motion/react";
 import CategoryCarousel from "../components/CategoryCarousel";
+import { fadeInUpVariants } from "../components/HeroSection";
+import "../scss/components/CategoryCarousel.scss";
+import "../scss/pages/CategoryPage.scss";
+
+const motionConfig = {
+    categoryPage: {
+        variants: fadeInUpVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.4 },
+    },
+    path: {
+        variants: fadeInUpVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.6 },
+    },
+    categoryProducts: {
+        variants: fadeInUpVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.8 },
+    },
+};
+
 function CategoryPage() {
     const { categoryName } = useParams();
 
@@ -25,11 +49,15 @@ function CategoryPage() {
     return (
         <motion.div
             className="category-page"
+            {...motionConfig.categoryPage}
         >
-            <motion.div>
+            <motion.div
+                {...motionConfig.path}
+            >
                 <Breadcrumbs />
             </motion.div>
-            <motion.div className="category-products">
+            <motion.div className="category-products"
+            {...motionConfig.categoryProducts}>
                 <CategoryCarousel
                     key={categoryName}
                     categoryName={categoryName}

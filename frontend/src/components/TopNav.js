@@ -1,8 +1,11 @@
+
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import MenuPopUp from "./MenuPopUp";
 import { motion } from "motion/react";
 import ProductsData from "../Pages/ProductsData";
+import { useAuth } from '../context/AuthContext';
+import AuthModal from './AuthModal';
 
 const ProductsList = ({ onLinkClick }) => {
     return ProductsData.map((categoryObj) => {
@@ -45,6 +48,14 @@ const ResourcesList = ({ onLinkClick }) => {
 export default function TopNav() {
     const [activeDropdown, setActiveDropdown] = useState(null);
     const timeoutRef = useRef(null);
+    const { user, isAuthenticated, isAdmin, logout } = useAuth();
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authMode, setAuthMode] = useState('login');
+    
+    const handleAuthClick = (mode) => {
+        setAuthMode(mode);
+        setShowAuthModal(true);
+    };
 
     const handleMouseEnter = (dropdown) => {
         setActiveDropdown(dropdown);
@@ -65,6 +76,11 @@ export default function TopNav() {
     };
 
     const handleCloseDropdown = () => {
+        setActiveDropdown(null);
+    };
+
+    const handleLogout = () => {
+        logout();
         setActiveDropdown(null);
     };
 
@@ -122,13 +138,11 @@ export default function TopNav() {
                                     onMouseLeave={handleMouseLeave}
                                     className="resources"
                                 >
-                                    
-                                        RESOURCES
-                                        <img
-                                            src="../images/arrow_down.svg"
-                                            alt=""
-                                        />
-                                    
+                                    RESOURCES
+                                    <img
+                                        src="../images/arrow_down.svg"
+                                        alt=""
+                                    />
                                 </li>
                                 <li>
                                     <Link to="/about">ABOUT US</Link>
@@ -139,6 +153,16 @@ export default function TopNav() {
                                 <li>
                                     <Link to="/contact">CONTACT US</Link>
                                 </li>
+                                {!isAuthenticated && (
+                                    <div className="auth-buttons">
+                                        <button onClick={() => handleAuthClick("login")}>
+                                            Login
+                                        </button>
+                                        <button onClick={() => handleAuthClick("register")}>
+                                            Register
+                                        </button>
+                                    </div>
+                                )}
                             </ul>
                         </div>
 
@@ -153,12 +177,56 @@ export default function TopNav() {
                                 <div className="save-icon">
                                     <img src="../images/save.svg" alt="Save" />
                                 </div>
+
                                 <div className="whatsapp-icon">
                                     <img
                                         src="../images/whatsapp.png"
                                         alt="WhatsApp"
                                     />
                                 </div>
+                                {isAuthenticated && (
+                                    <div
+                                        className="profile-icon"
+                                        onMouseEnter={() =>
+                                            handleMouseEnter("user")
+                                        }
+                                        onMouseLeave={handleMouseLeave}
+                                    >
+                                        <img
+                                            src="../images/profile.png"
+                                            alt="Profile"
+                                        />
+                                        {activeDropdown === "user" && (
+                                            <div
+                                                className="user-dropdown"
+                                                onMouseEnter={
+                                                    handleDropdownMouseEnter
+                                                }
+                                                onMouseLeave={
+                                                    handleDropdownMouseLeave
+                                                }
+                                            >
+                                                <Link to="/dashboard">
+                                                    Dashboard
+                                                </Link>
+                                                <Link to="/profile">
+                                                    Profile
+                                                </Link>
+                                                {isAdmin && (
+                                                    <Link to="/admin">
+                                                        Admin Panel
+                                                    </Link>
+                                                )}
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="logout-button"
+                                                >
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                                 <div className="hamburger-menu">
                                     <div></div>
                                     <div></div>
@@ -196,6 +264,12 @@ export default function TopNav() {
                         }
                     />
                 </div>
+            )}
+            {showAuthModal && (
+                <AuthModal
+                    onClose={() => setShowAuthModal(false)}
+                    initialMode={authMode}
+                />
             )}
         </>
     );
