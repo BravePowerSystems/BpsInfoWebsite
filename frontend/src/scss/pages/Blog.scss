@@ -16,11 +16,19 @@
         .blog-text {
             font-size: clamp(1.5rem, 4vw, 5rem);
             padding-top: 2rem;
+            background: linear-gradient(90deg, #fff0f3, #678df6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .blog-discover {
             font-size: clamp(1.5rem, 3vw, 3rem);
             margin: 1.5rem 0 0.5rem;
+            background: linear-gradient(90deg, #fff0f3, #678df6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .blog-quote {
@@ -74,6 +82,10 @@
                 .blog-title {
                     font-size: clamp(1.25rem, 2vw, 1.75rem);
                     margin: 0;
+                    background: linear-gradient(90deg, #fff0f3, #678df6);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
                 }
 
                 .blog-description {
