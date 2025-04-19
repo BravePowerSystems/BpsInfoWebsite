@@ -8,7 +8,7 @@ export default function BottomNav() {
             className="bottom-nav"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
         >
             <div className="upper">
                 <div className="about-us">
@@ -25,10 +25,10 @@ export default function BottomNav() {
                 <div className="products">
                     <ul>
                         <span className="products-span">
-                            <Link to="/products">PRODUCTS</Link>
+                            <Link to="/Products">PRODUCTS</Link>
                         </span>
                         <li>
-                            <Link to="/products/Transmitters">
+                            <Link to="/Products/Transmitters">
                                 Transmitters
                             </Link>
                         </li>
