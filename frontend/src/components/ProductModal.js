@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../scss/components/ProductModal.scss";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 const ProductModal = ({ productName, onClose }) => {
     const [formData, setFormData] = useState({
         firstName: "",
@@ -54,12 +54,9 @@ const ProductModal = ({ productName, onClose }) => {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: -100 }}
-            animate={{
-                opacity: 1,
-                y: 0,
-                transition: { duration: 1, type: "spring" },
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="modal-overlay"
             role="dialog"
             aria-modal="true"
@@ -83,7 +80,7 @@ const ProductModal = ({ productName, onClose }) => {
                     Reach out and we will get in touch within 24 hours
                 </p>
 
-                <form onSubmit={handleSubmit} className="enquiry-form">
+                <form onSubmit={handleSubmit} className="enquiry-form" autoComplete="off">
                     <div className="form-row">
                         <div className="form-group">
                             <label htmlFor="firstName">First Name</label>
@@ -95,6 +92,7 @@ const ProductModal = ({ productName, onClose }) => {
                                 onChange={handleChange}
                                 required
                                 aria-required="true"
+                                autoComplete="off"
                             />
                         </div>
 
@@ -108,6 +106,7 @@ const ProductModal = ({ productName, onClose }) => {
                                 onChange={handleChange}
                                 required
                                 aria-required="true"
+                                autoComplete="off"
                             />
                         </div>
                     </div>
@@ -122,6 +121,7 @@ const ProductModal = ({ productName, onClose }) => {
                             onChange={handleChange}
                             required
                             aria-required="true"
+                            autoComplete="off"
                         />
                     </div>
 

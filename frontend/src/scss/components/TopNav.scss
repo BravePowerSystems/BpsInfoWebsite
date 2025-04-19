@@ -5,7 +5,7 @@
 .top-nav {
     width: 100%;
     color: $primary-text-color;
-    background-color: $background-color;
+    background: transparent;
     .container {
         display: grid;
         grid-template-columns: 1fr auto; 
@@ -75,6 +75,67 @@
                 @include flex-center;
                 gap: 0.2rem;
 
+                .profile-icon {
+                    padding: 0;
+                    position: relative;
+                    top: -2.5px;
+                    cursor: pointer;
+                    margin-left: 4px;
+                    img {
+                        margin: 0;
+                        height: 1.5rem;
+                        width: auto; // Fixed height for all icons
+                        transition: transform 0.3s ease;
+                        filter: invert(1); // Make the icon white
+
+                        &:hover {
+                            transform: scale(1);
+                        }
+                    }
+
+                    .user-dropdown {
+                        position: absolute;
+                        top: 120%;
+                        right: 0;
+                        background: rgba(12, 24, 40, 0.95);
+                        backdrop-filter: blur(10px);
+                        border-radius: 8px;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+                        min-width: 200px;
+                        z-index: 1000;
+                        
+                        a, .logout-button {
+                            display: block;
+                            padding: 0.75rem 1rem;
+                            color: $primary-text-color;
+                            text-decoration: none;
+                            transition: all 0.3s ease;
+                            width: 100%;
+                            text-align: left;
+                            border: none;
+                            background: none;
+                            font-size: 0.9rem;
+                            cursor: pointer;
+
+                            &:hover {
+                                background: rgba(103, 141, 246, 0.1);
+                                color: #678df6;
+                            }
+                        }
+
+                        .logout-button {
+                            color: #ff4d4d;
+                            border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+                            &:hover {
+                                background: rgba(255, 77, 77, 0.1);
+                                color: #ff6b6b;
+                            }
+                        }
+                    }
+                }
+
                 .search-icon,
                 .save-icon {
                     cursor: pointer;
@@ -83,6 +144,7 @@
                     margin-right: 4px;
 
                     img {
+                        filter: invert(1);
                         height: 1.2rem;
                         width: auto;
 
@@ -112,7 +174,6 @@
                     cursor: pointer;
                     max-height: 24px;
                     padding-bottom: 2px;
-                    filter: invert(1);
 
                     div {
                         width: 1.25rem; 
@@ -173,6 +234,20 @@
                     height: 100%;
                     width: 100%;
 
+
+                    .resources:hover {
+                        color:red;
+                        img {
+                                transform: rotate(180deg);
+                                transition: transform 0.25s ease-out;
+                            }
+                        
+                            &::after {
+                                transform: scaleX(1);
+                                transform-origin: bottom left;
+                            }
+                    }
+
                     li {
                         font-size: 14px;
                         font-weight: 500;
@@ -231,7 +306,6 @@
                         img {
                             position: relative;
                             top: 2px;
-                            filter: invert(1);
                         }
 
                     }
@@ -287,6 +361,36 @@
 
                     }
                 }
+            }
+        }
+    }
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    button {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: $primary-text-color;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        &:first-child {
+            background: linear-gradient(90deg, #678df6, #8f94fb);
+            border: none;
+
+            &:hover {
+                box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
             }
         }
     }

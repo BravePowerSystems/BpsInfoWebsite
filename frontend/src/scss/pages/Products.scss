@@ -11,7 +11,10 @@
         font-size: 2.5rem;
         font-weight: 600;
         width: fit-content;
-        color: white;
+        background: linear-gradient(90deg, #fff0f3, #678df6);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .category-products{

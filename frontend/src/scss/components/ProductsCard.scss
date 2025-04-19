@@ -50,10 +50,12 @@
                 font-size: 1rem;
                 text-align: center;
                 padding: 0%;
-                background-color: black;
+                background-color: rgb(32, 7, 100);
                 color: $primary-text-color;
                 &:hover {
-                    filter: brightness(0.8);
+                    filter: brightness(1.2);
+                    background-color: rgb(103, 51, 248);
+                    
                 }
             }
         }
@@ -68,7 +70,7 @@
         width: 32px;
         height: 32px;
         border-radius: 32px;
-        background: linear-gradient(135deg, #01f9f5, #1a55f7);
+        background: linear-gradient(135deg, #0c1828 0%, #000000 50%, #0c1828 100%);
         transform: scale(0);
         transform-origin: 50% 50%;
         transition: transform 0.45s ease-out;

@@ -4,13 +4,14 @@
 .product-page {
     .product {
         margin: 2rem 0;
-        background-color: white;
+        background: transparent;
+        backdrop-filter: blur(10px); // Added for better readability
         .product-info {
             .breadcrumbs {
-                color: black;
+                color: $primary-text-color; // Changed from black to white
 
                 a {
-                    color: black;
+                    color: $primary-text-color; // Changed from black to white
 
                     &:hover {
                         color: red;
@@ -27,17 +28,33 @@
             .product-name {
                 width: 100%;
                 font-size: 1.4rem;
+                background: linear-gradient(90deg, #fff0f3, #678df6);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
 
             .product-image {
                 width: 12rem;
                 height: 12rem;
                 margin: 0 auto;
+                // filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.25));
             }
-
+            .product-description-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0 1rem;
+                h4 {
+                    font-size: 1.2rem;
+                    color: $primary-text-color; // Added to ensure visibility
+                }
+            
             .product-description {
                 font-size: 1rem;
+                color: $primary-text-color; // Added to ensure visibility
             }
+        }
 
             .buttons {
                 display: flex;
@@ -46,18 +63,52 @@
                 gap: 1rem;
 
                 button {
-                    background-color: black;
-                    color: white;
+                    color: $primary-text-color;
                     width: fit-content;
-                    padding: 0.5rem;
-                    border-radius: 10px;
+                    padding: 0.8rem 1.2rem;
+                    border-radius: 8px;
                     font-size: 12px;
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    transition: all 0.3s ease;
+
+                    &.wishlist {
+                        background: rgba(255, 255, 255, 0.05);
+                        backdrop-filter: blur(5px);
+
+                        &:hover {
+                            background: rgba(255, 255, 255, 0.1);
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+                        }
+                    }
+
+                    &.enquire {
+                        background: linear-gradient(90deg, #678df6, #8f94fb);
+                        border: none;
+
+                        &:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
+                        }
+                    }
+
+                    &.share {
+                        background: rgba(103, 141, 246, 0.1);
+                        backdrop-filter: blur(5px);
+
+                        &:hover {
+                            background: rgba(103, 141, 246, 0.2);
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 15px rgba(103, 141, 246, 0.1);
+                        }
+                    }
                 }
             }
         }
 
         .product-features {
             margin-top: 1rem;
+           
 
             .specs {
                 display: flex;
@@ -74,8 +125,11 @@
         .related-products-title {
             width: 100%;
             text-align: center;
-            color: $primary-text-color;
             font-size: 2.5rem;
+            background: linear-gradient(90deg, #fff0f3, #678df6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     }
 
@@ -91,16 +145,15 @@
             height: 35rem;
             display: flex;
             justify-content: space-between;
-            border-radius: 32px;
+            border-radius: 28px 32px 32px 28px;
 
             .product-features {
                 margin: 0;
                 height: 100%;
                 width: 35%;
-                background-color: #1f2937;
                 overflow-y: scroll;
                 scrollbar-width: none;
-                border-radius: 0 32px 32px 0;
+                border-radius: 0 28px 28px 0;
 
             }
         }
@@ -134,17 +187,10 @@
                 }
 
                 .buttons {
-
                     button {
                         font-size: 1rem;
-                        padding: 0.7rem;
-
-                        &:hover {
-                            background-color: rgb(19, 205, 78);
-                            transition: all 0.3s ease-in-out;
-                        }
+                        padding: 0.8rem 1.5rem;
                     }
-
                 }
 
             }

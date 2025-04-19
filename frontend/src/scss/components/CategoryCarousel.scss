@@ -4,11 +4,14 @@
 
 .category {
     margin-top: 2rem;
-    h2{
-        margin-bottom: 1rem;
-        color: $primary-text-color;
+    h2 {
         font-size: 2rem;
-        
+        width: fit-content;
+        background: linear-gradient(90deg, #fff0f3, #678df6);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
     }
 
     .embla {

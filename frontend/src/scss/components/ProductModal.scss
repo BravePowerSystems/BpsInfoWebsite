@@ -7,22 +7,40 @@
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 2rem 0;
-    background: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+
     .modal-content {
-        background:rgb(0,0,0,0.6);
-        padding: 2rem;
-        border-radius: 8px;
-        color: $primary-text-color;
         width: 90%;
-        max-height: 80vh;
+        max-width: 800px;
+        background: rgba(12, 24, 40, 0.6);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 2.5rem;
+        color: $primary-text-color;
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         overflow-y: scroll;
         scrollbar-width: none;
-        position: relative;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
 
         &:focus {
             outline: none;
@@ -36,20 +54,40 @@
             border: none;
             cursor: pointer;
             padding: 0.5rem;
-            filter: invert(1);
+            
             img {
                 width: 1.5rem;
                 height: 1.5rem;
+                filter: invert(1);
+                transition: transform 0.3s ease;
             }
+
+            &:hover img {
+                transform: rotate(90deg);
+            }
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff0f3, #678df6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            font-size: 1rem;
         }
 
         .enquiry-form {
             display: flex;
             flex-direction: column;
-            align-items: stretch; // Changed from center
             gap: 1.5rem;
             width: 100%;
-            color: $primary-text-color;
+
             .form-row {
                 display: flex;
                 flex-wrap: wrap;
@@ -57,52 +95,75 @@
                 width: 100%;
 
                 .form-group {
-                    flex: 1 1 calc(50% - 1rem); // Dynamic width with gap consideration
-                    min-width: 200px; // Minimum width before wrapping
+                    flex: 1 1 calc(50% - 1rem);
+                    min-width: 200px;
                     display: flex;
                     flex-direction: column;
                     gap: 0.5rem;
 
                     label {
-                        font-weight: 500;
+                        color: rgba(255, 255, 255, 0.8);
+                        font-size: 0.9rem;
                     }
 
                     input,
                     select {
-                        padding: 0.75rem;
-                        border-radius: 8px;
                         width: 100%;
-                        border: 1px solid #ddd;
-                        transition: border-color 0.3s;
+                        padding: 0.8rem;
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        border-radius: 4px;
+                        color: $primary-text-color;
+                        transition: all 0.3s ease;
 
                         &:focus {
-                            border-color: purple;
                             outline: none;
+                            border-color: #678df6;
+                            background: rgba(255, 255, 255, 0.1);
+                            box-shadow: 0 0 10px rgba(103, 141, 246, 0.2);
+                        }
+
+                        option {
+                            background-color: #1a2635; // Darker background
+                            color: white; // White text
+                            padding: 0.8rem; // Add some padding
                         }
                     }
                 }
             }
 
             .form-group-single {
-                flex: 1 1 100%; // Takes full width
+                width: 100%;
                 display: flex;
                 flex-direction: column;
                 gap: 0.5rem;
 
                 label {
-                    font-weight: 500;
+                    color: rgba(255, 255, 255, 0.8);
+                    font-size: 0.9rem;
                 }
 
                 input,
                 select {
-                    padding: 0.75rem;
-                    border-radius: 8px;
-                    border: 1px solid #ddd;
                     width: 100%;
+                    padding: 0.8rem;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 4px;
+                    color: $primary-text-color;
+                    transition: all 0.3s ease;
 
                     &:focus {
-                        border-color: purple;
                         outline: none;
+                        border-color: #678df6;
+                        background: rgba(255, 255, 255, 0.1);
+                        box-shadow: 0 0 10px rgba(103, 141, 246, 0.2);
+                    }
+
+                    option {
+                        background-color: #1a2635;
+                        color: $primary-text-color;
+                        padding: 0.8rem;
                     }
                 }
             }
@@ -112,17 +173,23 @@
                 align-self: flex-end;
 
                 button {
-                    background-color: rgb(34, 113, 240);
-                    color: white;
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 4px;
+                    padding: 1rem 2rem;
+                    background: linear-gradient(90deg, #678df6, #8f94fb);
                     border: none;
+                    border-radius: 4px;
+                    color: $primary-text-color;
+                    font-weight: 600;
                     cursor: pointer;
-                    transition: background-color 0.3s;
-                    font-weight: 500;
+                    transition: all 0.3s ease;
 
                     &:hover {
-                        background-color: green;
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
+                    }
+
+                    &:disabled {
+                        opacity: 0.7;
+                        cursor: not-allowed;
                     }
                 }
             }
@@ -134,15 +201,15 @@
     .modal-overlay {
         .modal-content {
             width: 80%;
-            padding: 2.5rem;
+            padding: 3rem;
 
             .enquiry-form {
                 .form-row {
                     gap: 1.5rem;
 
                     .form-group {
-                        flex: 1 1 calc(50% - 1.5rem); // Adjust for larger gap
-                        min-width: 250px; // Slightly larger min-width on tablets
+                        flex: 1 1 calc(50% - 1.5rem);
+                        min-width: 250px;
                     }
                 }
             }
@@ -154,20 +221,16 @@
     .modal-overlay {
         .modal-content {
             width: 70%;
-            max-width: 900px;
+            max-width: 1000px;
 
             .enquiry-form {
                 .form-row {
                     gap: 2rem;
 
                     .form-group {
-                        flex: 1 1 calc(50% - 2rem); // Adjust for larger gap
-                        min-width: 300px; // Larger min-width on desktop
+                        flex: 1 1 calc(50% - 2rem);
+                        min-width: 300px;
                     }
-                }
-
-                .form-group-single {
-                    max-width: 100%;
                 }
             }
         }

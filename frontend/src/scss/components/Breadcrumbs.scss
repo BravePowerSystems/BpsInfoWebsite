@@ -6,15 +6,27 @@
      align-items: center;
      gap: 2px;
      width: fit-content;
-     color: $primary-text-color;
+     background: linear-gradient(90deg, #fff0f3, #678df6);
+     -webkit-background-clip: text;
+     background-clip: text;
+     -webkit-text-fill-color: transparent;
 
      a {
          text-decoration: none;
          font-size: 1.2rem;
-         color:$primary-text-color;
-        margin-right:5px;
+         background: linear-gradient(90deg, #fff0f3, #678df6);
+         -webkit-background-clip: text;
+         background-clip: text;
+         -webkit-text-fill-color: transparent;
+         margin-right: 5px;
+         
          &:hover {
-             color: red;
+             background: linear-gradient(90deg, #ff0000, #ff5555);
+             -webkit-background-clip: text;
+             background-clip: text;
+             -webkit-text-fill-color: transparent;
          }
      }
  }
+
+

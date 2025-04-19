@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
+import { useModal } from "../context/ModalContext";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { useParams } from "react-router-dom";
 import ProductsData from "./ProductsData";
 import "../scss/pages/Product.scss";
 import Accordion from "../components/Accordion";
-import ProductModal from "../components/ProductModal";
 import {motion} from "motion/react";
 import CategoryCarousel from "../components/CategoryCarousel.js";
+import { fadeInUpVariants } from "../components/HeroSection.js";
+const motionConfig = {
+    product: {
+        variants: fadeInUpVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: { duration: 0.8, delay: 0.2 },
+    },
+};
 const featureItems = [
     {
         title: "Gas Flow pulse transmitter",
@@ -29,7 +38,7 @@ const featureItems = [
 ];
 
 export default function Product() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { openProductModal } = useModal();
     
     const { categoryName, productName} = useParams();
     const CategoryItem = ProductsData.find(
@@ -54,11 +63,7 @@ export default function Product() {
     }
 
     const handleEnquireClick = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleModalClose = () => {
-        setIsModalOpen(false);
+        openProductModal(cleanName);
     };
 
 
@@ -81,6 +86,7 @@ export default function Product() {
             <motion.div
                 
                 className="product"
+                {...motionConfig.product}
             >
                 <section className="product-info">
                     <Breadcrumbs />
@@ -110,14 +116,8 @@ export default function Product() {
                 <section className="product-features">
                     <Accordion items={featureItems} />
                 </section>
-                {isModalOpen && (
-                    <ProductModal
-                        productName={cleanName}
-                        onClose={handleModalClose}
-                    />
-                )}
             </motion.div>
-            <motion.div className="related-products">
+            <div className="related-products">
                 <h2 className="related-products-title">
                     Related Products
                 </h2>
@@ -126,7 +126,7 @@ export default function Product() {
                 categoryName={categoryName}
                 products={products}
             />
-            </motion.div>
+            </div>
 
         </div>
         
