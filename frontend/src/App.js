@@ -10,11 +10,9 @@ import Wishlist from "./Pages/Wishlist";
 import CategoryPage from "./Pages/CategoryPage";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import "./scss/main.scss";
-import Login from "./Pages/Login";
-import Register from "./Pages/Register";
 import UserDashboard from "./Pages/UserDashboard";
 import AdminDashboard from "./Pages/AdminDashboard";
+import "./scss/main.scss";
 
 function App() {
     return (
