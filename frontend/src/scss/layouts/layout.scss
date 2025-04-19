@@ -4,10 +4,17 @@
 
 .layout {
     height: 100vh;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-width: none;
-    background: linear-gradient(135deg, #0c1828 0%, #000000 50%, #0c1828 100%);
+    -ms-overflow-style: none;
+    scroll-behavior: "smooth";
+    background: linear-gradient(135deg, #0c1828 0%, #000000 50%, #0c1828 10%);
     padding: 0.5rem 1rem;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 @include tablet {

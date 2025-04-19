@@ -56,22 +56,26 @@
                 outline: none;
 
                 &.primary {
-                    background: linear-gradient(90deg, #0f2e3e, #060f2e);
+                    background: linear-gradient(90deg, #678df6, #8f94fb);
                     color: white;
+                    border: none;
 
                     &:hover {
                         transform: translateY(-2px);
-                        box-shadow: 0 6px 20px rgba(20, 47, 255, 0.6);
+                        box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
                     }
                 }
 
                 &.secondary {
-                    background: transparent;
+                    background: rgba(255, 255, 255, 0.05);
+                    backdrop-filter: blur(5px);
                     color: white;
-                    border: 2px solid rgb(13, 33, 109);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
 
                     &:hover {
-                        background: rgba(7, 57, 76, 0.5);
+                        background: rgba(255, 255, 255, 0.1);
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
                     }
                 }
             }
@@ -81,7 +85,6 @@
 
 @include tablet {
     .hero-section {
-
         .hero-content {
             .hero-logo {
                 font-size: 4rem;
@@ -105,7 +108,6 @@
 
 @include desktop {
     .hero-section {
-
         .hero-content {
             .hero-logo {
                 font-size: 5rem;

@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout/Layout";
 import Products from "./Pages/Products";
 import Home from "./Pages/Home";
@@ -6,36 +7,71 @@ import Blog from "./Pages/Blog";
 import CaseStudy from "./Pages/CaseStudy";
 import Product from "./Pages/Product";
 import Wishlist from "./Pages/Wishlist";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./scss/main.scss"; //importing the main.scss file to apply the styles to the app.js file.
 import CategoryPage from "./Pages/CategoryPage";
+import { AuthProvider } from "./context/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import "./scss/main.scss";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
+import UserDashboard from "./Pages/UserDashboard";
+import AdminDashboard from "./Pages/AdminDashboard";
 
 function App() {
     return (
-        <Router>
-            <Layout>
-                <div className="App">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/Products" element={<Products />} />
-                        <Route
-                            path="/Products/:categoryName"
-                            element={<CategoryPage />}
-                        />
-                        <Route
-                            path="/Products/:categoryName/:productName"
-                            element={<Product />}
-                        />
-                        <Route path="/Blog" element={<Blog />} />
-                        <Route
-                            path="/case-studies"
-                            element={<CaseStudy />}
-                        />
-                        <Route path="/Wishlist" element={<Wishlist />} />
-                    </Routes>
-                </div>
-            </Layout>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <Layout>
+                    <div className="App">
+                        <Routes>
+                            {/* Public Routes */}
+                            <Route path="/" element={<Home />} />
+                            <Route path="/Products" element={<Products />} />
+                            <Route
+                                path="/Products/:categoryName"
+                                element={<CategoryPage />}
+                            />
+                            <Route
+                                path="/Products/:categoryName/:productName"
+                                element={<Product />}
+                            />
+                            <Route path="/Blog" element={<Blog />} />
+                            <Route path="/case-studies" element={<CaseStudy />} />
+
+                            {/* Protected Routes (Requires Authentication) */}
+                            <Route
+                                path="/wishlist"
+                                element={
+                                    <ProtectedRoute>
+                                        <Wishlist />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/dashboard"
+                                element={
+                                    <ProtectedRoute>
+                                        <UserDashboard />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            {/* Admin Routes */}
+                            <Route
+                                path="/admin/*"
+                                element={
+                                    <ProtectedRoute requireAdmin>
+                                        <AdminDashboard />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            {/* 404 Route */}
+                            <Route path="*" element={<div>Page not found</div>} />
+                        </Routes>
+                    </div>
+                </Layout>
+            </Router>
+        </AuthProvider>
     );
 }
 
