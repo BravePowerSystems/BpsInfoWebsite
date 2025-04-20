@@ -3,8 +3,16 @@ import { useAuth } from '../context/AuthContext';
 import '../scss/pages/Dashboard.scss';
 
 function AdminDashboard() {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const [activeTab, setActiveTab] = useState('overview');
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!user) {
+        return <div>Please log in to access the admin dashboard</div>;
+    }
 
     const mockData = {
         totalUsers: 150,
