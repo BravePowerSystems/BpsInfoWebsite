@@ -25,7 +25,9 @@ const LayoutContent = ({ children }) => {
         <div className="layout" ref={layoutRef}>
             <ColorCursor />
             <TopNav />
-            {children}
+            <div className="main-content">
+                {children}
+            </div>
             <BottomNav />
             {productModal.isOpen && (
                 <ProductModal 

@@ -3,8 +3,9 @@
 @import "../base/mixins";
 
 .layout {
-    height: 100vh;
-    overflow-y: auto;
+    min-height: 100vh; // Change from height to min-height
+    display: flex; // Add flex display
+    flex-direction: column; // Stack children vertically
     overflow-x: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -14,6 +15,13 @@
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    // Add styles for the main content wrapper
+    .main-content {
+        flex: 1; // Takes up remaining space
+        display: flex;
+        flex-direction: column;
     }
 }
 
