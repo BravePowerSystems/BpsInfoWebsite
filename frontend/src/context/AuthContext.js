@@ -1,9 +1,10 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import { authNotifications } from '../utils/notificationHelper';
 
 // Configure axios defaults
-axios.defaults.withCredentials = true; // Important for cookies
-axios.defaults.baseURL = 'http://localhost:7001'; // Set base URL
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'http://localhost:7001'; // Consistent port
 
 const AuthContext = createContext(null);
 
@@ -54,9 +55,12 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
             
             setUser(userData);
+            authNotifications.loginSuccess(userData.username);
             return userData;
         } catch (err) {
-            setError(err.response?.data?.error || 'Login failed');
+            const errorMessage = err.response?.data?.error || 'Login failed';
+            setError(errorMessage);
+            authNotifications.loginError(errorMessage);
             throw err;
         }
     };
@@ -67,6 +71,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
         delete axios.defaults.headers.common['Authorization'];
         setUser(null);
+        authNotifications.logoutSuccess();
     };
 
     const refreshToken = async () => {
@@ -96,7 +101,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Axios interceptor for token refresh
+    // Axios interceptor for token refresh and session handling
     useEffect(() => {
         const interceptor = axios.interceptors.response.use(
             (response) => response,
@@ -109,6 +114,8 @@ export const AuthProvider = ({ children }) => {
                         await refreshToken();
                         return axios(originalRequest);
                     } catch (refreshError) {
+                        authNotifications.sessionExpired();
+                        logout();
                         return Promise.reject(refreshError);
                     }
                 }
