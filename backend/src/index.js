@@ -4,6 +4,8 @@ import cors from 'cors';
 import dbConnect from './config/dbConnect.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import enquiryRoutes from './routes/enquiryRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 
 // Load environment variables first
 dotenv.config();
@@ -13,7 +15,7 @@ const app = express();
 // CORS configuration
 const corsOptions = {
     origin: ['http://localhost:3000'], // Add your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // Enable credentials (cookies, authorization headers, etc)
     exposedHeaders: ['Content-Range', 'X-Content-Range']
@@ -34,6 +36,8 @@ try {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/enquiries', enquiryRoutes);
+app.use('/api/products', productRoutes);
 
 // Start the server
 app.listen(process.env.PORT, () => {
