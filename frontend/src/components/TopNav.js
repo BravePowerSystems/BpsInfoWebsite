@@ -48,7 +48,7 @@ const ResourcesList = ({ onLinkClick }) => {
 export default function TopNav() {
     const [activeDropdown, setActiveDropdown] = useState(null);
     const timeoutRef = useRef(null);
-    const { user, isAuthenticated, isAdmin, logout } = useAuth();
+    const {  isAuthenticated, isAdmin, logout } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authMode, setAuthMode] = useState('login');
     
@@ -81,7 +81,7 @@ export default function TopNav() {
 
     const handleLogout = () => {
         logout();
-        setActiveDropdown(null);
+        // The notification will be triggered from the AuthContext logout function
     };
 
     return (
@@ -155,10 +155,18 @@ export default function TopNav() {
                                 </li>
                                 {!isAuthenticated && (
                                     <div className="auth-buttons">
-                                        <button onClick={() => handleAuthClick("login")}>
+                                        <button
+                                            onClick={() =>
+                                                handleAuthClick("login")
+                                            }
+                                        >
                                             Login
                                         </button>
-                                        <button onClick={() => handleAuthClick("register")}>
+                                        <button
+                                            onClick={() =>
+                                                handleAuthClick("register")
+                                            }
+                                        >
                                             Register
                                         </button>
                                     </div>
@@ -175,7 +183,12 @@ export default function TopNav() {
                                     />
                                 </div>
                                 <div className="save-icon">
-                                    <img src="../images/save.svg" alt="Save" />
+                                    <Link to="/wishlist">
+                                        <img
+                                            src="../images/save.svg"
+                                            alt="Save"
+                                        />
+                                    </Link>
                                 </div>
 
                                 <div className="whatsapp-icon">

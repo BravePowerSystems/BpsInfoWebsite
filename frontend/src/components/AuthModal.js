@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from "framer-motion";
 import "../scss/components/AuthModal.scss";
 import axios from 'axios';
 
 function AuthModal({ onClose, initialMode = 'login' }) {
+    const navigate = useNavigate();
     const [mode, setMode] = useState(initialMode); // 'login' or 'register'
     const [formData, setFormData] = useState({
         username: '',
@@ -17,16 +19,25 @@ function AuthModal({ onClose, initialMode = 'login' }) {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const { login } = useAuth();
 
+    const handleClose = () => {
+        if (onClose) {
+            onClose();
+        } else {
+            // If no onClose prop is provided, navigate to home or return path
+            navigate( '/', { replace: true });
+        }
+    };
+
     // Handle Escape key press
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === "Escape") {
-                onClose();
+                handleClose();
             }
         };
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [onClose]);
+    }, []);
 
     const handleChange = (e) => {
         setFormData({
@@ -41,7 +52,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('/api/auth/forgot-password', 
+            await axios.post('/api/auth/forgot-password', 
                 { email: formData.email },
                 {
                     headers: {
@@ -50,9 +61,10 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                 }
             );
 
-            setError('Password reset link has been sent to your email');
+            setShowForgotPassword(false);
         } catch (err) {
-            setError(err.response?.data?.error || 'Password reset request failed');
+            const errorMessage = err.response?.data?.error || 'Password reset request failed';
+            setError(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -81,13 +93,15 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                         },
                     }
                 );
+                
             }
             
             // Login after successful registration or direct login
             await login(formData.username, formData.password);
-            onClose();
+            handleClose();
         } catch (err) {
-            setError(err.response?.data?.error || 'Authentication failed');
+            const errorMessage = err.response?.data?.error || 'Authentication failed';
+            setError(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -105,7 +119,7 @@ function AuthModal({ onClose, initialMode = 'login' }) {
                     animate={{ scale: 1, y: 0 }}
                     exit={{ scale: 0.9, y: 20 }}
                 >
-                    <button className="modal-close" onClick={onClose}>
+                    <button className="modal-close" onClick={handleClose}>
                         <img src="/images/close.png" alt="Close" />
                     </button>
                     
@@ -146,18 +160,26 @@ function AuthModal({ onClose, initialMode = 'login' }) {
     }
 
     return (
-        <motion.div className="auth-modal-overlay"
+        <motion.div 
+            className="auth-modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
         >
-            <motion.div className="auth-modal-content"
+            <motion.div 
+                className="auth-modal-content"
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
+                transition={{ duration: 0.3 }}
                 onClick={e => e.stopPropagation()}
             >
-                <button className="modal-close" onClick={onClose}>
+                <button 
+                    className="modal-close" 
+                    onClick={handleClose}
+                    aria-label="Close modal"
+                >
                     <img src="/images/close.png" alt="Close" />
                 </button>
                 

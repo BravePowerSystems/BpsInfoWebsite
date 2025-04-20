@@ -1,4 +1,4 @@
-/*************  ✨ Codeium Command 🌟  *************/
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
@@ -60,11 +60,11 @@ export default function BottomNav() {
                 </div>
                 <div className="contact-us">
                     <span className="contact-us-span">CONTACT US</span>
-                    <p class="office">🏬 Brave Power Systems</p>
-                    <p class="city">📍Bengaluru</p>
-                    <p class="verifier">✅ India MT Verified Supplier</p>
-                    <p class="gst">GST: 29BLFPD4482G1Z1</p>
-                    <p class="telephone">Call us ☎ +917942701967 </p>
+                    <p className="office">🏬 Brave Power Systems</p>
+                    <p className="city">📍Bengaluru</p>
+                    <p className="verifier">✅ India MT Verified Supplier</p>
+                    <p className="gst">GST: 29BLFPD4482G1Z1</p>
+                    <p className="telephone">Call us ☎ +917942701967 </p>
                 </div>
             </div>
             <div className="breaker"></div>
