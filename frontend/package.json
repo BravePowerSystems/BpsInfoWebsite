@@ -14,7 +14,8 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^6.29.0",
     "react-scripts": "5.0.1",
-    "sass": "^1.83.4"
+    "sass": "^1.83.4",
+    "simple-notify": "^1.0.6"
   },
   "scripts": {
     "start": "react-scripts start",

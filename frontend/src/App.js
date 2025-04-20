@@ -14,10 +14,18 @@ import UserDashboard from "./Pages/UserDashboard";
 import AdminDashboard from "./Pages/AdminDashboard";
 import "./scss/main.scss";
 
+// Add future flags configuration
+const router = {
+    future: {
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+    }
+};
+
 function App() {
     return (
         <AuthProvider>
-            <Router>
+            <Router future={router}>
                 <Layout>
                     <div className="App">
                         <Routes>

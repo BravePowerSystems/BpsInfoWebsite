@@ -1,0 +1,9 @@
+.sn-notifications-container {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.sn-notification {
+    pointer-events: auto;
+}
