@@ -39,7 +39,7 @@ const products = [
                 url: "/downloads/GFT21_manual.pdf"
             }
         ],
-        imageUrl: "/images/transmitters/gft21.jpg",
+        imageUrl: "/transmitters/gft21.jpg",
     },
     {
         title: "Gas Flow Pulse Transmitter",
@@ -76,7 +76,7 @@ const products = [
                 url: "/downloads/GFT24_manual.pdf"
             }
         ],
-        imageUrl: "/images/transmitters/gft24.jpg"
+        imageUrl: "/transmitters/gft24.jpg"
     },
     {
         title: "Water Flow Transmitter",
@@ -113,7 +113,7 @@ const products = [
                 url: "/downloads/water_flow_manual.pdf"
             }
         ],
-        imageUrl: "/images/transmitters/water_flow.jpg"
+        imageUrl: "/transmitters/water_flow.jpg"
     },
     {
         title: "CO2 Transmitter",
@@ -150,7 +150,7 @@ const products = [
                 url: "/downloads/CO224_manual.pdf"
             }
         ],
-        imageUrl: "/images/transmitters/co2.jpg"
+        imageUrl: "/transmitters/co2.jpg"
     },
     {
         title: "Water pH Transmitter",
@@ -187,7 +187,7 @@ const products = [
                 url: "/downloads/WPH24_manual.pdf"
             }
         ],
-        imageUrl: "/images/transmitters/ph.jpg"
+        imageUrl: "/transmitters/ph.jpg"
     },
     {
         title: "IR HVAC Air Conditioner Transmitter",
@@ -223,7 +223,7 @@ const products = [
                 url: "/downloads/IRAC24_manual.pdf"
             }
         ],
-        imageUrl: "/images/transmitters/hvac.jpg"
+        imageUrl: "/transmitters/hvac.jpg"
     },
     {
         title: "Humidity & Temperature Transmitter",
@@ -262,7 +262,7 @@ const products = [
                 url: "/downloads/HT24_manual.pdf"
             }
         ],
-        imageUrl: "/images/controllers/humidity_temp.jpg"
+        imageUrl: "/controllers/humidity_temp.jpg"
     },
     {
         title: "Humidity Controller",
@@ -300,7 +300,7 @@ const products = [
                 url: "/downloads/HMC24_manual.pdf"
             }
         ],
-        imageUrl: "/images/controllers/humidity.jpg"
+        imageUrl: "/controllers/humidity.jpg"
     },
     {
         title: "Temperature Controller",
@@ -338,7 +338,7 @@ const products = [
                 url: "/downloads/HTC24_manual.pdf"
             }
         ],
-        imageUrl: "/images/controllers/temperature.jpg"
+        imageUrl: "/controllers/temperature.jpg"
     },
     {
         title: "Water Level Controller",
@@ -376,7 +376,7 @@ const products = [
                 url: "/downloads/WLC24_manual.pdf"
             }
         ],
-        imageUrl: "/images/controllers/water_level.jpg"
+        imageUrl: "/controllers/water_level.jpg"
     },
     {
         title: "Hot Water Level Controller",
@@ -414,7 +414,7 @@ const products = [
                 url: "/downloads/HWC24_manual.pdf"
             }
         ],
-        imageUrl: "/images/controllers/hot_water.jpg"
+        imageUrl: "/controllers/hot_water.jpg"
     },
     {
         title: "RTD PT100 Modbus Module MA24",
@@ -450,7 +450,7 @@ const products = [
                 url: "/downloads/MA24_manual.pdf"
             }
         ],
-        imageUrl: "/images/iot_plc/rtd_pt100.jpg"
+        imageUrl: "/iot_plc/rtd_pt100.jpg"
     }
 ];
 

@@ -18,7 +18,6 @@ const motionConfig = {
     },
 };
 
-
 export default function Product() {
     const { openProductModal } = useModal();
     const { categoryName, productName } = useParams();
@@ -26,16 +25,11 @@ export default function Product() {
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    useEffect(() => {
-        loadProduct();
-    }, [categoryName, productName]);
-
     const loadProduct = async () => {
         try {
             // Load specific product
             const response = await productService.getProductByDetails(
-                categoryName, 
+                categoryName,
                 productName
             );
             const productData = response.data;
@@ -51,19 +45,25 @@ export default function Product() {
                 setRelatedProducts(Object.values(categoryObj)[0]);
             }
         } catch (err) {
-            setError('Failed to load product');
+            setError("Failed to load product");
             console.error(err);
         } finally {
             setLoading(false);
         }
     };
 
+    useEffect(() => {
+        loadProduct();
+    }, [categoryName, productName]);
+
+    console.log(categoryName, productName);
+
     // Generate accordion items based on product data
     const generateFeatureItems = (product) => {
         return [
             {
                 title: "Gas Flow pulse transmitter",
-                content: product.description
+                content: product.description,
             },
             {
                 title: "Specifications",
@@ -76,7 +76,7 @@ export default function Product() {
                             </div>
                         ))}
                     </div>
-                )
+                ),
             },
             {
                 title: "Applications",
@@ -86,14 +86,14 @@ export default function Product() {
                             <li key={index}>{app}</li>
                         ))}
                     </ul>
-                )
+                ),
             },
             {
                 title: "Download",
                 content: (
                     <div className="downloads-list">
                         {product.downloads.map((download, index) => (
-                            <a 
+                            <a
                                 key={index}
                                 href={download.url}
                                 className="download-item"
@@ -104,8 +104,8 @@ export default function Product() {
                             </a>
                         ))}
                     </div>
-                )
-            }
+                ),
+            },
         ];
     };
 
@@ -129,9 +129,11 @@ export default function Product() {
                 <section className="product-info">
                     <Breadcrumbs />
                     <h2 className="product-name">{product.title}</h2>
-                    <div className="model-number">Model: {product.modelNumber}</div>
+                    <div className="model-number">
+                        Model: {product.modelNumber}
+                    </div>
                     <img
-                        src="/images/GasFlowPulseTransmitter.png"
+                        src="/GasFlowPulseTransmitter.png"
                         alt={product.title}
                         className="product-image"
                     />
@@ -142,10 +144,16 @@ export default function Product() {
                         </p>
                     </div>
                     <div className="buttons">
-                        <button className="wishlist" onClick={handleWishlistAdd}>
+                        <button
+                            className="wishlist"
+                            onClick={handleWishlistAdd}
+                        >
                             Add to wishlist
                         </button>
-                        <button onClick={handleEnquireClick} className="enquire">
+                        <button
+                            onClick={handleEnquireClick}
+                            className="enquire"
+                        >
                             Enquire Now
                         </button>
                         <button className="share">Share</button>
@@ -166,4 +174,3 @@ export default function Product() {
         </div>
     );
 }
-

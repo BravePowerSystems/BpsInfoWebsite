@@ -99,7 +99,7 @@ const ProductModal = ({ productName, onClose }) => {
                     onClick={onClose}
                     aria-label="Close modal"
                 >
-                    <img src="../../images/close.png" alt="Close" />
+                    <img src="../../close.png" alt="Close" />
                 </button>
 
                 <h3 id="modal-title">Enquire about {productName}</h3>

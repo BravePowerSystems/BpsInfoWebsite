@@ -24,8 +24,8 @@ const UnauthorizedPage = ({
 
     const getIllustration = () => {
         return type === 'authentication' 
-            ? '/images/authRequired.jpg'
-            : '/images/access-denied.svg';
+            ? '/authRequired.jpg'
+            : '/access-denied.svg';
     };
 
     const getTitle = () => {

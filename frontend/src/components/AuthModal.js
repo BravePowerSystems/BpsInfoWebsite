@@ -109,7 +109,7 @@ function AuthModal({ onClose, initialMode = "login" }) {
                     exit={{ scale: 0.9, y: 20 }}
                 >
                     <button className="modal-close" onClick={handleClose}>
-                        <img src="/images/close.png" alt="Close" />
+                        <img src="/close.png" alt="Close" />
                     </button>
 
                     <h2>Reset Password</h2>
@@ -169,7 +169,7 @@ function AuthModal({ onClose, initialMode = "login" }) {
                     onClick={handleClose}
                     aria-label="Close modal"
                 >
-                    <img src="/images/close.png" alt="Close" />
+                    <img src="/close.png" alt="Close" />
                 </button>
 
                 <h2>{mode === "login" ? "Welcome Back" : "Create Account"}</h2>

@@ -41,7 +41,7 @@ export default function BottomNav() {
                             <Link to="/Products/Controllers">Controllers</Link>
                         </li>
                         <li>
-                            <Link to="/Products/Modules/IOT-and-PLC-Modules">
+                            <Link to="/Products/IOT-and-PLC-Modules">
                                 IOT and PLC Module
                             </Link>
                         </li>
@@ -76,7 +76,7 @@ export default function BottomNav() {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <img src="../images/facebook.png" alt="Facebook" />
+                        <img src="../facebook.png" alt="Facebook" />
                     </Link>
                     <Link
                         to="https://www.whatsapp.com"
@@ -84,7 +84,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                         className="whatsapp-link"
                     >
-                        <img src="../images/whatsapp.png" alt="WhatsApp" />
+                        <img src="../whatsapp.png" alt="WhatsApp" />
                     </Link>
                     <Link
                         to="https://www.youtube.com"
@@ -92,7 +92,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                         className="youtube-link"
                     >
-                        <img src="../images/youtube.png" alt="youtube" />
+                        <img src="../youtube.png" alt="youtube" />
                     </Link>
                 </div>
             </div>

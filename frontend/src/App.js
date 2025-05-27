@@ -1,5 +1,5 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import Layout from "./Layout/Layout";
 import Products from "./Pages/Products";
 import Home from "./Pages/Home";
@@ -14,18 +14,11 @@ import UserDashboard from "./Pages/UserDashboard";
 import AdminDashboard from "./Pages/AdminDashboard";
 import "./scss/main.scss";
 
-// Add future flags configuration
-const router = {
-    future: {
-        v7_startTransition: true,
-        v7_relativeSplatPath: true,
-    },
-};
-
 function App() {
     return (
         <AuthProvider>
-            <Router future={router}>
+            <Router>
+                <ScrollToTop />
                 <Layout>
                     <div className="App">
                         <Routes>

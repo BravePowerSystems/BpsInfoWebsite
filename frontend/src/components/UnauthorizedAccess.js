@@ -38,8 +38,8 @@ const UnauthorizedAccess = ({
 
     const getIllustration = () => {
         return type === 'authentication' 
-            ? '/images/auth-required.svg'  // Add these illustrations to your assets
-            : '/images/access-denied.svg';
+            ? '/auth-required.svg'  // Add these illustrations to your assets
+            : '/access-denied.svg';
     };
 
     const getTitle = () => {

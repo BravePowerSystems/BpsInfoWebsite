@@ -12,7 +12,7 @@ function CategoryCarousel({ categoryName, products }) {
         onNextButtonClick,
     } = usePrevNextButtons(emblaApi);
 
-    const imageUrl ="/images/gasFlowPulseTransmitter.png";
+    const imageUrl ="/gasFlowPulseTransmitter.png";
 
     return (
         <>
@@ -26,7 +26,7 @@ function CategoryCarousel({ categoryName, products }) {
                         disabled={prevBtnDisabled}
                     >
                         <img
-                            src="/images/arrow_left.svg"
+                            src="/arrow_left.svg"
                             alt="prev"
                         />
                     </button>
@@ -55,7 +55,7 @@ function CategoryCarousel({ categoryName, products }) {
                         disabled={nextBtnDisabled}
                     >
                         <img
-                            src="/images/arrow_right.svg"
+                            src="/arrow_right.svg"
                             alt="next"
                         />
                     </button>

@@ -37,13 +37,13 @@ function Blog(props) {
              Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>  
             <a href=" " className="read-more" > Read more</a>
             </div>
-            <img src="../images/1.png" alt="iot" className="blog-image"/> 
+            <img src="../1.png" alt="iot" className="blog-image"/> 
             </div>  
         <div className="blog-breaker"></div>
 
 
         <div className="blog-card">
-        <img src="../images/2.png" alt="iot" className="blog-image"/> 
+        <img src="../2.png" alt="iot" className="blog-image"/> 
             <div className="blog-content">
              <h3 className="blog-title">Lorem ipsum dolor</h3>
              <p className="hr"></p>
@@ -62,12 +62,12 @@ function Blog(props) {
             Lorem ipsum dolor sit amet consectetur adipiscing elit.</p> 
             <a href=" " className="read-more" > Read more</a>
             </div>
-            <img src="../images/3.png" alt="iot" className="blog-image"/> 
+            <img src="../3.png" alt="iot" className="blog-image"/> 
             </div>  
         <div className="blog-breaker"></div>
         
         <div className="blog-card">
-        <img src="../images/4.png" alt="iot" className="blog-image"/> 
+        <img src="../4.png" alt="iot" className="blog-image"/> 
             <div className="blog-content">
              <h3 className="blog-title">Lorem ipsum dolor</h3>
              <p className="hr"></p>

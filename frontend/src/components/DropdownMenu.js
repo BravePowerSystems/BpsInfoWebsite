@@ -1,5 +1,3 @@
-// Rename to DropdownMenu.js
-import React from "react";
 import "../scss/components/DropdownMenu.scss";
 import { motion } from "motion/react";
 

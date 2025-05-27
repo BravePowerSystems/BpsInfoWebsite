@@ -2,19 +2,21 @@
 @import "../base/variables";
 @import "../base/mixins";
 
+// Products Dropdown
 .products-dropdown-container {
-    position: absolute;
+    position: relative;
     z-index: 1000;
-    top: 10%;
-    left: 0;
-    right: 0;
     padding: 0 4rem;
-    
+
     .dropdown-menu {
+        position: absolute;
+        top: 10%;
+        left: 0;
+        right: 0;
         margin-top: 0.5rem;
         display: grid;
-        grid-template-columns: auto auto auto; // Changed to 3 auto columns
-        background: rgb(37, 36, 41, 0.6);
+        grid-template-columns: auto auto auto;
+        background: rgba(37, 36, 41, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
         border-radius: 12px;
@@ -24,7 +26,7 @@
         a {
             text-decoration: none;
             color: $primary-text-color;
-            
+
             &:hover {
                 color: red;
             }
@@ -40,12 +42,11 @@
                 font-size: medium;
                 font-weight: bolder;
                 margin-bottom: 1rem;
-                color: $primary-text-color;
             }
 
             li {
                 margin-bottom: 0.5rem;
-                
+
                 a {
                     font-size: small;
                     font-weight: normal;
@@ -55,20 +56,19 @@
     }
 }
 
+// Resources Dropdown
 .resources-dropdown-container {
-    position: absolute;
+    position: relative;
     z-index: 1000;
-    top: 10%;
-    left: 0;
-    right: 0;
-    
+
     .dropdown-menu {
+        position: absolute;
+        top: 10%;
+        left: 0;
         margin-top: 0.5rem;
-        margin-left: auto;
-        margin-right: auto;
         display: flex;
         flex-direction: column;
-        background: rgb(37, 36, 41, 0.6);
+        background: rgba(37, 36, 41, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
         border-radius: 12px;
@@ -84,11 +84,10 @@
             list-style: none;
 
             li {
-                
                 a {
                     text-decoration: none;
                     color: $primary-text-color;
-                    
+
                     &:hover {
                         color: red;
                     }
@@ -98,11 +97,9 @@
     }
 }
 
-
-
+// Media Queries
 @include desktop {
     .products-dropdown-container {
-
         .dropdown-menu {
             gap: 2rem;
         }
@@ -113,15 +110,14 @@
     .products-dropdown-container {
         .dropdown-menu {
             gap: 4rem;
+
             ul {
                 a {
                     font-size: large;
                 }
 
-                li {
-                    a {
-                        font-size: medium;
-                    }
+                li a {
+                    font-size: medium;
                 }
             }
         }
@@ -129,7 +125,7 @@
 
     .resources-dropdown-container {
         .dropdown-menu {
-            left: 30%;
+            
         }
     }
 }

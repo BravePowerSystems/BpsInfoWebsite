@@ -32,9 +32,9 @@ function CaseStudy() {
                 >
                     <div className="left-images">
                     
-                        <img src="../images/pic1.jpeg" alt="iot" className="image1"/>  
-                        <img src="../images/pic2.jpg" alt="iot" className="image2"/> 
-                        <img src="../images/pic3.jpeg" alt="iot" className="image3"/>
+                        <img src="../pic1.jpeg" alt="iot" className="image1"/>  
+                        <img src="../pic2.jpg" alt="iot" className="image2"/> 
+                        <img src="../pic3.jpeg" alt="iot" className="image3"/>
                   
                     </div>
 
@@ -52,7 +52,7 @@ function CaseStudy() {
                     </div>
 
                     <div className="right-image" >
-                        <img src="../images/pic4.jpg" alt="iot" className="image4"/>
+                        <img src="../pic4.jpg" alt="iot" className="image4"/>
                     </div>
 
                 </motion.div>
@@ -77,9 +77,9 @@ function CaseStudy() {
 
                     <div className="left-images1">
                     
-                        <img src="../images/pic1.jpeg" alt="iot" className="image12"/>  
-                        <img src="../images/pic2.jpg" alt="iot" className="image22"/> 
-                        <img src="../images/pic3.jpeg" alt="iot" className="image32"/>
+                        <img src="../pic1.jpeg" alt="iot" className="image12"/>  
+                        <img src="../pic2.jpg" alt="iot" className="image22"/> 
+                        <img src="../pic3.jpeg" alt="iot" className="image32"/>
                   
                     </div>
 
@@ -90,10 +90,10 @@ function CaseStudy() {
                 >
                     <div className="left-images">
                     
-                        <img src="../images/pic1.jpeg" alt="iot" className="image1"/>  
-                        <img src="../images/pic2.jpg" alt="iot" className="image2"/> 
+                        <img src="../pic1.jpeg" alt="iot" className="image1"/>  
+                        <img src="../pic2.jpg" alt="iot" className="image2"/> 
                     
-                        <img src="../images/pic3.jpeg" alt="iot" className="image3"/>
+                        <img src="../pic3.jpeg" alt="iot" className="image3"/>
                   
                     </div>
 
@@ -111,7 +111,7 @@ function CaseStudy() {
                     </div>
 
                     <div className="right-image" >
-                        <img src="../images/pic4.jpg" alt="iot" className="image4"/>
+                        <img src="../pic4.jpg" alt="iot" className="image4"/>
                     </div>
 
                 </motion.div>
@@ -136,9 +136,9 @@ function CaseStudy() {
 
                     <div className="left-images1">
                     
-                        <img src="../images/pic1.jpeg" alt="iot" className="image12"/>  
-                        <img src="../images/pic2.jpg" alt="iot" className="image22"/> 
-                        <img src="../images/pic3.jpeg" alt="iot" className="image32"/>
+                        <img src="../pic1.jpeg" alt="iot" className="image12"/>  
+                        <img src="../pic2.jpg" alt="iot" className="image22"/> 
+                        <img src="../pic3.jpeg" alt="iot" className="image32"/>
                   
                     </div>
 
