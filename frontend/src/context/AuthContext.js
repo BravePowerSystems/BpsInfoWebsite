@@ -4,7 +4,7 @@ import { authNotifications } from '../utils/notificationHelper';
 
 // Configure axios defaults
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost:7001'; // Consistent port
+axios.defaults.baseURL = "https://bpsinfowebsite-production.up.railway.app/api"; // Consistent port
 
 const AuthContext = createContext(null);
 
