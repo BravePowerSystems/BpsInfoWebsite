@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import '../scss/pages/Dashboard.scss';
+import { Loading } from './Product';
 
 function AdminDashboard() {
     const { user, loading } = useAuth();
     const [activeTab, setActiveTab] = useState('overview');
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading />
     }
 
     if (!user) {
