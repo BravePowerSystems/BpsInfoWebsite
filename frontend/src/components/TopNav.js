@@ -1,61 +1,115 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-
+import Skeleton from "react-loading-skeleton";
 import DropdownMenu from "./DropdownMenu";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
 import { productService } from "../services/productService";
 
-// --- COMPONENTS ---
 const ProductsList = ({ onLinkClick }) => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        // Check localStorage for cached data
+        const cachedData = localStorage.getItem("products");
+        if (cachedData) {
+            setCategories(JSON.parse(cachedData));
+            setLoading(false);
+            return;
+        }
+
         const fetchProducts = async () => {
             try {
                 const { data } = await productService.getAllProducts();
                 setCategories(data);
+                // Cache data in localStorage with a TTL (e.g., 1 hour)
+                localStorage.setItem("products", JSON.stringify(data));
+                localStorage.setItem(
+                    "productsCacheTime",
+                    Date.now().toString()
+                );
             } catch (err) {
                 console.error("Error fetching products:", err);
-                setError("Failed to load products");
+                setError("Failed to load products. Please try again later.");
             } finally {
                 setLoading(false);
             }
         };
+
         fetchProducts();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    // Memoize the cleaned categories to prevent unnecessary re-renders
+    const formattedCategories = useMemo(() => {
+        return categories.map((categoryObj) => {
+            const [categoryName, products] = Object.entries(categoryObj)[0];
+            const cleanedCategory = categoryName
+                .replace(/[^a-zA-Z0-9\s]/g, "") // Remove special characters, keep spaces
+                .trim();
+            const formattedProducts = products.map((product) => ({
+                ...product,
+                cleanedTitle: product.title
+                    .replace(/[^a-zA-Z0-9\s]/g, "") // Remove special characters
+                    .trim(),
+                slug: product.title.replace(/\s+/g, "-").toLowerCase(), // Create URL-friendly slug
+            }));
+            return {
+                categoryName,
+                cleanedCategory,
+                products: formattedProducts,
+            };
+        });
+    }, [categories]);
 
-    return categories.map((categoryObj) => {
-        const [categoryName, products] = Object.entries(categoryObj)[0];
-        const cleanedCategory = categoryName.replace(/[^a-zA-Z0-9]/g, " ");
-
+    if (loading) {
         return (
-            <ul key={categoryName}>
-                <Link to={`/Products/${categoryName}`} onClick={onLinkClick}>
-                    {cleanedCategory}
-                </Link>
-                {products.map((product) => (
-                    <li key={product._id || product.title}>
-                        <Link
-                            to={`/Products/${categoryName}/${product.title.replace(
-                                /\s+/g,
-                                "-"
-                            )}`}
-                            onClick={onLinkClick}
-                        >
-                            {product.title.replace(/[^a-zA-Z0-9]/g, " ")}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
+            <div aria-live="polite">
+                <Skeleton count={5} height={200} />
+            </div>
         );
-    });
+    }
+
+    if (error) {
+        return (
+            <div role="alert" className="error">
+                Error: {error}
+            </div>
+        );
+    }
+
+    return (
+        <>
+            {formattedCategories.map(
+                ({ categoryName, cleanedCategory, products }) => (
+                    <ul key={categoryName} className="category-list">
+                        <Link
+                            to={`/Products/${categoryName}`}
+                            onClick={onLinkClick}
+                            className="category-link"
+                            aria-label={`View all products in ${cleanedCategory}`}
+                        >
+                            {cleanedCategory}
+                        </Link>
+                        {products.map((product) => (
+                            <li key={product._id || product.title}>
+                                <Link
+                                    to={`/Products/${categoryName}/${product.slug}`}
+                                    onClick={onLinkClick}
+                                    className="product-link"
+                                    aria-label={`View ${product.cleanedTitle}`}
+                                >
+                                    {product.cleanedTitle}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                )
+            )}
+        </>
+    );
 };
 
 const ResourcesList = ({ onLinkClick }) => (
@@ -170,17 +224,11 @@ export default function TopNav() {
                         <div className="icons">
                             <div className="icon-container">
                                 <div className="search-icon">
-                                    <img
-                                        src="../../search.svg"
-                                        alt="Search"
-                                    />
+                                    <img src="../../search.svg" alt="Search" />
                                 </div>
                                 <div className="save-icon">
                                     <Link to="/wishlist">
-                                        <img
-                                            src="../../save.svg"
-                                            alt="Save"
-                                        />
+                                        <img src="../../save.svg" alt="Save" />
                                     </Link>
                                 </div>
                                 <div className="whatsapp-icon">
