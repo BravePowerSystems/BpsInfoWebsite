@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:7001/api';
+const API_BASE_URL = "https://bpsinfowebsite-production.up.railway.app/api";
 
 // Public API client (no auth required)
 export const publicClient = axios.create({

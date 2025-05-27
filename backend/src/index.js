@@ -11,17 +11,10 @@ import productRoutes from './routes/productRoutes.js';
 dotenv.config();
 
 const app = express();
-// CORS configuration
-const corsOptions = {
-    origin: ['http://localhost:3000'], // Add your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // Enable credentials (cookies, authorization headers, etc)
-    exposedHeaders: ['Content-Range', 'X-Content-Range'] // exoposed headers are headers that are allowed to be accessed by the frontend. 
-};
+
 
 // Middleware
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());  // this is used to parse the request body as JSON
 
 // Connect to database
