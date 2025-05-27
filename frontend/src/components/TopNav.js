@@ -54,7 +54,7 @@ const ProductsList = ({ onLinkClick }) => {
                 cleanedTitle: product.title
                     .replace(/[^a-zA-Z0-9\s]/g, "") // Remove special characters
                     .trim(),
-                slug: product.title.replace(/\s+/g, "-").toLowerCase(), // Create URL-friendly slug
+                slug: product.title.replace(/\s+/g, "-"), // Create URL-friendly slug
             }));
             return {
                 categoryName,

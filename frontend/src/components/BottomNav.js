@@ -32,11 +32,11 @@ export default function BottomNav() {
                                 Transmitters
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link to="/Products/Power-Monitors">
                                 Power Monitors
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link to="/Products/Controllers">Controllers</Link>
                         </li>
