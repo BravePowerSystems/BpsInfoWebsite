@@ -33,7 +33,9 @@
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
-
+            .model-number {
+                color: $primary-text-color; // Changed from black to white
+            }
             .product-image {
                 width: 12rem;
                 height: 12rem;
@@ -108,14 +110,125 @@
 
         .product-features {
             margin-top: 1rem;
-           
+            background: rgba(12, 24, 40, 0.6);
+            backdrop-filter: blur(10px);
+            
+            // Styled scrollbar
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 3px;
+                
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.3);
+                }
+            }
+
+            // Firefox scrollbar
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 
             .specs {
                 display: flex;
                 flex-direction: row;
                 gap: 1rem;
             }
+        }
 
+        // Update specifications styling to match dashboard
+        .specifications {
+            .spec-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                height: 5rem;
+            
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                .spec-name {
+                    font-size: 0.875rem;
+                    width: 70%;
+                    color: $primary-text-color;
+                }
+
+                .spec-value {
+                    font-size: 0.75rem;
+                    color: rgba(255, 255, 255, 0.8);
+
+                    width: fit-content;
+
+                    text-align: center;
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 4px;
+                    background-color: rgba(255, 255, 255, 0.05);
+                }
+            }
+        }
+
+        .applications-list {
+            list-style: none;
+            padding: 0;
+            
+            li {
+                display: flex;
+                align-items: center;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                font-size: 0.875rem;
+                color: rgba(255, 255, 255, 0.7);
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &::before {
+                    content: "•";
+                    color: #678df6;
+                    font-weight: bold;
+                    margin-right: 0.5rem;
+                }
+            }
+        }
+
+        .downloads-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+
+            .download-item {
+                display: flex;
+                align-items: center;
+                padding: 0.75rem 1rem;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+                color: $primary-text-color;
+                text-decoration: none;
+                font-size: 0.875rem;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    border-color: rgba(103, 141, 246, 0.3);
+                    transform: translateY(-2px);
+                }
+
+                &::before {
+                    content: "↓";
+                    margin-right: 0.5rem;
+                    color: #678df6;
+                }
+            }
         }
 
         
@@ -139,8 +252,6 @@
 
 @include desktop {
     .product-page {
-
-
         .product {
             height: 35rem;
             display: flex;
@@ -150,11 +261,12 @@
             .product-features {
                 margin: 0;
                 height: 100%;
-                width: 35%;
-                overflow-y: scroll;
-                scrollbar-width: none;
+                width: 40%;
+                overflow-y: auto;
                 border-radius: 0 28px 28px 0;
+                padding: 1.5rem;
 
+                
             }
         }
     }
@@ -164,8 +276,7 @@
 @include large_desktop {
     .product-page {
         .product {
-            height: 80vh;
-
+            height: 90vh;
             .breadcrumbs {
                 margin-top: 1rem;
             }
@@ -196,8 +307,21 @@
             }
 
             .product-features {
-                padding: 2rem 1rem;
+                padding: 2rem;
                 width: 40%;
+                .specifications {
+                    .spec-item {
+                        min-height: 5rem;
+
+                        .spec-name {
+                            font-size: 1rem;
+                        }
+
+                        .spec-value {
+                            font-size: 0.875rem;
+                        }
+                    }
+                }
             }
 
         }

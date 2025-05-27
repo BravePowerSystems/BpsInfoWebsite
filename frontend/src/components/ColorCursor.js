@@ -11,8 +11,8 @@ const ColorCursor = () => {
             const { clientX, clientY } = e;
             cursor.style.background = `radial-gradient(
                 600px at ${clientX}px ${clientY}px,
-                rgba(42, 109, 253, 0.15),
-                transparent 80%
+                rgba(42, 109, 253, 0.4),
+                transparent 60%
             )`;
         };
 

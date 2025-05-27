@@ -4,7 +4,7 @@
 
 $accordion: (
     bg: transparent,
-    border: rgba(255, 255, 255, 0.1),
+    border: rgba(255, 255, 255, 0.3),
     text: $primary-text-color,
     icon: rgba(255, 255, 255, 0.6),
     hover-bg: rgba(19, 88, 162, 0.05)
@@ -34,7 +34,7 @@ $accordion: (
         &--open {
             #{$self}__content {
                 max-height: fit-content;
-                padding: 1.25rem 1.5rem;
+                padding: 1rem 1.5rem;
             }
 
             #{$self}__indicator {

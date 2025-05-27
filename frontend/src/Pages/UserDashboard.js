@@ -4,8 +4,18 @@ import { Link } from 'react-router-dom';
 import '../scss/pages/Dashboard.scss';
 
 function UserDashboard() {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const [activeTab, setActiveTab] = useState('overview');
+
+    // Show loading state while auth is being initialized
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    // Redirect or show error if no user (though ProtectedRoute should prevent this)
+    if (!user) {
+        return <div>Please log in to access your dashboard</div>;
+    }
 
     // Mock data - In real app, this would come from API
     const mockData = {

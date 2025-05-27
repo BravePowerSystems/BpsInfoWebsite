@@ -1,4 +1,4 @@
-/*************  ✨ Codeium Command 🌟  *************/
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
@@ -41,7 +41,7 @@ export default function BottomNav() {
                             <Link to="/Products/Controllers">Controllers</Link>
                         </li>
                         <li>
-                            <Link to="/Products/Modules/IOT-and-PLC-Modules">
+                            <Link to="/Products/IOT-and-PLC-Modules">
                                 IOT and PLC Module
                             </Link>
                         </li>
@@ -60,11 +60,11 @@ export default function BottomNav() {
                 </div>
                 <div className="contact-us">
                     <span className="contact-us-span">CONTACT US</span>
-                    <p class="office">🏬 Brave Power Systems</p>
-                    <p class="city">📍Bengaluru</p>
-                    <p class="verifier">✅ India MT Verified Supplier</p>
-                    <p class="gst">GST: 29BLFPD4482G1Z1</p>
-                    <p class="telephone">Call us ☎ +917942701967 </p>
+                    <p className="office">🏬 Brave Power Systems</p>
+                    <p className="city">📍Bengaluru</p>
+                    <p className="verifier">✅ India MT Verified Supplier</p>
+                    <p className="gst">GST: 29BLFPD4482G1Z1</p>
+                    <p className="telephone">Call us ☎ +917942701967 </p>
                 </div>
             </div>
             <div className="breaker"></div>
@@ -76,7 +76,7 @@ export default function BottomNav() {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <img src="../images/facebook.png" alt="Facebook" />
+                        <img src="../facebook.png" alt="Facebook" />
                     </Link>
                     <Link
                         to="https://www.whatsapp.com"
@@ -84,7 +84,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                         className="whatsapp-link"
                     >
-                        <img src="../images/whatsapp.png" alt="WhatsApp" />
+                        <img src="../whatsapp.png" alt="WhatsApp" />
                     </Link>
                     <Link
                         to="https://www.youtube.com"
@@ -92,7 +92,7 @@ export default function BottomNav() {
                         rel="noopener noreferrer"
                         className="youtube-link"
                     >
-                        <img src="../images/youtube.png" alt="youtube" />
+                        <img src="../youtube.png" alt="youtube" />
                     </Link>
                 </div>
             </div>

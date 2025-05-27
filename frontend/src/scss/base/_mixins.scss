@@ -25,3 +25,53 @@
         @content;
     }
 }
+
+@mixin glass-background {
+    background: rgba(12, 24, 40, 0.6);
+    backdrop-filter: blur(10px);
+}
+
+@mixin glass-card {
+    background: rgba(12, 24, 40, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+@mixin gradient-text {
+    background: linear-gradient(90deg, #fff0f3, #678df6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@mixin primary-button {
+    background: linear-gradient(90deg, #678df6, #8f94fb);
+    color: white;
+    border: none;
+    
+    &:hover {
+        background: linear-gradient(90deg, #8f94fb, #678df6);
+    }
+}
+
+@mixin secondary-button {
+    background: transparent;
+    border: 1px solid rgba($primary-text-color, 0.3);
+    color: $primary-text-color;
+    
+    &:hover {
+        border-color: $primary-text-color;
+        background: rgba($primary-text-color, 0.1);
+    }
+}
+
+@mixin alternative-button {
+    background: rgba($primary-text-color, 0.1);
+    border: 1px solid rgba($primary-text-color, 0.2);
+    color: $primary-text-color;
+    
+    &:hover {
+        background: rgba($primary-text-color, 0.2);
+    }
+}

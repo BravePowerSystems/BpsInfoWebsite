@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
-
 const verifyToken = (req, res, next) => {
     try {
+
         // Check if authorization header exists
         const authHeader = req.headers.authorization;
         if (!authHeader) {
@@ -28,16 +28,12 @@ const verifyToken = (req, res, next) => {
 
         // Debug: Log token details
         console.log('Attempting to verify token:', token);
-        console.log('Using JWT_SECRET:', process.env.JWT_SECRET);
 
         // Verify token
         const decodedToken = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-        
-        // Debug: Log decoded token
-        console.log('Decoded token:', decodedToken);
-        
         req.user = decodedToken;
-        next();
+
+        next(); // this is used to call the next middleware function
     } catch (error) {
         // Debug: Log the actual error
         console.error('Token verification error:', error);

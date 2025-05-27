@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../scss/components/ProductModal.scss";
 import { motion } from "framer-motion";
+import { formNotifications } from '../utils/notificationHelper';
+import axios from 'axios';
+
 const ProductModal = ({ productName, onClose }) => {
     const [formData, setFormData] = useState({
         firstName: "",
@@ -10,6 +13,7 @@ const ProductModal = ({ productName, onClose }) => {
         phone: "",
         enquiryType: "general",
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const enquiryTypes = [
         { value: "general", label: "General Enquiry" },
@@ -43,13 +47,36 @@ const ProductModal = ({ productName, onClose }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const submitEnquiry = async (enquiryData) => {
+        const response = await axios.post('/api/enquiries', {
+            ...enquiryData,
+            productName,
+            submittedAt: new Date().toISOString()
+        });
+        
+        if (!response.data || response.status !== 200) {
+            throw new Error('Failed to submit enquiry');
+        }
+        
+        return response.data;
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted:", formData);
-        alert(
-            `Thank you for your enquiry about ${productName}! We'll contact you soon.`
-        );
-        onClose();
+        
+        if (isSubmitting) return;
+        
+        setIsSubmitting(true);
+        try {
+            await submitEnquiry(formData);
+            formNotifications.submitSuccess('product enquiry');
+            onClose();
+        } catch (error) {
+            console.error('Enquiry submission error:', error);
+            formNotifications.submitError('product enquiry');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -72,7 +99,7 @@ const ProductModal = ({ productName, onClose }) => {
                     onClick={onClose}
                     aria-label="Close modal"
                 >
-                    <img src="../../images/close.png" alt="Close" />
+                    <img src="../../close.png" alt="Close" />
                 </button>
 
                 <h3 id="modal-title">Enquire about {productName}</h3>
@@ -168,8 +195,12 @@ const ProductModal = ({ productName, onClose }) => {
                     </div>
 
                     <div className="form-actions">
-                        <button type="submit" className="submit-btn">
-                            Submit Enquiry
+                        <button 
+                            type="submit" 
+                            className="submit-btn"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
                         </button>
                     </div>
                 </form>

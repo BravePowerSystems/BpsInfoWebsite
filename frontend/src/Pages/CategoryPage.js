@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ProductsData from "./ProductsData";
 import Breadcrumbs from "../components/Breadcrumbs";
-
 import { motion } from "motion/react";
 import CategoryCarousel from "../components/CategoryCarousel";
 import { fadeInUpVariants } from "../components/HeroSection";
 import "../scss/components/CategoryCarousel.scss";
 import "../scss/pages/CategoryPage.scss";
+import { productService } from "../services/productService";
 
 const motionConfig = {
     categoryPage: {
@@ -32,32 +31,54 @@ const motionConfig = {
 
 function CategoryPage() {
     const { categoryName } = useParams();
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const categoryKeys = ProductsData.map((item) => Object.keys(item)[0]);
-    const isValidCategory = categoryKeys.includes(categoryName);
+    useEffect(() => {
+        loadProducts();
+    }, [categoryName]);
 
-    if (!isValidCategory) {
-        return <h1>Category not found</h1>;
-    }
+    const loadProducts = async () => {
+        try {
+            setLoading(true);
+            const response = await productService.getAllProducts();
+            const { data } = response;
+            
+            const categoryObj = data.find(
+                (item) => Object.keys(item)[0] === categoryName
+            );
+            
+            if (!categoryObj) {
+                setError('Category not found');
+                return;
+            }
+            
+            setProducts(Object.values(categoryObj)[0]);
+        } catch (err) {
+            setError('Failed to load products');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const categoryObj = ProductsData.find(
-        (item) => Object.keys(item)[0] === categoryName
-    );
-
-    const products = categoryObj ? Object.values(categoryObj)[0] : [];
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!products.length) return <div>No products found in this category</div>;
 
     return (
         <motion.div
             className="category-page"
             {...motionConfig.categoryPage}
         >
-            <motion.div
-                {...motionConfig.path}
-            >
+            <motion.div {...motionConfig.path}>
                 <Breadcrumbs />
             </motion.div>
-            <motion.div className="category-products"
-            {...motionConfig.categoryProducts}>
+            <motion.div 
+                className="category-products"
+                {...motionConfig.categoryProducts}
+            >
                 <CategoryCarousel
                     key={categoryName}
                     categoryName={categoryName}

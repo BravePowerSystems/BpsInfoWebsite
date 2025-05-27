@@ -1,22 +1,32 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLocation } from 'react-router-dom';
+import UnauthorizedPage from '../Pages/UnauthorizedPage';
 
 export const ProtectedRoute = ({ children, requireAdmin }) => {
     const { isAuthenticated, isAdmin, loading } = useAuth();
     const location = useLocation();
 
     if (loading) {
-        return <div>Loading...</div>; // You can replace this with a proper loading component
+        return <div>Loading...</div>;
     }
 
     if (!isAuthenticated) {
-        // Redirect to login while saving the attempted location
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        return (
+            <UnauthorizedPage 
+                type="authentication"
+                currentPath={location.pathname}
+            />
+        );
     }
 
     if (requireAdmin && !isAdmin) {
-        // Redirect non-admin users to home page
-        return <Navigate to="/" replace />;
+        return (
+            <UnauthorizedPage 
+                type="authorization"
+                currentPath={location.pathname}
+            />
+        );
     }
 
     return children;

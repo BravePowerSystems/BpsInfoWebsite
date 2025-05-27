@@ -29,27 +29,28 @@ const motionConfig = {
     },
 };
 export default function HeroSection() {
-    const transformRef = useRef(null);
+    const transformRef = useRef(null);  // Reference to the transform wrapper
 
    
 
     useEffect(() => {
-        const handleMouseMove = (e) => {
+        const handleMouseMove = (e) => {  // Event handler for mouse movement
             if (!transformRef.current) return;
 
             const { left, top, width, height } =
-                transformRef.current.getBoundingClientRect();
+                transformRef.current.getBoundingClientRect();  // Get the bounding rectangle of the transform wrapper
             const x = (e.clientX - left) / width - 0.5;
             const y = (e.clientY - top) / height - 0.5;
 
-            transformRef.current.style.transform = `
+            transformRef.current.style.transform = `  
                 perspective(1000px)
                 rotateY(${x * 5}deg)
                 rotateX(${y * -5}deg)
-            `;
+            `;                                   
         };
 
-        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mousemove", handleMouseMove);  // Attach event listener
+
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
 

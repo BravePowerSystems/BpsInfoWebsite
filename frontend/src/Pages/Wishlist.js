@@ -17,7 +17,7 @@ function Wishlist() {
             </div>
             <header className="wishlist-header">
                 <div className="wishlist-overlay">
-                    <img src="../images/heart.png" alt="heart" className="heart-icon" />
+                    <img src="../heart.png" alt="heart" className="heart-icon" />
                     <h1 className="wishlist-title">Wishlist</h1>
                 </div>
                 <p className="header-subtitle">Here are your all the items you wish for</p>
@@ -41,7 +41,7 @@ function Wishlist() {
 
                     <div className="wishlist-item">
                         <div className="item-image">
-                            <img src="../images/gasFlowPulseTransmitter.png" alt="product-image" className="product-image" />
+                            <img src="../gasFlowPulseTransmitter.png" alt="product-image" className="product-image" />
                         </div>
                         <div className="item-details">
                             <h2 className="item-title">Gas flow pulse transmitter</h2>
@@ -50,13 +50,13 @@ function Wishlist() {
                                 Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                             </p>
                         </div>
-                        <img src="../images/trash.svg" className="trash" alt="trash" onClick={handleRemoveItem} />
+                        <img src="../trash.svg" className="trash" alt="trash" onClick={handleRemoveItem} />
                     </div>
 
 
                     <div className="wishlist-item">
                         <div className="item-image">
-                            <img src="../images/gasFlowPulseTransmitter.png" alt="product-image" className="product-image" />
+                            <img src="../gasFlowPulseTransmitter.png" alt="product-image" className="product-image" />
                         </div>
                         <div className="item-details">
                             <h2 className="item-title">Gas flow pulse transmitter</h2>
@@ -65,7 +65,7 @@ function Wishlist() {
                                 Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                             </p>
                         </div>
-                        <img src="../images/trash.svg" className="trash" alt="trash" onClick={handleRemoveItem} />
+                        <img src="../trash.svg" className="trash" alt="trash" onClick={handleRemoveItem} />
                     </div>
 
 

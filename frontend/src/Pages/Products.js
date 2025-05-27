@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Products.scss";
-import ProductsData from "./ProductsData";
 import CategoryCarousel from "../components/CategoryCarousel";
-import {  motion } from "motion/react";
+import { motion } from "motion/react";
 import { fadeInUpVariants } from "../components/HeroSection";
+import { productService } from "../services/productService";
+
 const motionConfig = {
     path: {
         variants: fadeInUpVariants,
@@ -25,19 +26,42 @@ const motionConfig = {
         transition: { duration: 0.8, delay: 0.6 },
     },
 };
+
 function Products() {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        loadProducts();
+    }, []);
+
+    const loadProducts = async () => {
+        try {
+            setLoading(true);
+            const response = await productService.getAllProducts();
+            const  {data}  = response;
+            setProducts(data);
+        } catch (err) {
+            setError('Failed to load products');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+
     return (
-        <motion.div
-            className="products-container"
-            
-        >
-            <motion.div className="path"{...motionConfig.path}>
+        <motion.div className="products-container">
+            <motion.div className="path" {...motionConfig.path}>
                 <Breadcrumbs />
-            </motion.div >
+            </motion.div>
             <motion.h1 {...motionConfig.h1}>PRODUCTS</motion.h1>
 
-            {ProductsData.map((categoryObj, index) => {
-                const [categoryName, products] = Object.entries(categoryObj)[0];
+            {products.map((categoryObj, index) => {
+                const [categoryName, categoryProducts] = Object.entries(categoryObj)[0];
                 return (
                     <motion.div
                         className="category-products"
@@ -46,7 +70,7 @@ function Products() {
                     >
                         <CategoryCarousel
                             categoryName={categoryName}
-                            products={products}
+                            products={categoryProducts}
                         />
                     </motion.div>
                 );

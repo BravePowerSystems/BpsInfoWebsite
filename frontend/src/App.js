@@ -1,5 +1,5 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import Layout from "./Layout/Layout";
 import Products from "./Pages/Products";
 import Home from "./Pages/Home";
@@ -10,16 +10,15 @@ import Wishlist from "./Pages/Wishlist";
 import CategoryPage from "./Pages/CategoryPage";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import "./scss/main.scss";
-import Login from "./Pages/Login";
-import Register from "./Pages/Register";
 import UserDashboard from "./Pages/UserDashboard";
 import AdminDashboard from "./Pages/AdminDashboard";
+import "./scss/main.scss";
 
 function App() {
     return (
         <AuthProvider>
             <Router>
+                <ScrollToTop />
                 <Layout>
                     <div className="App">
                         <Routes>
@@ -35,7 +34,10 @@ function App() {
                                 element={<Product />}
                             />
                             <Route path="/Blog" element={<Blog />} />
-                            <Route path="/case-studies" element={<CaseStudy />} />
+                            <Route
+                                path="/case-studies"
+                                element={<CaseStudy />}
+                            />
 
                             {/* Protected Routes (Requires Authentication) */}
                             <Route
@@ -66,7 +68,10 @@ function App() {
                             />
 
                             {/* 404 Route */}
-                            <Route path="*" element={<div>Page not found</div>} />
+                            <Route
+                                path="*"
+                                element={<div>Page not found</div>}
+                            />
                         </Routes>
                     </div>
                 </Layout>

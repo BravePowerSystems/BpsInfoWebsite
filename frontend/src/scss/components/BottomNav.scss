@@ -3,14 +3,15 @@
 @import "../base/mixins";
 
 .bottom-nav {
+    margin-top: auto; // Push to bottom if content is shorter than viewport
     color: white;
     width: 100%;
     height: auto;
     display: flex;
     flex-direction: column;
-    margin-top: 2rem;
-    
+    padding-top: 2rem; // Changed from margin to padding
     background-color: transparent;
+    
     a {
         text-decoration: none;
         color: white;
