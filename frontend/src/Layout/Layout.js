@@ -12,17 +12,13 @@ const LayoutContent = ({ children }) => {
     const location = useLocation();
     const { productModal, closeProductModal } = useModal();
 
-    useEffect(() => {
-        if (layoutRef.current) {
-            layoutRef.current.scrollTo({
-                top: 0,
-                left: 0,
-            });
-        }
-    }, [location.pathname]);
 
     return (
-        <div className="layout" ref={layoutRef}>
+        <div 
+            className="layout" 
+            ref={layoutRef}
+            key={location.pathname + location.search} // Add key to force remount
+        >
             <ColorCursor />
             <TopNav />
             <div className="main-content">

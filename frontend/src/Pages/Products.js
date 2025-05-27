@@ -40,7 +40,7 @@ function Products() {
         try {
             setLoading(true);
             const response = await productService.getAllProducts();
-            const { data } = response; // Extract data from axios response
+            const  {data}  = response;
             setProducts(data);
         } catch (err) {
             setError('Failed to load products');
@@ -52,7 +52,6 @@ function Products() {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
-    if (!products.length) return <div>No products found</div>;
 
     return (
         <motion.div className="products-container">

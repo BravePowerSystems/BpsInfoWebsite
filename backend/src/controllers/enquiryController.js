@@ -44,7 +44,7 @@ export const updateEnquiryStatus = async (req, res) => {
             req.params.id,
             req.body.status
         );
-
+        // req.body.status is the status of the enquiry. for example, if the status is 'new', then the enquiry is new and not yet responded to. if the status is 'in-progress', then the enquiry is being responded to. if the status is 'completed', then the enquiry has been responded to. if the status is 'archived', then the enquiry has been responded to and is no longer active.
         res.status(200).json({
             success: true,
             message: 'Enquiry status updated successfully',

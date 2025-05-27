@@ -9,9 +9,9 @@ const Accordion = ({ items }) => {
     const toggleItem = (index) => {
         setActiveIndices(
             (prev) =>
-                prev.includes(index)
+                prev.includes(index)    // Check if the item is already open. .includes checks if the array contains the given value.
                     ? prev.filter((i) => i !== index) // Close if open
-                    : [...prev, index] // Open if closed
+                    : [...prev, index] // Open if closed   ...prev is the previous state of the array. and [index] is the new state of the array.
         );
     };
 

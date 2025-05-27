@@ -1,15 +1,41 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+
 import { Link } from "react-router-dom";
-import MenuPopUp from "./MenuPopUp";
+import DropdownMenu from "./DropdownMenu";
 import { motion } from "motion/react";
-import ProductsData from "../Pages/ProductsData";
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
+import { productService } from "../services/productService";
 
 const ProductsList = ({ onLinkClick }) => {
-    return ProductsData.map((categoryObj) => {
-        const [categoryName, products] = Object.entries(categoryObj)[0];
+    
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await productService.getAllProducts();
+                const { data } = response;
+                setCategories(data);
+                setLoading(false);
+            } catch (err) {
+                console.error('Error fetching products:', err);
+                setError('Failed to load products');
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+
+    return categories.map((categoryObj) => {
+        const [categoryName, products] = Object.entries(categoryObj)[0];  // Object.entries return an array of arrays, each containing a key-value pair from the object.
 
         return (
             <ul key={categoryName}>
@@ -17,8 +43,11 @@ const ProductsList = ({ onLinkClick }) => {
                     {categoryName.replace(/[^a-zA-Z0-9]/g, " ")}
                 </Link>
                 {products.map((product) => (
-                    <li key={product.name}>
-                        <Link to={product.link} onClick={onLinkClick}>
+                    <li key={product._id || product.title}>
+                        <Link 
+                            to={`/Products/${categoryName}/${product.title.replace(/\s+/g, '-')}`} 
+                            onClick={onLinkClick}
+                        >
                             {product.title.replace(/[^a-zA-Z0-9]/g, " ")}
                         </Link>
                     </li>
@@ -257,7 +286,7 @@ export default function TopNav() {
                     onMouseEnter={handleDropdownMouseEnter}
                     onMouseLeave={handleDropdownMouseLeave}
                 >
-                    <MenuPopUp
+                    <DropdownMenu
                         element={
                             <ProductsList onLinkClick={handleCloseDropdown} />
                         }
@@ -271,7 +300,7 @@ export default function TopNav() {
                     onMouseEnter={handleDropdownMouseEnter}
                     onMouseLeave={handleDropdownMouseLeave}
                 >
-                    <MenuPopUp
+                    <DropdownMenu
                         element={
                             <ResourcesList onLinkClick={handleCloseDropdown} />
                         }

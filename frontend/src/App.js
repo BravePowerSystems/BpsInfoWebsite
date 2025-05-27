@@ -18,8 +18,8 @@ import "./scss/main.scss";
 const router = {
     future: {
         v7_startTransition: true,
-        v7_relativeSplatPath: true
-    }
+        v7_relativeSplatPath: true,
+    },
 };
 
 function App() {
@@ -41,7 +41,10 @@ function App() {
                                 element={<Product />}
                             />
                             <Route path="/Blog" element={<Blog />} />
-                            <Route path="/case-studies" element={<CaseStudy />} />
+                            <Route
+                                path="/case-studies"
+                                element={<CaseStudy />}
+                            />
 
                             {/* Protected Routes (Requires Authentication) */}
                             <Route
@@ -72,7 +75,10 @@ function App() {
                             />
 
                             {/* 404 Route */}
-                            <Route path="*" element={<div>Page not found</div>} />
+                            <Route
+                                path="*"
+                                element={<div>Page not found</div>}
+                            />
                         </Routes>
                     </div>
                 </Layout>

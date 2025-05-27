@@ -6,10 +6,10 @@
     min-height: 100vh; // Change from height to min-height
     display: flex; // Add flex display
     flex-direction: column; // Stack children vertically
-    overflow-x: hidden;
+    overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    scroll-behavior: "smooth";
+    scroll-behavior: smooth; // Changed from "smooth" to smooth
     background: linear-gradient(135deg, #0c1828 0%, #000000 50%, #0c1828 10%);
     padding: 0.5rem 1rem;
 
@@ -33,6 +33,7 @@
 
 @include desktop {
     .layout {
+        
         padding: 1rem 4rem;
     }
 }

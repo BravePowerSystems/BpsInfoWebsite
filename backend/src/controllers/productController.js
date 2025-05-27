@@ -17,9 +17,13 @@ export const getProducts = async (req, res) => {
 export const getProductByDetails = async (req, res) => {
     try {
         const { category, productName } = req.params;
+        console.log('Fetching product with:', { category, productName }); // Debug log
+
         const product = await ProductService.getProductByDetails(category, productName);
+        console.log('Found product:', product); // Debug log
         
         if (!product) {
+            console.log('No product found'); // Debug log
             return res.status(404).json({
                 success: false,
                 message: 'Product not found'

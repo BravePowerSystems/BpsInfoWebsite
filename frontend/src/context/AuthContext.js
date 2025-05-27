@@ -138,9 +138,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={contextValue}>
+        <AuthContext.Provider value={contextValue}> 
             {!loading && children}
-        </AuthContext.Provider>
+        </AuthContext.Provider>                        // AuthContext.Provider is a component that provides the context value to its children.
     );
 };
 
@@ -153,4 +153,32 @@ export const useAuth = () => {
     return context;
 };
 
+
+/*
+
+Workflow of this file: 
+1. The AuthProvider component is created using the createContext hook. This creates a context object that can be used to share data with components.
+
+2. The AuthProvider component uses the useState hook to manage the user state, loading state, and error state.
+
+3. The AuthProvider component uses the useEffect hook to initialize the auth state from storage. This is done by checking if there is an access token and user data in local storage. If there is, the user state is set to the user data and the access token is set as the default header for axios requests.
+
+4. The AuthProvider component exports a login function that sends a POST request to the /api/auth/login endpoint with the username and password. If the request is successful, the access token, refresh token, and user data are stored in local storage and the user state is set to the user data.
+
+5. The AuthProvider component exports a logout function that removes the access token, refresh token, and user data from local storage and sets the user state to null.
+
+6. The AuthProvider component exports a refreshToken function that sends a POST request to the /api/auth/refresh-token endpoint with the refresh token. If the request is successful, the access token and refresh token are updated in local storage and the user state is set to the user data.
+
+7. The AuthProvider component exports an isAuthenticated function that returns true if the user state is not null.
+
+8. The AuthProvider component exports an isAdmin function that returns true if the user state is not null and the user's role is 'admin'.
+
+9. The AuthProvider component exports a contextValue object that contains the user state, loading state, error state, login function, logout function, refreshToken function, isAuthenticated function, and isAdmin function.
+
+
+10. The AuthProvider component exports a useAuth hook that returns the contextValue object.
+
+
+
+*/
 

@@ -26,3 +26,6 @@ protectedClient.interceptors.request.use((config) => {
     }
     return config;
 });
+
+
+// this file contains the code for creating the api client. api client is used to make api requests to the backend. 

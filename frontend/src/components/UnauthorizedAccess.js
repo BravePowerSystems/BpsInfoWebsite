@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthModal from './AuthModal';
 import '../scss/components/UnauthorizedAccess.scss';
+import {motion} from "motion/react";
+import {fadeInUpVariants} from './HeroSection';
+
+const motionConfig = {
+    unauthorizedContainer: {
+        variants: fadeInUpVariants,
+        initial: "hidden",
+        animate: "visible",
+        transition: {  duration: 0.8, delay: 1.4 },
+    },
+};
 
 const UnauthorizedAccess = ({ 
     type, 
@@ -45,7 +56,9 @@ const UnauthorizedAccess = ({
 
     return (
         <>
-            <div className="unauthorized-container">
+        
+            <motion.div className="unauthorized-container"
+            {...motionConfig.unauthorizedContainer}>
                 <div className="unauthorized-content">
                     <div className="unauthorized-illustration">
                         <img src={getIllustration()} alt={getTitle()} />
@@ -105,7 +118,7 @@ const UnauthorizedAccess = ({
                         </div>
                     )}
                 </div>
-            </div>
+            </motion.div>
 
             {showAuthModal && (
                 <AuthModal

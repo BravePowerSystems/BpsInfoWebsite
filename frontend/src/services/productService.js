@@ -2,12 +2,16 @@ import { publicClient, protectedClient } from './apiClient';
 
 export const productService = {
     // Public routes (no auth needed)
-    getAllProducts: () => {
-        return publicClient.get('/products');
+    getAllProducts: async () => {
+        const response = await publicClient.get('/products');
+        return response; // Return just the data
     },
 
-    getProductByDetails: (category, productName) => {
-        return publicClient.get(`/products/${category}/${productName}`);
+    getProductByDetails: async (category, productName) => {
+        const response = await publicClient.get(`/products/${category}/${productName}`);
+        console.log('Response from API:', response.data);
+        console.log('Product data:', response.data.data);
+        return response.data; // Return the product data from the response
     },
 
     // Protected routes (auth needed)

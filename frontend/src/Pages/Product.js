@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
 import Breadcrumbs from "../components/Breadcrumbs";
-import { useParams } from "react-router-dom";
-import ProductsData from "./ProductsData";
 import "../scss/pages/Product.scss";
 import Accordion from "../components/Accordion";
-import {motion} from "motion/react";
-import CategoryCarousel from "../components/CategoryCarousel.js";
-import { fadeInUpVariants } from "../components/HeroSection.js";
+import { motion } from "motion/react";
+import CategoryCarousel from "../components/CategoryCarousel";
+import { fadeInUpVariants } from "../components/HeroSection";
+import { productService } from "../services/productService";
+
 const motionConfig = {
     product: {
         variants: fadeInUpVariants,
@@ -16,98 +17,135 @@ const motionConfig = {
         transition: { duration: 0.8, delay: 0.2 },
     },
 };
-const featureItems = [
-    {
-        title: "Gas Flow pulse transmitter",
-        content:
-            "Gas flow pulse transmitter is a gas flow transmitter that uses pulse technology to detect gas flow.",
-    },
-    {
-        title: "Specifications",
-        content: "", // Custom React component
-    },
-    {
-        title: "Applications",
-        content:
-            "Gas flow pulse transmitter is used in various applications such as gas flow monitoring, gas leak detection, and gas flow control.",
-    },
-    {
-        title: "Download",
-        content: "",
-    },
-];
+
 
 export default function Product() {
     const { openProductModal } = useModal();
-    
-    const { categoryName, productName} = useParams();
-    const CategoryItem = ProductsData.find(
-        (item) => Object.keys(item)[0] === categoryName
-    );
+    const { categoryName, productName } = useParams();
+    const [product, setProduct] = useState(null);
+    const [relatedProducts, setRelatedProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    if (!CategoryItem) {
-        console.error(`Category "${categoryName}" not found`);
-        return null;
-    }
-    const productsArray = CategoryItem[categoryName];
+    useEffect(() => {
+        loadProduct();
+    }, [categoryName, productName]);
 
-    const cleanName = productName.replace(/[^a-zA-Z0-9]/g, " ");
+    const loadProduct = async () => {
+        try {
+            // Load specific product
+            const response = await productService.getProductByDetails(
+                categoryName, 
+                productName
+            );
+            const productData = response.data;
+            setProduct(productData);
 
-    const ProductItem = productsArray.find(
-        (item) => item.title.replace(/[^a-zA-Z0-9]/g, " ") === cleanName
-    );
-
-    if (!ProductItem) {
-        console.error(`Product "${cleanName}" not found`);
-        return null;
-    }
-
-    const handleEnquireClick = () => {
-        openProductModal(cleanName);
+            // Load all products to get related products from same category
+            const allProductsResponse = await productService.getAllProducts();
+            const allProducts = allProductsResponse.data;
+            const categoryObj = allProducts.find(
+                (item) => Object.keys(item)[0] === categoryName
+            );
+            if (categoryObj) {
+                setRelatedProducts(Object.values(categoryObj)[0]);
+            }
+        } catch (err) {
+            setError('Failed to load product');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
+    // Generate accordion items based on product data
+    const generateFeatureItems = (product) => {
+        return [
+            {
+                title: "Gas Flow pulse transmitter",
+                content: product.description
+            },
+            {
+                title: "Specifications",
+                content: (
+                    <div className="specifications">
+                        {product.specifications.map((spec, index) => (
+                            <div key={index} className="spec-item">
+                                <span className="spec-name">{spec.name}:</span>
+                                <span className="spec-value">{spec.value}</span>
+                            </div>
+                        ))}
+                    </div>
+                )
+            },
+            {
+                title: "Applications",
+                content: (
+                    <ul className="applications-list">
+                        {product.applications.map((app, index) => (
+                            <li key={index}>{app}</li>
+                        ))}
+                    </ul>
+                )
+            },
+            {
+                title: "Download",
+                content: (
+                    <div className="downloads-list">
+                        {product.downloads.map((download, index) => (
+                            <a 
+                                key={index}
+                                href={download.url}
+                                className="download-item"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {download.name} ({download.type})
+                            </a>
+                        ))}
+                    </div>
+                )
+            }
+        ];
+    };
 
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!product) return <h1>Product not found</h1>;
 
-    const categoryKeys = ProductsData.map((item) => Object.keys(item)[0]);
-    const isValidCategory = categoryKeys.includes(categoryName);
+    const featureItems = generateFeatureItems(product);
 
-    if (!isValidCategory) {
-        return <h1>Category not found</h1>;
-    }
+    const handleEnquireClick = () => {
+        openProductModal(product.title);
+    };
 
-    const categoryObj = ProductsData.find(
-        (item) => Object.keys(item)[0] === categoryName
-    );
-
-    const products = categoryObj ? Object.values(categoryObj)[0] : [];
+    const handleWishlistAdd = () => {
+        // Add to wishlist logic
+    };
 
     return (
         <div className="product-page">
-            <motion.div
-                
-                className="product"
-                {...motionConfig.product}
-            >
+            <motion.div className="product" {...motionConfig.product}>
                 <section className="product-info">
                     <Breadcrumbs />
-                    <h2 className="product-name">{cleanName}</h2>
+                    <h2 className="product-name">{product.title}</h2>
+                    <div className="model-number">Model: {product.modelNumber}</div>
                     <img
-                        src="../../images/gasFlowPulseTransmitter.png"
-                        alt=""
+                        src="/images/GasFlowPulseTransmitter.png"
+                        alt={product.title}
                         className="product-image"
                     />
                     <div className="product-description-container">
                         <h4>Description</h4>
                         <p className="product-description">
-                            {ProductItem.description}
+                            {product.description}
                         </p>
                     </div>
                     <div className="buttons">
-                        <button className="wishlist">Add to wishlist</button>
-                        <button
-                            onClick={handleEnquireClick}
-                            className="enquire"
-                        >
+                        <button className="wishlist" onClick={handleWishlistAdd}>
+                            Add to wishlist
+                        </button>
+                        <button onClick={handleEnquireClick} className="enquire">
                             Enquire Now
                         </button>
                         <button className="share">Share</button>
@@ -118,17 +156,14 @@ export default function Product() {
                 </section>
             </motion.div>
             <div className="related-products">
-                <h2 className="related-products-title">
-                    Related Products
-                </h2>
-            <CategoryCarousel
-                key={categoryName}
-                categoryName={categoryName}
-                products={products}
-            />
+                <h2 className="related-products-title">Related Products</h2>
+                <CategoryCarousel
+                    key={categoryName}
+                    categoryName={categoryName}
+                    products={relatedProducts}
+                />
             </div>
-
         </div>
-        
     );
 }
+

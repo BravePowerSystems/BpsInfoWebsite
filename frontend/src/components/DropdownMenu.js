@@ -1,11 +1,12 @@
+// Rename to DropdownMenu.js
 import React from "react";
-import "../scss/components/MenuPopUp.scss";
+import "../scss/components/DropdownMenu.scss";
 import { motion } from "motion/react";
 
-function MenuPopUp({ element }) {
+function DropdownMenu({ element }) {
     return (
         <motion.div 
-            className="MenuPopUp"
+            className="dropdown-menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.5, type: "tween" }}}
         >
@@ -14,4 +15,4 @@ function MenuPopUp({ element }) {
     );
 }
 
-export default MenuPopUp;
+export default DropdownMenu;
