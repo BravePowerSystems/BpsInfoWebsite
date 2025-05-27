@@ -8,7 +8,21 @@ import { motion } from "motion/react";
 import CategoryCarousel from "../components/CategoryCarousel";
 import { fadeInUpVariants } from "../components/HeroSection";
 import { productService } from "../services/productService";
-
+export const Loading = () => {
+    return (
+        <h1
+            style={{
+                position: "absolute",
+                color: "white",
+                width: "100%",
+                height: "100%",
+                padding:"30vh 40vw"
+            }}
+        >
+            Loading....
+        </h1>
+    );
+};
 const motionConfig = {
     product: {
         variants: fadeInUpVariants,
@@ -25,34 +39,35 @@ export default function Product() {
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const loadProduct = async () => {
-        try {
-            // Load specific product
-            const response = await productService.getProductByDetails(
-                categoryName,
-                productName
-            );
-            const productData = response.data;
-            setProduct(productData);
-
-            // Load all products to get related products from same category
-            const allProductsResponse = await productService.getAllProducts();
-            const allProducts = allProductsResponse.data;
-            const categoryObj = allProducts.find(
-                (item) => Object.keys(item)[0] === categoryName
-            );
-            if (categoryObj) {
-                setRelatedProducts(Object.values(categoryObj)[0]);
-            }
-        } catch (err) {
-            setError("Failed to load product");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
+        const loadProduct = async () => {
+            try {
+                // Load specific product
+                const response = await productService.getProductByDetails(
+                    categoryName,
+                    productName
+                );
+                const productData = response.data;
+                setProduct(productData);
+
+                // Load all products to get related products from same category
+                const allProductsResponse =
+                    await productService.getAllProducts();
+                const allProducts = allProductsResponse.data;
+                const categoryObj = allProducts.find(
+                    (item) => Object.keys(item)[0] === categoryName
+                );
+                if (categoryObj) {
+                    setRelatedProducts(Object.values(categoryObj)[0]);
+                }
+            } catch (err) {
+                setError("Failed to load product");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
         loadProduct();
     }, [categoryName, productName]);
 
@@ -109,7 +124,7 @@ export default function Product() {
         ];
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Loading />;
     if (error) return <div>Error: {error}</div>;
     if (!product) return <h1>Product not found</h1>;
 

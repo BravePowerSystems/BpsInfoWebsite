@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import '../scss/pages/Dashboard.scss';
+import { Loading } from './Product';
 
 function UserDashboard() {
     const { user, loading } = useAuth();
@@ -9,7 +10,7 @@ function UserDashboard() {
 
     // Show loading state while auth is being initialized
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading />
     }
 
     // Redirect or show error if no user (though ProtectedRoute should prevent this)

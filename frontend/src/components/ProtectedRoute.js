@@ -2,13 +2,13 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import UnauthorizedPage from '../Pages/UnauthorizedPage';
-
+import Loading from "../Pages/Product";
 export const ProtectedRoute = ({ children, requireAdmin }) => {
     const { isAuthenticated, isAdmin, loading } = useAuth();
     const location = useLocation();
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading />
     }
 
     if (!isAuthenticated) {
