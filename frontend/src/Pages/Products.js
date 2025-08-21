@@ -41,10 +41,12 @@ function Products() {
         try {
             setLoading(true);
             const response = await productService.getAllProducts();
-            if (!response) {
+            console.log('API Response:', response); // Debug log
+            if (!response || !response.data) {
                 throw new Error('Invalid response from server');
             }
-            setProducts(response);
+            console.log('Products data:', response.data); // Debug log
+            setProducts(response.data);
         } catch (err) {
             setError('Failed to load products: ' + (err.message || 'Unknown error'));
             console.error('Error loading products:', err);
@@ -63,21 +65,33 @@ function Products() {
             </motion.div>
             <motion.h1 {...motionConfig.h1}>PRODUCTS</motion.h1>
 
-            {products.map((categoryObj, index) => {
-                const [categoryName, categoryProducts] = Object.entries(categoryObj)[0];
-                return (
-                    <motion.div
-                        className="category-products"
-                        key={index}
-                        {...motionConfig.categoryProducts}
-                    >
-                        <CategoryCarousel
-                            categoryName={categoryName}
-                            products={categoryProducts}
-                        />
-                    </motion.div>
-                );
-            })}
+            {Array.isArray(products) && products.length > 0 ? (
+                products.map((categoryObj, index) => {
+                    const [categoryName, categoryProducts] = Object.entries(categoryObj)[0];
+                    return (
+                        <motion.div
+                            className="category-products"
+                            key={index}
+                            {...motionConfig.categoryProducts}
+                        >
+                            <CategoryCarousel
+                                categoryName={categoryName}
+                                products={categoryProducts}
+                            />
+                        </motion.div>
+                    );
+                })
+            ) : (
+                <motion.div 
+                    className="no-products"
+                    variants={fadeInUpVariants}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                    <p>No products available at the moment.</p>
+                </motion.div>
+            )}
         </motion.div>
     );
 }

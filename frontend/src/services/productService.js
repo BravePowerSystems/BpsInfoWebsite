@@ -14,7 +14,7 @@ export const productService = {
         return publicClientMethods.get(`/products/category/${category}`);
     },
     
-    getProductDetails: (category, productName) => {
+    getProductByDetails: (category, productName) => {
         return publicClientMethods.get(`/products/details/${category}/${productName}`);
     },
     

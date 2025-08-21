@@ -22,19 +22,28 @@ function EnquiryManagement() {
         setLoading(true);
         try {
             const response = await enquiryService.getAllEnquiries();
-            if (response && response.success) {
-                setEnquiries(response.data);
+            console.log('Raw API response:', response); // Debug log
+            
+            // The API client wraps the response in a 'data' property
+            const responseData = response.data;
+            console.log('Response data:', responseData); // Debug log
+            
+            if (responseData && responseData.success) {
+                setEnquiries(responseData.data);
                 // Fetch wishlists for all enquiries with userId
-                response.data.forEach(async (enq) => {
+                responseData.data.forEach(async (enq) => {
                     if (enq.userId) {
                         const wlRes = await enquiryService.getWishlistEnquiries(enq.userId);
-                        setWishlists(prev => ({ ...prev, [enq._id]: wlRes.data }));
+                        if (wlRes && wlRes.data && wlRes.data.success) {
+                            setWishlists(prev => ({ ...prev, [enq._id]: wlRes.data.data }));
+                        }
                     }
                 });
             } else {
                 setEnquiries([]);
             }
         } catch (err) {
+            console.error('Error fetching enquiries:', err);
             setError('Failed to load enquiries');
             setEnquiries([]);
         } finally {
@@ -44,14 +53,18 @@ function EnquiryManagement() {
 
     const handleStatusChange = async (id, newStatus) => {
         try {
-            await enquiryService.updateEnquiryStatus(id, newStatus);
+            console.log('Updating status for enquiry:', id, 'to:', newStatus);
+            const response = await enquiryService.updateEnquiryStatus(id, newStatus);
+            console.log('Status update response:', response);
+            
             setEnquiries(enquiries =>
                 enquiries.map(enq =>
                     enq._id === id ? { ...enq, status: newStatus } : enq
                 )
             );
         } catch (err) {
-            alert('Failed to update status');
+            console.error('Status update error:', err);
+            alert('Failed to update status: ' + (err.message || 'Unknown error'));
         }
     };
 

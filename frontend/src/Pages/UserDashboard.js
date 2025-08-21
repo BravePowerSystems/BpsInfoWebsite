@@ -16,13 +16,19 @@ function UserDashboard() {
             setEnquiriesLoading(true);
             try {
                 const response = await enquiryService.getMyEnquiries();
-                console.log(response);
-                if (response && response.success) {
-                    setEnquiries(response.data);
+                console.log('Raw API response:', response);
+                
+                // The API client wraps the response in a 'data' property
+                const responseData = response.data;
+                console.log('Response data:', responseData);
+                
+                if (responseData && responseData.success) {
+                    setEnquiries(responseData.data);
                 } else {
                     setEnquiries([]);
                 }
             } catch (err) {
+                console.error('Error fetching user enquiries:', err);
                 setEnquiries([]);
             } finally {
                 setEnquiriesLoading(false);
