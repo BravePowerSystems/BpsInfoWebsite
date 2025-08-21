@@ -48,37 +48,25 @@ export const login = async (req, res) => {
         
         // Get the origin from the request to determine the domain
         const origin = req.get('Origin');
-        let domain = undefined;
         
-        if (isProd && origin) {
-            try {
-                const url = new URL(origin);
-                // For production, set domain to allow cross-subdomain cookies
-                // Remove port if present and set domain
-                domain = url.hostname;
-                // If it's a subdomain, you might want to set it to the root domain
-                // domain = url.hostname.split('.').slice(-2).join('.');
-            } catch (e) {
-                console.log('Could not parse origin for domain setting:', origin);
-            }
-        }
-        
+        // For cross-origin requests in production, don't set domain
+        // This allows cookies to work across different domains
         const cookieOptions = {
             httpOnly: true,
             secure: isProd,
-            sameSite: isProd ? 'none' : 'lax', // Changed from 'strict' to 'none' for cross-origin
+            sameSite: isProd ? 'none' : 'lax', // 'none' for cross-origin
             path: '/', // Ensure cookie is available across all paths
             maxAge: 60 * 60 * 1000, // 1 hour
-            domain: domain // Set domain for production
+            // Don't set domain - let the browser handle it
         };
         
         const refreshCookieOptions = {
             httpOnly: true,
             secure: isProd,
-            sameSite: isProd ? 'none' : 'lax', // Changed from 'strict' to 'none' for cross-origin
+            sameSite: isProd ? 'none' : 'lax', // 'none' for cross-origin
             path: '/',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            domain: domain // Set domain for production
+            // Don't set domain - let the browser handle it
         };
         
         // Log cookie options for debugging
@@ -104,23 +92,13 @@ export const logout = (req, res) => {
     
     // Get the origin from the request to determine the domain
     const origin = req.get('Origin');
-    let domain = undefined;
-    
-    if (isProd && origin) {
-        try {
-            const url = new URL(origin);
-            domain = url.hostname;
-        } catch (e) {
-            console.log('Could not parse origin for domain setting:', origin);
-        }
-    }
     
     const clearOptions = {
         httpOnly: true,
         secure: isProd,
         sameSite: isProd ? 'none' : 'lax',
         path: '/',
-        domain: domain
+        // Don't set domain - let the browser handle it
     };
     
     res.clearCookie('accessToken', clearOptions);
@@ -140,16 +118,6 @@ export const refreshToken = async (req, res) => {
         
         // Get the origin from the request to determine the domain
         const origin = req.get('Origin');
-        let domain = undefined;
-        
-        if (isProd && origin) {
-            try {
-                const url = new URL(origin);
-                domain = url.hostname;
-            } catch (e) {
-                console.log('Could not parse origin for domain setting:', origin);
-            }
-        }
         
         const cookieOptions = {
             httpOnly: true,
@@ -157,7 +125,7 @@ export const refreshToken = async (req, res) => {
             sameSite: isProd ? 'none' : 'lax',
             path: '/',
             maxAge: 60 * 60 * 1000, // 1 hour
-            domain: domain
+            // Don't set domain - let the browser handle it
         };
         
         res.cookie('accessToken', tokens.accessToken, cookieOptions);

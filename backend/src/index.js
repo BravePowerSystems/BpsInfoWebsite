@@ -93,23 +93,13 @@ app.get('/api/debug/cookies', (req, res) => {
 app.get('/api/debug/set-test-cookie', (req, res) => {
   const isProd = process.env.NODE_ENV === 'production';
   const origin = req.get('Origin');
-  let domain = undefined;
-  
-  if (isProd && origin) {
-    try {
-      const url = new URL(origin);
-      domain = url.hostname;
-    } catch (e) {
-      console.log('Could not parse origin for domain setting:', origin);
-    }
-  }
   
   const cookieOptions = {
     httpOnly: false, // Make it readable by frontend for testing
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
     path: '/',
-    domain: domain,
+    // Don't set domain - let the browser handle it
     maxAge: 60 * 60 * 1000 // 1 hour
   };
   
@@ -130,6 +120,55 @@ app.get('/api/debug/env', (req, res) => {
     MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
     JWT_SECRET: process.env.JWT_SECRET ? 'Set' : 'Not set',
     JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ? 'Set' : 'Not set',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Comprehensive cookie test endpoint
+app.get('/api/debug/test-cookies', (req, res) => {
+  const isProd = process.env.NODE_ENV === 'production';
+  const origin = req.get('Origin');
+  
+  // Test different cookie configurations
+  const cookies = [
+    {
+      name: 'testCookie1',
+      value: 'value1',
+      options: {
+        httpOnly: false,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 1000
+      }
+    },
+    {
+      name: 'testCookie2',
+      value: 'value2',
+      options: {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 1000
+      }
+    }
+  ];
+  
+  // Set all test cookies
+  cookies.forEach(cookie => {
+    res.cookie(cookie.name, cookie.value, cookie.options);
+  });
+  
+  // Get response headers for debugging
+  const responseHeaders = res.getHeaders();
+  
+  res.json({
+    message: 'Test cookies set with comprehensive options',
+    cookies: cookies,
+    origin: origin,
+    nodeEnv: process.env.NODE_ENV,
+    responseHeaders: responseHeaders,
     timestamp: new Date().toISOString()
   });
 });
