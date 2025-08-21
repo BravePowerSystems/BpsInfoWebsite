@@ -32,7 +32,7 @@ export class ProductService {
         return {
             _id: product._id,
             title: product.title,
-            img: product.imageUrl,
+            imageUrl: product.imageUrl, // Keep consistent naming
             description: product.description,
             link: `/Products/${product.category}/${product.title.replace(/\s+/g, '-')}`,
             specifications: product.specifications,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import "../scss/components/Sidebar.scss";
 import { Link } from "react-router-dom";
 import { productService } from "../services/productService";
-import Skeleton from "react-loading-skeleton";
+
 
 const PRODUCT_SECTIONS = [
     { key: "Transmitters", label: "Transmitters" },
@@ -131,9 +131,7 @@ export default function Sidebar({ open, onClose }) {
                                     </span>
                                 </button>
                                 <div className="sidebar-accordion-content" style={{ maxHeight: productsOpen ? '2000px' : 0, overflow: 'hidden', transition: 'max-height 0.3s' }}>
-                                    {loading ? (
-                                        <Skeleton count={2} height={30} />
-                                    ) : error ? (
+                                    {loading ? null : error ? (
                                         <div className="error">{error}</div>
                                     ) : (
                                         renderProductSections()

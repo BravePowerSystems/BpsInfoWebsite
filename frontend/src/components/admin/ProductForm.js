@@ -18,7 +18,7 @@ function ProductForm({ product, categories, onSave, onCancel }) {
     const [currentTab, setCurrentTab] = useState('basic');
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
     
     useEffect(() => {
         if (product) {
@@ -163,11 +163,8 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             if (response.data && response.data.url) {
-                // Ensure absolute URL
-                const imageUrl = response.data.url.startsWith('http')
-                    ? response.data.url
-                    : API_BASE + response.data.url;
-                setFormData(prev => ({ ...prev, imageUrl }));
+                // The backend now returns full URLs, so use directly
+                setFormData(prev => ({ ...prev, imageUrl: response.data.url }));
             } else {
                 alert('Image upload failed');
             }

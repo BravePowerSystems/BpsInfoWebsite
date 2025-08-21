@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import '../scss/pages/UserProfile.scss';
 import { systemNotifications, formNotifications } from '../utils/notificationHelper';
 import { authService } from '../services/authService';

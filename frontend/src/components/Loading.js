@@ -1,4 +1,3 @@
-import "react-loading-skeleton/dist/skeleton.css";
 import "../scss/components/Loading.scss";
 
 export default function Loading() {

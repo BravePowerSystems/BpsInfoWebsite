@@ -1,37 +1,13 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "motion/react";
-import Skeleton from "react-loading-skeleton";
+import { motion } from "framer-motion";
 import DropdownMenu from "./DropdownMenu";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
 import { productService } from "../services/productService";
 import Sidebar from "./Sidebar";
 
-const ProductsList = ({ onLinkClick }) => {
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        
-
-        const fetchProducts = async () => {
-            try {
-                const { data } = await productService.getAllProducts();
-                setCategories(data);
-                
-            } catch (err) {
-                console.error("Error fetching products:", err);
-                setError("Failed to load products. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, []);
-
+const ProductsList = ({ onLinkClick, categories, loading, error }) => {
     // Memoize the cleaned categories to prevent unnecessary re-renders
     const formattedCategories = useMemo(() => {
         return categories.map((categoryObj) => {
@@ -54,21 +30,8 @@ const ProductsList = ({ onLinkClick }) => {
         });
     }, [categories]);
 
-    if (loading) {
-        return (
-            <div aria-live="polite">
-                <Skeleton count={5} height={200} />
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div role="alert" className="error">
-                Error: {error}
-            </div>
-        );
-    }
+    if (loading) return null;
+    if (error) return null;
 
     return (
         <>
@@ -124,6 +87,30 @@ export default function TopNav() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const openSidebar = () => setSidebarOpen(true);
     const closeSidebar = () => setSidebarOpen(false);
+
+    // Prefetch products once on mount to avoid loading flash on hover
+    const [productCategories, setProductCategories] = useState([]);
+    const [productsLoading, setProductsLoading] = useState(true);
+    const [productsError, setProductsError] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchProducts = async () => {
+            try {
+                const { data } = await productService.getAllProducts();
+                if (isMounted) setProductCategories(data);
+            } catch (err) {
+                console.error("Error fetching products:", err);
+                if (isMounted) setProductsError("Failed to load products. Please try again later.");
+            } finally {
+                if (isMounted) setProductsLoading(false);
+            }
+        };
+        fetchProducts();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const openDropdown = (type) => setActiveDropdown(type);
     const closeDropdown = () => setActiveDropdown(null);
@@ -278,14 +265,14 @@ export default function TopNav() {
                 </div>
             </motion.div>
 
-            {activeDropdown === "products" && (
+            {activeDropdown === "products" && !productsLoading && !productsError && (
                 <div
                     className="products-dropdown-container"
                     onMouseEnter={clearDropdownTimeout}
                     onMouseLeave={handleMouseLeave}
                 >
                     <DropdownMenu
-                        element={<ProductsList onLinkClick={closeDropdown} />}
+                        element={<ProductsList onLinkClick={closeDropdown} categories={productCategories} loading={productsLoading} error={productsError} />}
                     />
                 </div>
             )}

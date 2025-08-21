@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Products.scss";
 import CategoryCarousel from "../components/CategoryCarousel";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { fadeInUpVariants } from "../components/HeroSection";
 import { productService } from "../services/productService";
 import { Loading } from "./Product";

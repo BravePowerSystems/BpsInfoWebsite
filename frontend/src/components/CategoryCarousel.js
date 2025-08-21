@@ -37,7 +37,7 @@ function CategoryCarousel({ categoryName, products }) {
                                     key={product.title || idx}
                                 >
                                     <ProductsCard
-                                        image={product.img || product.imageUrl || "/gasFlowPulseTransmitter.png"}
+                                        image={product.imageUrl || "/placeholder-product.png"}
                                         title={product.title}
                                         description={product.description}
                                         link={product.link}

@@ -1,7 +1,7 @@
 import React from "react";
 
 import "../scss/pages/Blog.scss"; 
-import {motion} from "motion/react";
+import {motion} from "framer-motion";
 import { fadeInUpVariants } from "../components/HeroSection";
 const motionConfig = {
     blogTextContainer: {

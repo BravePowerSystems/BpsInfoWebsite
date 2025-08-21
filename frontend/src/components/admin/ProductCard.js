@@ -5,7 +5,7 @@ function ProductCard({ product, onEdit, onDelete }) {
     return (
         <div className="admin-product-card">
             <div className="product-image">
-                <img src={product.img || product.imageUrl} alt={product.title} />
+                <img src={product.imageUrl || "/placeholder-product.png"} alt={product.title} />
             </div>
             <div className="product-info">
                 <h3 className="product-title">{product.title}</h3>

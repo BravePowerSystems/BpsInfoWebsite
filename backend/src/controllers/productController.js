@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import { ImageService } from '../services/imageService.js';
 import { ProductService } from '../services/productService.js';
 
 // Get all products
@@ -97,6 +98,11 @@ export const deleteProduct = async (req, res) => {
         
         if (!deletedProduct) {
             return res.status(404).json({ message: 'Product not found' });
+        }
+        
+        // Clean up the product's image file
+        if (deletedProduct.imageUrl) {
+            await ImageService.deleteProductImage(deletedProduct.imageUrl);
         }
         
         res.status(200).json({ message: 'Product deleted successfully' });

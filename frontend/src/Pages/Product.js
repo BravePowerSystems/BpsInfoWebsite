@@ -4,7 +4,7 @@ import { useModal } from "../context/ModalContext";
 import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Product.scss";
 import Accordion from "../components/Accordion";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import CategoryCarousel from "../components/CategoryCarousel";
 import { fadeInUpVariants } from "../components/HeroSection";
 import { productService } from "../services/productService";
@@ -176,7 +176,7 @@ export default function Product() {
                         Model: {product.modelNumber}
                     </div>
                     <img
-                        src={product.img || product.imageUrl || "/gasFlowPulseTransmitter.png"}
+                        src={product.imageUrl || "/placeholder-product.png"}
                         alt={product.title}
                         className="product-image"
                     />
