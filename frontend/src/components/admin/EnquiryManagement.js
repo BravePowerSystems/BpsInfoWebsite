@@ -22,19 +22,30 @@ function EnquiryManagement() {
         setLoading(true);
         try {
             const response = await enquiryService.getEnquiries();
+            console.log('Fetched enquiries response:', response);
+            
             if (response.data && response.data.success) {
-                setEnquiries(response.data.data);
+                const enquiriesData = response.data.data;
+                console.log('Enquiries data:', enquiriesData);
+                
+                setEnquiries(enquiriesData);
+                
                 // Fetch wishlists for all enquiries with userId
-                response.data.data.forEach(async (enq) => {
+                enquiriesData.forEach(async (enq) => {
                     if (enq.userId) {
-                        const wlRes = await enquiryService.getUserWishlist(enq.userId);
-                        setWishlists(prev => ({ ...prev, [enq._id]: wlRes.data.data }));
+                        try {
+                            const wlRes = await enquiryService.getUserWishlist(enq.userId);
+                            setWishlists(prev => ({ ...prev, [enq._id]: wlRes.data.data }));
+                        } catch (wishlistErr) {
+                            console.error('Error fetching wishlist for user:', enq.userId, wishlistErr);
+                        }
                     }
                 });
             } else {
                 setEnquiries([]);
             }
         } catch (err) {
+            console.error('Error fetching enquiries:', err);
             setError('Failed to load enquiries');
             setEnquiries([]);
         } finally {
@@ -56,20 +67,49 @@ function EnquiryManagement() {
     };
 
     const handleResponseChange = (id, value) => {
-        setResponseMessages(prev => ({ ...prev, [id]: value }));
+        console.log('Response message changed for enquiry:', id, 'Value:', value);
+        setResponseMessages(prev => {
+            const newState = { ...prev, [id]: value };
+            console.log('New response messages state:', newState);
+            return newState;
+        });
     };
 
     const handleResponseSubmit = async (id) => {
         setSavingResponse(prev => ({ ...prev, [id]: true }));
         try {
-            await enquiryService.updateEnquiryResponseMessage(id, responseMessages[id] || '');
-            setEnquiries(enquiries =>
-                enquiries.map(enq =>
-                    enq._id === id ? { ...enq, responseMessage: responseMessages[id] || '' } : enq
-                )
-            );
+            const responseMessage = responseMessages[id] || '';
+            console.log('Saving response for enquiry:', id, 'Message:', responseMessage);
+            
+            const response = await enquiryService.updateEnquiryResponseMessage(id, responseMessage);
+            console.log('Response from server:', response);
+            
+            if (response.data && response.data.success) {
+                // Update local state with the new response message
+                setEnquiries(enquiries =>
+                    enquiries.map(enq =>
+                        enq._id === id ? { ...enq, responseMessage: responseMessage } : enq
+                    )
+                );
+                
+                // Clear the response message from the local state since it's now saved
+                setResponseMessages(prev => {
+                    const newState = { ...prev };
+                    delete newState[id];
+                    return newState;
+                });
+                
+                // Show success message
+                alert('Response message saved successfully!');
+                
+                // Refresh the enquiries to ensure we have the latest data
+                await fetchEnquiries();
+            } else {
+                throw new Error('Server response indicates failure');
+            }
         } catch (err) {
-            alert('Failed to save response message');
+            console.error('Error saving response message:', err);
+            alert(`Failed to save response message: ${err.message || 'Unknown error'}`);
         } finally {
             setSavingResponse(prev => ({ ...prev, [id]: false }));
         }
@@ -78,6 +118,11 @@ function EnquiryManagement() {
     const filteredEnquiries = filter
         ? enquiries.filter(enq => enq.status === filter)
         : enquiries;
+
+    // Debug: Log current state
+    console.log('Current enquiries:', enquiries);
+    console.log('Current response messages:', responseMessages);
+    console.log('Current saving response:', savingResponse);
 
     return (
         <div className="enquiry-management clean-admin">
@@ -147,18 +192,51 @@ function EnquiryManagement() {
                             </div>
                             <div className="enquiry-response">
                                 <label>Admin Response:</label>
+                                
+                                {/* Show existing response if any */}
+                                {enq.responseMessage && (
+                                    <div className="existing-response">
+                                        <strong>Current Response:</strong>
+                                        <p>{enq.responseMessage}</p>
+                                    </div>
+                                )}
+                                
                                 <textarea
-                                    value={responseMessages[enq._id] !== undefined ? responseMessages[enq._id] : (enq.responseMessage || '')}
+                                    value={responseMessages[enq._id] !== undefined ? responseMessages[enq._id] : ''}
                                     onChange={e => handleResponseChange(enq._id, e.target.value)}
-                                    rows={2}
-                                    placeholder="Type your response to the user here..."
+                                    rows={3}
+                                    placeholder={enq.responseMessage ? "Update the response message..." : "Type your response to the user here..."}
+                                    onFocus={() => {
+                                        // Initialize the response message if it doesn't exist
+                                        if (responseMessages[enq._id] === undefined && enq.responseMessage) {
+                                            setResponseMessages(prev => ({ ...prev, [enq._id]: enq.responseMessage }));
+                                        }
+                                    }}
                                 />
-                                <button
-                                    onClick={() => handleResponseSubmit(enq._id)}
-                                    disabled={savingResponse[enq._id]}
-                                >
-                                    {savingResponse[enq._id] ? 'Saving...' : 'Save Response'}
-                                </button>
+                                
+                                <div className="response-actions">
+                                    <button
+                                        onClick={() => handleResponseSubmit(enq._id)}
+                                        disabled={savingResponse[enq._id] || (responseMessages[enq._id] === undefined || responseMessages[enq._id] === '')}
+                                        className="save-response-btn"
+                                    >
+                                        {savingResponse[enq._id] ? 'Saving...' : 'Save Response'}
+                                    </button>
+                                    
+                                    {responseMessages[enq._id] && (
+                                        <button
+                                            onClick={() => setResponseMessages(prev => {
+                                                const newState = { ...prev };
+                                                delete newState[enq._id];
+                                                return newState;
+                                            })}
+                                            className="clear-response-btn"
+                                            disabled={savingResponse[enq._id]}
+                                        >
+                                            Clear
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))}

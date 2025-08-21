@@ -13,8 +13,6 @@ const verifyToken = async (req, res, next) => {
             console.error('JWT_SECRET is undefined');
             return res.status(500).json({ error: "Server configuration error" });
         }
-        // Debug: Log token details
-        console.log('Attempting to verify token:', token);
         // Verify token
         const decodedToken = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         // Fetch full user document
