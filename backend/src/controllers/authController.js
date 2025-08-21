@@ -43,12 +43,13 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const authData = await AuthService.loginUser(req.body);
-        // Set JWT as HttpOnly cookie
+        // Set JWT as cookie (not httpOnly so frontend can read it)
         const isProd = process.env.NODE_ENV === 'production';
         const cookieOptions = {
             httpOnly: true,
             secure: isProd,
             sameSite: isProd ? 'strict' : 'lax',
+            path: '/', // Ensure cookie is available across all paths
             maxAge: 60 * 60 * 1000 // 1 hour
         };
         const refreshCookieOptions = {
