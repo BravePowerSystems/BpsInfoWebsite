@@ -53,12 +53,18 @@ export default function Product() {
                     formattedCategory,
                     formattedProduct
                 );
-                const productData = response;
+                if (!response || !response.data) {
+                    throw new Error('Invalid response from server');
+                }
+                const productData = response.data;
                 setProduct(productData);
 
                 // Load all products to get related products from same category
                 const allProductsResponse = await productService.getAllProducts();
-                const allProducts = allProductsResponse;
+                if (!allProductsResponse || !allProductsResponse.data) {
+                    throw new Error('Invalid response from server');
+                }
+                const allProducts = allProductsResponse.data;
                 const categoryObj = allProducts.find(
                     (item) => Object.keys(item)[0].toLowerCase() === formattedCategory.toLowerCase()
                 );
@@ -92,9 +98,13 @@ export default function Product() {
                 title: "Applications",
                 content: (
                     <ul className="applications-list">
-                        {product.applications.map((app, index) => (
-                            <li key={index}>{app}</li>
-                        ))}
+                        {Array.isArray(product.applications) && product.applications.length > 0 ? (
+                            product.applications.map((app, index) => (
+                                <li key={index}>{app}</li>
+                            ))
+                        ) : (
+                            <li>No applications information available</li>
+                        )}
                     </ul>
                 ),
             },
@@ -102,17 +112,21 @@ export default function Product() {
                 title: "Download",
                 content: (
                     <div className="downloads-list">
-                        {product.downloads.map((download, index) => (
-                            <a
-                                key={index}
-                                href={download.url}
-                                className="download-item"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {download.name} ({download.type})
-                            </a>
-                        ))}
+                        {Array.isArray(product.downloads) && product.downloads.length > 0 ? (
+                            product.downloads.map((download, index) => (
+                                <a
+                                    key={index}
+                                    href={download.url}
+                                    className="download-item"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {download.name} ({download.type})
+                                </a>
+                            ))
+                        ) : (
+                            <p>No downloads available</p>
+                        )}
                     </div>
                 ),
             },

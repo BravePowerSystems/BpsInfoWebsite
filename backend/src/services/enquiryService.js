@@ -9,6 +9,8 @@ export class EnquiryService {
     }
 
     static async getEnquiriesService(filterParams) {
+        console.log('getEnquiriesService called with filterParams:', filterParams);
+        
         const { status, enquiryType, startDate, endDate, userId } = filterParams;
         
         const filter = {};
@@ -21,15 +23,24 @@ export class EnquiryService {
             if (endDate) filter.submittedAt.$lte = new Date(endDate);
         }
 
-        return await Enquiry.find(filter).sort({ submittedAt: -1 });
+        console.log('Final filter applied:', JSON.stringify(filter, null, 2));
+        
+        const enquiries = await Enquiry.find(filter).sort({ submittedAt: -1 });
+        console.log('Raw enquiries found:', enquiries.length);
+        
+        return enquiries;
     }
 
     static async updateEnquiryStatusService(enquiryId, status) {
+        console.log('updateEnquiryStatusService called with:', { enquiryId, status });
+        
         const enquiry = await Enquiry.findByIdAndUpdate(
             enquiryId,
             { status },
             { new: true, runValidators: true }
         );
+
+        console.log('Database update result:', enquiry);
 
         if (!enquiry) {
             throw new Error('Enquiry not found');

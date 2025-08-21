@@ -25,7 +25,13 @@ export const createEnquiryController = async (req, res) => {
 
 export const getEnquiriesController = async (req, res) => {
     try {
+        console.log('getEnquiriesController called with query:', req.query);
+        console.log('User making request:', req.user ? { id: req.user._id, role: req.user.role } : 'No user');
+        
         const enquiries = await EnquiryService.getEnquiriesService(req.query);
+        
+        console.log('Enquiries found:', enquiries.length);
+        console.log('First enquiry sample:', enquiries[0] ? { id: enquiries[0]._id, firstName: enquiries[0].firstName } : 'No enquiries');
 
         res.status(200).json({
             success: true,
@@ -44,10 +50,19 @@ export const getEnquiriesController = async (req, res) => {
 
 export const updateEnquiryStatusController = async (req, res) => {
     try {
+        console.log('updateEnquiryStatusController called with:', {
+            id: req.params.id,
+            status: req.body.status,
+            user: req.user ? { id: req.user._id, role: req.user.role } : 'No user'
+        });
+        
         const enquiry = await EnquiryService.updateEnquiryStatusService(
             req.params.id,
             req.body.status
         );
+        
+        console.log('Status updated successfully:', enquiry._id, 'to', enquiry.status);
+        
         // req.body.status is the status of the enquiry. for example, if the status is 'new', then the enquiry is new and not yet responded to. if the status is 'in-progress', then the enquiry is being responded to. if the status is 'completed', then the enquiry has been responded to. if the status is 'archived', then the enquiry has been responded to and is no longer active.
         res.status(200).json({
             success: true,

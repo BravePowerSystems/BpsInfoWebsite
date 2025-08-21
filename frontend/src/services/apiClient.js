@@ -38,10 +38,25 @@ export async function apiClient(
   const data = await res.json();
   
   if (!res.ok) {
-    throw new Error(data.message || data.error || 'API request failed');
+    // Create Axios-like error structure for consistency
+    const error = new Error(data.message || data.error || 'API request failed');
+    error.response = {
+      data: data,
+      status: res.status,
+      statusText: res.statusText,
+      headers: res.headers
+    };
+    throw error;
   }
   
-  return data;
+  // Return Axios-like response structure for consistency
+  return {
+    data: data,
+    status: res.status,
+    statusText: res.statusText,
+    headers: res.headers,
+    config: { url: fullUrl, method, headers: finalHeaders }
+  };
 }
 
 // Public client: does not attach token
