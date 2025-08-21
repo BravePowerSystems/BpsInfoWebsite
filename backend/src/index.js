@@ -17,8 +17,6 @@ dotenv.config();
 
 const app = express();
 
-import cors from 'cors';
-
 const allowedOrigins = [
   'https://bps-info-website.vercel.app'   // production frontend
 ];
