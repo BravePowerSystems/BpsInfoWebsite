@@ -1,29 +1,36 @@
 import { publicClient, protectedClient } from './apiClient';
 
 export const productService = {
-    // Public routes (no auth needed)
-    getAllProducts: async () => {
-        const response = await publicClient.get('/products');
-        return response; // Return just the data
+    // Public routes
+    getAllProducts: () => {
+        return publicClient.get('/products');
     },
-
-    getProductByDetails: async (category, productName) => {
-        const response = await publicClient.get(`/products/${category}/${productName}`);
-        console.log('Response from API:', response.data);
-        console.log('Product data:', response.data.data);
-        return response.data; // Return the product data from the response
+    
+    getProductById: (id) => {
+        return publicClient.get(`/products/${id}`);
     },
-
-    // Protected routes (auth needed)
+    
+    getProductsByCategory: (category) => {
+        return publicClient.get(`/products/category/${category}`);
+    },
+    
+    getProductByDetails: (category, productName) => {
+        return publicClient.get(`/products/details/${category}/${productName}`);
+    },
+    
+    // Protected routes (admin only)
     createProduct: (productData) => {
         return protectedClient.post('/products', productData);
     },
-
+    
     updateProduct: (id, productData) => {
         return protectedClient.put(`/products/${id}`, productData);
     },
-
+    
     deleteProduct: (id) => {
         return protectedClient.delete(`/products/${id}`);
     }
 };
+
+
+

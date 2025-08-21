@@ -1,0 +1,129 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+
+.product-management {
+    padding: 1.5rem;
+
+    .product-management-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+
+        h2 {
+            font-size: 1.5rem;
+            margin: 0;
+            background: linear-gradient(90deg, #678df6, #8f94fb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .product-controls {
+            display: flex;
+            gap: 1rem;
+
+            .category-filter {
+                padding: 0.75rem;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: $primary-text-color;
+                min-width: 150px;
+                transition: all 0.3s ease;
+
+                &:focus {
+                    outline: none;
+                    border-color: #678df6;
+                    box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.2);
+                }
+
+                option {
+                    background-color: #1a2635;
+                    color: white;
+                    padding: 0.5rem;
+                }
+            }
+
+            .add-product-btn {
+                background: linear-gradient(90deg, #678df6, #8f94fb);
+                color: white;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
+                }
+            }
+        }
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 3rem;
+        font-size: 1.2rem;
+        color: $primary-text-color;
+
+        &::after {
+            content: '';
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-left: 0.5rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #678df6;
+            animation: spin 1s ease-in-out infinite;
+            vertical-align: middle;
+        }
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+}
+
+@include tablet {
+    .product-management {
+        padding: 2rem;
+
+        .product-grid {
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        }
+    }
+}
+
+@include desktop {
+    .product-management {
+        padding: 2.5rem;
+
+        .product-grid {
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+    }
+}
+
+

@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import '../scss/components/ColorCursor.scss';
+import React, { useEffect, useRef } from "react";
+import "../scss/components/ColorCursor.scss";
 
 const ColorCursor = () => {
     const cursorRef = useRef(null);
 
     useEffect(() => {
         const cursor = cursorRef.current;
-        
+
         const updateCursor = (e) => {
             const { clientX, clientY } = e;
             cursor.style.background = `radial-gradient(
@@ -16,16 +16,10 @@ const ColorCursor = () => {
             )`;
         };
 
-        const handleMouseLeave = () => {
-            cursor.style.background = 'transparent';
-        };
-
-        window.addEventListener('mousemove', updateCursor);
-        window.addEventListener('mouseleave', handleMouseLeave);
+        window.addEventListener("mousemove", updateCursor);
 
         return () => {
-            window.removeEventListener('mousemove', updateCursor);
-            window.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener("mousemove", updateCursor);
         };
     }, []);
 

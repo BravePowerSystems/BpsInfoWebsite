@@ -1,0 +1,30 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.loading-container {
+    @include flex-center;
+    flex-direction: column;
+    min-height: 300px;
+    width: 100%;
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top-color: #678df6;
+        animation: spin 1s ease-in-out infinite;
+    }
+    
+    .loading-text {
+        margin-top: 1rem;
+        color: $primary-text-color;
+        font-size: 1rem;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

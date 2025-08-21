@@ -15,10 +15,10 @@ export default function BottomNav() {
                     <ul>
                         <span className="about-us-span">ABOUT US</span>
                         <li>
-                            <Link to="/our-story">Our Story</Link>
+                            <Link to="/about">Our Story</Link>
                         </li>
                         <li>
-                            <Link to="/contact-us">Contact Us</Link>
+                            <Link to="/contact">Contact Us</Link>
                         </li>
                     </ul>
                 </div>
@@ -32,11 +32,6 @@ export default function BottomNav() {
                                 Transmitters
                             </Link>
                         </li>
-                        {/* <li>
-                            <Link to="/Products/Power-Monitors">
-                                Power Monitors
-                            </Link>
-                        </li> */}
                         <li>
                             <Link to="/Products/Controllers">Controllers</Link>
                         </li>
@@ -71,29 +66,29 @@ export default function BottomNav() {
             <div className="bottom">
                 <p>© 2021 Brave power systems. All rights reserved</p>
                 <div className="social-links">
-                    <Link
-                        to="https://www.facebook.com"
+                    <a
+                        href="https://www.facebook.com"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <img src="../facebook.png" alt="Facebook" />
-                    </Link>
-                    <Link
-                        to="https://www.whatsapp.com"
+                        <img src="/facebook.png" alt="Facebook" />
+                    </a>
+                    <a
+                        href="https://www.whatsapp.com"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="whatsapp-link"
                     >
-                        <img src="../whatsapp.png" alt="WhatsApp" />
-                    </Link>
-                    <Link
-                        to="https://www.youtube.com"
+                        <img src="/whatsapp.png" alt="WhatsApp" />
+                    </a>
+                    <a
+                        href="https://www.youtube.com"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="youtube-link"
                     >
-                        <img src="../youtube.png" alt="youtube" />
-                    </Link>
+                        <img src="/youtube.png" alt="youtube" />
+                    </a>
                 </div>
             </div>
         </motion.div>

@@ -17,7 +17,7 @@ const AccordionItem = ({ item, index, isOpen, onClick }) => {
                     <h3 className="accordion__title">{item.title}</h3>
                 </div>
                 <span className={`accordion__indicator ${isOpen ? 'accordion__indicator--rotated' : '' }`}>
-                   <img src="../../arrow_down.svg" alt="" />
+                   <img src="/arrow_down.svg" alt="" />
                 </span>
             </button>
 

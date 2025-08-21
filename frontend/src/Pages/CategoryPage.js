@@ -46,6 +46,11 @@ function CategoryPage() {
             const response = await productService.getAllProducts();
             const { data } = response;
             
+            if (!data || !Array.isArray(data)) {
+                setError('Invalid data format received from server');
+                return;
+            }
+            
             const categoryObj = data.find(
                 (item) => Object.keys(item)[0] === categoryName
             );
@@ -57,7 +62,7 @@ function CategoryPage() {
             
             setProducts(Object.values(categoryObj)[0]);
         } catch (err) {
-            setError('Failed to load products');
+            setError('Failed to load products: ' + (err.message || 'Unknown error'));
             console.error(err);
         } finally {
             setLoading(false);

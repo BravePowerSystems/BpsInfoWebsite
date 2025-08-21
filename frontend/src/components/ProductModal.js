@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import "../scss/components/ProductModal.scss";
 import { motion } from "framer-motion";
 import { formNotifications } from '../utils/notificationHelper';
-import axios from 'axios';
+import { publicClient, protectedClient } from '../services/apiClient';
+import { useAuth } from '../context/AuthContext';
 
 const ProductModal = ({ productName, onClose }) => {
+    const { user, isAuthenticated } = useAuth();
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -48,13 +50,14 @@ const ProductModal = ({ productName, onClose }) => {
     };
 
     const submitEnquiry = async (enquiryData) => {
-        const response = await axios.post('/api/enquiries', {
+        const client = isAuthenticated ? protectedClient : publicClient;
+        const response = await client.post('/enquiries', {
             ...enquiryData,
             productName,
             submittedAt: new Date().toISOString()
-        });
+        }, { withCredentials: true });
         
-        if (!response.data || response.status !== 200) {
+        if (!response.data || (response.status !== 200 && response.status !== 201)) {
             throw new Error('Failed to submit enquiry');
         }
         

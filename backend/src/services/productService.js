@@ -30,6 +30,7 @@ export class ProductService {
 
     static transformProductData(product) {
         return {
+            _id: product._id,
             title: product.title,
             img: product.imageUrl,
             description: product.description,
@@ -37,7 +38,8 @@ export class ProductService {
             specifications: product.specifications,
             applications: product.applications,
             downloads: product.downloads,
-            modelNumber: product.modelNumber
+            modelNumber: product.modelNumber,
+            category: product.category
         };
     }
 }

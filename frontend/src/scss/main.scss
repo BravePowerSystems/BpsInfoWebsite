@@ -3,10 +3,24 @@
 // Override default variables before the import
 $body-bg: $background-color;
 
-
+// Components
 @import "../scss/components/TopNav.scss";
 @import "../scss/components/BottomNav.scss";
 @import "../scss/components/DropdownMenu.scss";
+@import "../scss/components/ContactForm.scss";
+@import "../scss/components/SpecificationsAccordion.scss";
+
+// Pages
+@import "../scss/pages/Home.scss";
+@import "../scss/pages/Products.scss";
+@import "../scss/pages/Blog.scss";
+@import "../scss/pages/Contact.scss";
+@import "../scss/pages/About.scss";
+@import "../scss/pages/FAQ.scss";
+@import "../scss/pages/NotFound.scss";
+@import "../scss/pages/Dashboard.scss";
+@import "../scss/pages/UserProfile.scss";
+@import "../scss/pages/Wishlist.scss";
 
 // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap.scss';

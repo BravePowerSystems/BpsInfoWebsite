@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import { useAuth } from "../context/AuthContext";
-import { motion } from "framer-motion";
 import "../scss/components/AuthModal.scss";
-import axios from "axios";
+import { publicClient } from "../services/apiClient";
 
 function AuthModal({ onClose, initialMode = "login" }) {
     const [mode, setMode] = useState(initialMode); // 'login' or 'register'
@@ -15,7 +15,7 @@ function AuthModal({ onClose, initialMode = "login" }) {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
-    const { login } = useAuth(); // Import the login function from AuthContext
+    const { login, register } = useAuth(); // Import the login and register functions from AuthContext
 
     const handleClose = () => {
         if (onClose) {
@@ -36,14 +36,9 @@ function AuthModal({ onClose, initialMode = "login" }) {
         setIsLoading(true);
 
         try {
-            await axios.post(
-                "/api/auth/forgot-password",
-                { email: formData.email },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
+            await publicClient.post(
+                "/auth/forgot-password",
+                { email: formData.email }
             );
 
             setShowForgotPassword(false);
@@ -67,27 +62,25 @@ function AuthModal({ onClose, initialMode = "login" }) {
                     throw new Error("Passwords do not match");
                 }
 
-                await axios.post(
-                    "/api/auth/register",
-                    {
-                        username: formData.username,
-                        email: formData.email,
-                        password: formData.password,
-                    },
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
+                // Use the register function from AuthContext
+                await register({
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password,
+                });
+                
+                // No need to login separately as register will do that
+                handleClose();
+                return;
             }
 
-            // Login after successful registration or direct login
+            // For login mode
             await login(formData.username, formData.password);
             handleClose();
         } catch (err) {
+            console.error("Auth error:", err);
             const errorMessage =
-                err.response?.data?.error || "Authentication failed";
+                err.response?.data?.error || err.message || "Authentication failed";
             setError(errorMessage);
         } finally {
             setIsLoading(false);

@@ -86,6 +86,26 @@ export const productNotifications = {
             text: `${productName} has been removed from your wishlist`,
             customIcon: '💔'
         });
+    },
+    
+    alreadyInWishlist: () => {
+        new Notify({
+            ...defaultOptions,
+            status: 'info',
+            title: 'Already in Wishlist',
+            text: 'This product is already in your wishlist',
+            customIcon: '❤️'
+        });
+    },
+    
+    wishlistError: () => {
+        new Notify({
+            ...defaultOptions,
+            status: 'error',
+            title: 'Wishlist Error',
+            text: 'There was a problem updating your wishlist',
+            customIcon: '⚠️'
+        });
     }
 };
 
@@ -182,3 +202,4 @@ export const formNotifications = {
         });
     }
 };
+

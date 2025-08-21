@@ -33,7 +33,12 @@
 
 @include desktop {
     .layout {
-        
-        padding: 1rem 4rem;
+        padding: 1rem 6rem; // Increased from 4rem for better desktop spacing
+    }
+}
+
+@include large_desktop {
+    .layout {
+        padding: 1.5rem 8rem; // Added large desktop specific padding
     }
 }

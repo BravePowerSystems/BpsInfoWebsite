@@ -85,11 +85,11 @@ export default function HeroSection() {
                                 Explore Products
                             </button>
                         </Link>
-                        <a href="#contact-us">
+                        <Link to="/contact">
                             <button className="hero-cta-button secondary">
                                 Contact Us
                             </button>
-                        </a>
+                        </Link>
                     </motion.div>
                 </div>
             </div>

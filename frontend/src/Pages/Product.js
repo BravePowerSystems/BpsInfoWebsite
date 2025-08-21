@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
 import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Product.scss";
@@ -8,6 +8,11 @@ import { motion } from "motion/react";
 import CategoryCarousel from "../components/CategoryCarousel";
 import { fadeInUpVariants } from "../components/HeroSection";
 import { productService } from "../services/productService";
+import { wishlistService } from "../services/wishlistService";
+import { productNotifications } from "../utils/notificationHelper";
+import { useAuth } from "../context/AuthContext";
+import SpecificationsAccordion from "../components/SpecificationsAccordion";
+import UnauthorizedPage from "./UnauthorizedPage";
 export const Loading = () => {
     return (
         <h1
@@ -39,24 +44,37 @@ export default function Product() {
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { user, isAdmin } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation(); // Add this line to get the current location
+    const [showUnauthorized, setShowUnauthorized] = useState(false);
 
     useEffect(() => {
+        if (!categoryName || !productName) {
+            setProduct(null);
+            setRelatedProducts([]);
+            setLoading(false);
+            return;
+        }
         const loadProduct = async () => {
             try {
+                setLoading(true);
+                // Convert dashes to spaces and make case-insensitive
+                const formattedCategory = categoryName ? categoryName.replace(/-/g, ' ') : "";
+                const formattedProduct = productName ? productName.replace(/-/g, ' ') : "";
                 // Load specific product
                 const response = await productService.getProductByDetails(
-                    categoryName,
-                    productName
+                    formattedCategory,
+                    formattedProduct
                 );
                 const productData = response.data;
                 setProduct(productData);
 
                 // Load all products to get related products from same category
-                const allProductsResponse =
-                    await productService.getAllProducts();
+                const allProductsResponse = await productService.getAllProducts();
                 const allProducts = allProductsResponse.data;
                 const categoryObj = allProducts.find(
-                    (item) => Object.keys(item)[0] === categoryName
+                    (item) => Object.keys(item)[0].toLowerCase() === formattedCategory.toLowerCase()
                 );
                 if (categoryObj) {
                     setRelatedProducts(Object.values(categoryObj)[0]);
@@ -71,8 +89,6 @@ export default function Product() {
         loadProduct();
     }, [categoryName, productName]);
 
-    console.log(categoryName, productName);
-
     // Generate accordion items based on product data
     const generateFeatureItems = (product) => {
         return [
@@ -83,14 +99,7 @@ export default function Product() {
             {
                 title: "Specifications",
                 content: (
-                    <div className="specifications">
-                        {product.specifications.map((spec, index) => (
-                            <div key={index} className="spec-item">
-                                <span className="spec-name">{spec.name}:</span>
-                                <span className="spec-value">{spec.value}</span>
-                            </div>
-                        ))}
-                    </div>
+                    <SpecificationsAccordion specifications={product.specifications} />
                 ),
             },
             {
@@ -127,6 +136,9 @@ export default function Product() {
     if (loading) return <Loading />;
     if (error) return <div>Error: {error}</div>;
     if (!product) return <h1>Product not found</h1>;
+    if (showUnauthorized) {
+        return <UnauthorizedPage type="authentication" currentPath={location.pathname} />;
+    }
 
     const featureItems = generateFeatureItems(product);
 
@@ -134,8 +146,24 @@ export default function Product() {
         openProductModal(product.title);
     };
 
-    const handleWishlistAdd = () => {
-        // Add to wishlist logic
+    const handleWishlistAdd = async () => {
+        if (!user) {
+            setShowUnauthorized(true);
+            return;
+        }
+        
+        try {
+            await wishlistService.addToWishlist(product._id);
+            productNotifications.addedToWishlist(product.title);
+        } catch (error) {
+            // Check if it's already in wishlist
+            if (error.response && error.response.status === 409) {
+                productNotifications.alreadyInWishlist();
+            } else {
+                console.error('Error adding to wishlist:', error);
+                productNotifications.wishlistError();
+            }
+        }
     };
 
     return (
@@ -148,7 +176,7 @@ export default function Product() {
                         Model: {product.modelNumber}
                     </div>
                     <img
-                        src="/GasFlowPulseTransmitter.png"
+                        src={product.img || product.imageUrl || "/gasFlowPulseTransmitter.png"}
                         alt={product.title}
                         className="product-image"
                     />
@@ -159,12 +187,15 @@ export default function Product() {
                         </p>
                     </div>
                     <div className="buttons">
-                        <button
-                            className="wishlist"
-                            onClick={handleWishlistAdd}
-                        >
-                            Add to wishlist
-                        </button>
+                        {/* Only show wishlist button for regular users, not admins */}
+                        {!isAdmin && (
+                            <button
+                                className="wishlist"
+                                onClick={handleWishlistAdd}
+                            >
+                                Add to wishlist
+                            </button>
+                        )}
                         <button
                             onClick={handleEnquireClick}
                             className="enquire"

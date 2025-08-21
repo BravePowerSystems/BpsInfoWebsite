@@ -6,6 +6,7 @@ import DropdownMenu from "./DropdownMenu";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
 import { productService } from "../services/productService";
+import Sidebar from "./Sidebar";
 
 const ProductsList = ({ onLinkClick }) => {
     const [categories, setCategories] = useState([]);
@@ -13,24 +14,13 @@ const ProductsList = ({ onLinkClick }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Check localStorage for cached data
-        const cachedData = localStorage.getItem("products");
-        if (cachedData) {
-            setCategories(JSON.parse(cachedData));
-            setLoading(false);
-            return;
-        }
+        
 
         const fetchProducts = async () => {
             try {
                 const { data } = await productService.getAllProducts();
                 setCategories(data);
-                // Cache data in localStorage with a TTL (e.g., 1 hour)
-                localStorage.setItem("products", JSON.stringify(data));
-                localStorage.setItem(
-                    "productsCacheTime",
-                    Date.now().toString()
-                );
+                
             } catch (err) {
                 console.error("Error fetching products:", err);
                 setError("Failed to load products. Please try again later.");
@@ -131,6 +121,9 @@ export default function TopNav() {
     const { isAuthenticated, isAdmin, logout } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authMode, setAuthMode] = useState("login");
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const openSidebar = () => setSidebarOpen(true);
+    const closeSidebar = () => setSidebarOpen(false);
 
     const openDropdown = (type) => setActiveDropdown(type);
     const closeDropdown = () => setActiveDropdown(null);
@@ -193,12 +186,11 @@ export default function TopNav() {
                                 <NavLink to="/Products" withDropdown="products">
                                     PRODUCTS
                                 </NavLink>
-                                <NavLink to="/tools">TOOLS</NavLink>
                                 <NavLink withDropdown="resources">
                                     RESOURCES
                                 </NavLink>
                                 <NavLink to="/about">ABOUT US</NavLink>
-                                <NavLink to="/support">SUPPORT</NavLink>
+                                <NavLink to="/faqs">FAQs</NavLink>
                                 <NavLink to="/contact">CONTACT US</NavLink>
                                 {!isAuthenticated && (
                                     <div className="auth-buttons">
@@ -223,9 +215,6 @@ export default function TopNav() {
 
                         <div className="icons">
                             <div className="icon-container">
-                                <div className="search-icon">
-                                    <img src="../../search.svg" alt="Search" />
-                                </div>
                                 <div className="save-icon">
                                     <Link to="/wishlist">
                                         <img src="../../save.svg" alt="Save" />
@@ -258,9 +247,7 @@ export default function TopNav() {
                                                 }
                                                 onMouseLeave={handleMouseLeave}
                                             >
-                                                <Link to="/dashboard">
-                                                    Dashboard
-                                                </Link>
+                                               
                                                 <Link to="/profile">
                                                     Profile
                                                 </Link>
@@ -280,7 +267,7 @@ export default function TopNav() {
                                     </div>
                                 )}
 
-                                <div className="hamburger-menu">
+                                <div className="hamburger-menu" onClick={openSidebar}>
                                     <div></div>
                                     <div></div>
                                     <div></div>
@@ -321,6 +308,7 @@ export default function TopNav() {
                     initialMode={authMode}
                 />
             )}
+            <Sidebar open={sidebarOpen} onClose={closeSidebar} />
         </>
     );
 }

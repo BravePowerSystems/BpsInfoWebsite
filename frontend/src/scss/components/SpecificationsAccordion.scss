@@ -1,0 +1,110 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.specifications-accordion {
+    width: 100%;
+    
+    .spec-category {
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+        background: rgba(12, 24, 40, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        
+        &.active {
+            box-shadow: 0 5px 15px rgba(103, 141, 246, 0.2);
+        }
+        
+        .spec-category-header {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            
+            &:hover {
+                background: rgba(255, 255, 255, 0.05);
+            }
+            
+            h3 {
+                margin: 0;
+                font-size: 1.1rem;
+                color: $primary-text-color;
+            }
+            
+            .indicator {
+                transition: transform 0.3s ease;
+                
+                img {
+                    width: 16px;
+                    height: 16px;
+                }
+                
+                &.rotated {
+                    transform: rotate(180deg);
+                }
+            }
+        }
+        
+        .spec-category-content {
+            padding: 0 1.5rem;
+        }
+    }
+    
+    .spec-list, .spec-category-content {
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            
+            &:last-child {
+                border-bottom: none;
+            }
+            
+            .spec-name {
+                font-size: 0.875rem;
+                color: $primary-text-color;
+                width: 70%;
+            }
+            
+            .spec-value {
+                font-size: 0.75rem;
+                color: rgba(255, 255, 255, 0.8);
+                width: fit-content;
+                text-align: center;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+    }
+}
+
+// Responsive styles
+@include tablet {
+    .specifications-accordion {
+        .spec-category {
+            .spec-category-header {
+                h3 {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+        
+        .spec-list, .spec-category-content {
+            .spec-item {
+                .spec-name {
+                    font-size: 1rem;
+                }
+                
+                .spec-value {
+                    font-size: 0.875rem;
+                }
+            }
+        }
+    }
+}

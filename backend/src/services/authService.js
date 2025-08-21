@@ -6,27 +6,44 @@ export class AuthService {
     static async registerUser(userData) {
         const { username, email, password } = userData;
         
-        const existingUser = await User.findOne({ 
-            $or: [{ username }, { email }]
-        });
-
-        if (existingUser) {
-            throw new Error(
-                existingUser.username === username 
-                    ? 'Username already exists' 
-                    : 'Email already exists'
-            );
+        // Additional validation
+        if (!username || !email || !password) {
+            throw new Error("All fields are required");
         }
+        
+        try {
+            const existingUser = await User.findOne({ 
+                $or: [{ username }, { email }]
+            });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ 
-            username, 
-            email, 
-            password: hashedPassword, 
-            role: 'user' 
-        });
+            if (existingUser) {
+                throw new Error(
+                    existingUser.username === username 
+                        ? 'Username already exists' 
+                        : 'Email already exists'
+                );
+            }
 
-        return await user.save();
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const user = new User({ 
+                username, 
+                email, 
+                password: hashedPassword, 
+                role: 'user' 
+            });
+
+            return await user.save();
+        } catch (error) {
+            // Check if it's a MongoDB duplicate key error
+            if (error.code === 11000) {
+                // Extract the duplicate field name from the error message
+                const field = Object.keys(error.keyPattern)[0];
+                throw new Error(`${field.charAt(0).toUpperCase() + field.slice(1)} already exists`);
+            }
+            
+            // Re-throw other errors
+            throw error;
+        }
     }
 
     static async loginUser(credentials) {

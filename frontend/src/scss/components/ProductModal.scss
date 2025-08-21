@@ -14,6 +14,7 @@
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
+    overflow: hidden; /* Prevent scrolling within the modal overlay */
 
     .modal-content {
         width: 90%;
@@ -26,8 +27,10 @@
         position: relative;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        overflow-y: scroll;
-        scrollbar-width: none;
+        overflow-y: auto;
+        max-height: 90vh;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 
         &::-webkit-scrollbar {
             width: 8px;
@@ -40,6 +43,10 @@
         &::-webkit-scrollbar-thumb {
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 4px;
+            
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+            }
         }
 
         &:focus {

@@ -39,6 +39,15 @@ const enquirySchema = new mongoose.Schema(
             enum: ["new", "in-progress", "completed", "archived"],
             default: "new",
         },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: false // Only required if user is logged in
+        },
+        responseMessage: {
+            type: String,
+            default: '',
+        },
     },
     {
         timestamps: true,
