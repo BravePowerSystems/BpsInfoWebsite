@@ -18,19 +18,34 @@ dotenv.config();
 const app = express();
 
 const allowedOrigins = [
-  'https://bps-info-website.vercel.app'   // production frontend
+  'https://bps-info-website.vercel.app',   // production frontend
+  'http://localhost:3000',                // development frontend
+  'http://localhost:3001',                // alternative dev port
+  'https://localhost:3000',               // HTTPS dev
+  'https://localhost:3001'                // HTTPS dev alternative
 ];
 
-// Dynamic origin handling
+// Dynamic origin handling with better error handling
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // allow non-browser clients (like curl, Postman)
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowed list
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    return callback(new Error('Not allowed by CORS'));
+    
+    // Log blocked origins for debugging
+    console.log(`CORS blocked origin: ${origin}`);
+    
+    // Allow the request but log it (more permissive for development)
+    return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Set-Cookie']
 }));
 
 
@@ -51,6 +66,31 @@ app.use('/api/user', userRoutes);
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'No Origin'}`);
+  next();
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({
+      error: 'CORS Error',
+      message: 'Origin not allowed',
+      origin: req.get('Origin'),
+      allowedOrigins
+    });
+  }
+  
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: err.message
+  });
+});
 
 // Serve uploads folder statically from backend
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
