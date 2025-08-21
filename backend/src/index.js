@@ -36,6 +36,12 @@ app.use(cors({
       return callback(null, true);
     }
     
+    // For production, be more permissive with origins but log them
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`Production CORS allowing origin: ${origin}`);
+      return callback(null, true);
+    }
+    
     // Log blocked origins for debugging
     console.log(`CORS blocked origin: ${origin}`);
     
@@ -67,9 +73,79 @@ app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 
+// Debug endpoint for cookie testing
+app.get('/api/debug/cookies', (req, res) => {
+  const cookies = req.headers.cookie;
+  const origin = req.get('Origin');
+  const userAgent = req.get('User-Agent');
+  
+  res.json({
+    message: 'Cookie debug info',
+    cookies: cookies || 'No cookies sent',
+    origin: origin || 'No origin',
+    userAgent: userAgent || 'No user agent',
+    nodeEnv: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Test endpoint to set a simple cookie
+app.get('/api/debug/set-test-cookie', (req, res) => {
+  const isProd = process.env.NODE_ENV === 'production';
+  const origin = req.get('Origin');
+  let domain = undefined;
+  
+  if (isProd && origin) {
+    try {
+      const url = new URL(origin);
+      domain = url.hostname;
+    } catch (e) {
+      console.log('Could not parse origin for domain setting:', origin);
+    }
+  }
+  
+  const cookieOptions = {
+    httpOnly: false, // Make it readable by frontend for testing
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+    path: '/',
+    domain: domain,
+    maxAge: 60 * 60 * 1000 // 1 hour
+  };
+  
+  res.cookie('testCookie', 'testValue123', cookieOptions);
+  res.json({
+    message: 'Test cookie set',
+    cookieOptions,
+    origin,
+    nodeEnv: process.env.NODE_ENV
+  });
+});
+
+// Environment check endpoint
+app.get('/api/debug/env', (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    PORT: process.env.PORT,
+    MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
+    JWT_SECRET: process.env.JWT_SECRET ? 'Set' : 'Not set',
+    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ? 'Set' : 'Not set',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Add request logging middleware
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'No Origin'}`);
+  const origin = req.get('Origin');
+  const userAgent = req.get('User-Agent');
+  const cookies = req.headers.cookie;
+  
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log(`  Origin: ${origin || 'No Origin'}`);
+  console.log(`  User-Agent: ${userAgent || 'No User-Agent'}`);
+  console.log(`  Cookies: ${cookies || 'No Cookies'}`);
+  console.log(`  NODE_ENV: ${process.env.NODE_ENV}`);
+  
   next();
 });
 

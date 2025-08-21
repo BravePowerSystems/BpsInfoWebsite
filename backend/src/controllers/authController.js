@@ -45,19 +45,47 @@ export const login = async (req, res) => {
         const authData = await AuthService.loginUser(req.body);
         // Set JWT as cookie (not httpOnly so frontend can read it)
         const isProd = process.env.NODE_ENV === 'production';
+        
+        // Get the origin from the request to determine the domain
+        const origin = req.get('Origin');
+        let domain = undefined;
+        
+        if (isProd && origin) {
+            try {
+                const url = new URL(origin);
+                // For production, set domain to allow cross-subdomain cookies
+                // Remove port if present and set domain
+                domain = url.hostname;
+                // If it's a subdomain, you might want to set it to the root domain
+                // domain = url.hostname.split('.').slice(-2).join('.');
+            } catch (e) {
+                console.log('Could not parse origin for domain setting:', origin);
+            }
+        }
+        
         const cookieOptions = {
             httpOnly: true,
             secure: isProd,
-            sameSite: isProd ? 'strict' : 'lax',
+            sameSite: isProd ? 'none' : 'lax', // Changed from 'strict' to 'none' for cross-origin
             path: '/', // Ensure cookie is available across all paths
-            maxAge: 60 * 60 * 1000 // 1 hour
+            maxAge: 60 * 60 * 1000, // 1 hour
+            domain: domain // Set domain for production
         };
+        
         const refreshCookieOptions = {
             httpOnly: true,
             secure: isProd,
-            sameSite: isProd ? 'strict' : 'lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            sameSite: isProd ? 'none' : 'lax', // Changed from 'strict' to 'none' for cross-origin
+            path: '/',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            domain: domain // Set domain for production
         };
+        
+        // Log cookie options for debugging
+        if (isProd) {
+            console.log('Setting cookies with options:', { cookieOptions, refreshCookieOptions, origin });
+        }
+        
         res.cookie('accessToken', authData.accessToken, cookieOptions);
         res.cookie('refreshToken', authData.refreshToken, refreshCookieOptions);
         res.status(200).json({
@@ -73,11 +101,28 @@ export const login = async (req, res) => {
 // Logout controller to clear cookies
 export const logout = (req, res) => {
     const isProd = process.env.NODE_ENV === 'production';
+    
+    // Get the origin from the request to determine the domain
+    const origin = req.get('Origin');
+    let domain = undefined;
+    
+    if (isProd && origin) {
+        try {
+            const url = new URL(origin);
+            domain = url.hostname;
+        } catch (e) {
+            console.log('Could not parse origin for domain setting:', origin);
+        }
+    }
+    
     const clearOptions = {
         httpOnly: true,
         secure: isProd,
-        sameSite: isProd ? 'strict' : 'lax',
+        sameSite: isProd ? 'none' : 'lax',
+        path: '/',
+        domain: domain
     };
+    
     res.clearCookie('accessToken', clearOptions);
     res.clearCookie('refreshToken', clearOptions);
     res.status(200).json({ message: 'Logged out successfully' });
@@ -92,12 +137,29 @@ export const refreshToken = async (req, res) => {
         );
         // Set new accessToken as cookie
         const isProd = process.env.NODE_ENV === 'production';
+        
+        // Get the origin from the request to determine the domain
+        const origin = req.get('Origin');
+        let domain = undefined;
+        
+        if (isProd && origin) {
+            try {
+                const url = new URL(origin);
+                domain = url.hostname;
+            } catch (e) {
+                console.log('Could not parse origin for domain setting:', origin);
+            }
+        }
+        
         const cookieOptions = {
             httpOnly: true,
             secure: isProd,
-            sameSite: isProd ? 'strict' : 'lax',
-            maxAge: 60 * 60 * 1000 // 1 hour
+            sameSite: isProd ? 'none' : 'lax',
+            path: '/',
+            maxAge: 60 * 60 * 1000, // 1 hour
+            domain: domain
         };
+        
         res.cookie('accessToken', tokens.accessToken, cookieOptions);
         // Do not send tokens in response
         res.status(200).json({ message: 'Token refreshed' });
