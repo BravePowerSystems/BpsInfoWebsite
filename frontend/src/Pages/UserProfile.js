@@ -24,13 +24,13 @@ const UserProfile = () => {
             try {
                 const response = await authService.getProfile();
                 setFormData({
-                    username: response.data.username || '',
-                    email: response.data.email || '',
-                    firstName: response.data.firstName || '',
-                    lastName: response.data.lastName || '',
-                    company: response.data.company || '',
-                    phone: response.data.phone || '',
-                    address: response.data.address || ''
+                                    username: response.username || '',
+                email: response.email || '',
+                firstName: response.firstName || '',
+                lastName: response.lastName || '',
+                company: response.company || '',
+                phone: response.phone || '',
+                address: response.address || ''
                 });
             } catch (error) {
                 systemNotifications.error('Failed to load profile');
@@ -50,13 +50,13 @@ const UserProfile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await authService.updateProfile(formData);
+            await authService.updateProfile(formData);
             formNotifications.submitSuccess('profile');
             setIsEditing(false);
             // Update user in AuthContext after profile update
             if (setUser) {
                 const profile = await authService.getProfile();
-                setUser(profile.data);
+                setUser(profile);
             }
         } catch (error) {
             systemNotifications.error('Failed to update profile');

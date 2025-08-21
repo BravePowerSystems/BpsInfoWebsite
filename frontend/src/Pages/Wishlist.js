@@ -29,8 +29,8 @@ function Wishlist() {
     const fetchWishlist = async () => {
         try {
             setLoading(true);
-            const response = await wishlistService.getUserWishlist();
-            setWishlistItems(response.data);
+            const response = await wishlistService.getWishlist();
+                            setWishlistItems(response);
         } catch (error) {
             console.error('Error fetching wishlist:', error);
             setError('Failed to load wishlist items');

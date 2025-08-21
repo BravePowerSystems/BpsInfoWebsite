@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../scss/components/admin/ProductForm.scss';
 import { motion } from 'framer-motion';
-import { protectedClient } from '../../services/apiClient';
+import { privateClientMethods } from '../../services/apiClient';
 
 function ProductForm({ product, categories, onSave, onCancel }) {
     const [formData, setFormData] = useState({
@@ -159,12 +159,10 @@ function ProductForm({ product, categories, onSave, onCancel }) {
         const formDataObj = new FormData();
         formDataObj.append('file', file);
         try {
-            const response = await protectedClient.post('/upload', formDataObj, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            if (response.data && response.data.url) {
+            const response = await privateClientMethods.post('/upload', formDataObj);
+            if (response && response.url) {
                 // The backend now returns full URLs, so use directly
-                setFormData(prev => ({ ...prev, imageUrl: response.data.url }));
+                setFormData(prev => ({ ...prev, imageUrl: response.url }));
             } else {
                 alert('Image upload failed');
             }

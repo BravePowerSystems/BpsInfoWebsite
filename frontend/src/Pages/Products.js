@@ -41,10 +41,10 @@ function Products() {
         try {
             setLoading(true);
             const response = await productService.getAllProducts();
-            if (!response || !response.data) {
+            if (!response) {
                 throw new Error('Invalid response from server');
             }
-            setProducts(response.data);
+            setProducts(response);
         } catch (err) {
             setError('Failed to load products: ' + (err.message || 'Unknown error'));
             console.error('Error loading products:', err);

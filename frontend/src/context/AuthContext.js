@@ -1,7 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { authService } from '../services/authService';
 import { authNotifications } from '../utils/notificationHelper';
-import { protectedClient } from '../services/apiClient';
 
 const AuthContext = createContext(null);
 
@@ -12,14 +11,22 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // On mount, check if user is authenticated by calling backend
+    // On mount, check if user is authenticated by checking localStorage and validating token
     useEffect(() => {
         const checkAuth = async () => {
             setLoading(true);
             try {
-                const response = await authService.getProfile();
-                setUser(response.data);
+                const token = localStorage.getItem('accessToken');
+                if (token) {
+                    const response = await authService.getProfile();
+                    setUser(response.data);
+                } else {
+                    setUser(null);
+                }
             } catch (err) {
+                // Token is invalid or expired, clear it
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
                 setUser(null);
             } finally {
                 setLoading(false);
@@ -32,11 +39,15 @@ export const AuthProvider = ({ children }) => {
         try {
             setError(null);
             const response = await authService.login(username, password);
-            // After login, fetch user profile
-            const profile = await authService.getProfile();
-            setUser(profile.data);
-            authNotifications.loginSuccess(profile.data.username);
-            return profile.data;
+            
+            // Store tokens in localStorage
+            const { accessToken, refreshToken, user: userData } = response.data;
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            
+            setUser(userData);
+            authNotifications.loginSuccess(userData.username);
+            return userData;
         } catch (err) {
             const errorMessage = err.response?.data?.error || 'Login failed';
             setError(errorMessage);
@@ -51,18 +62,36 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
             // Ignore API errors on logout
         }
+        
+        // Clear tokens from localStorage
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         setUser(null);
         authNotifications.logoutSuccess();
     };
 
     const refreshToken = async () => {
         try {
-            const response = await authService.refreshToken();
-            // After refresh, fetch user profile
+            const storedRefreshToken = localStorage.getItem('refreshToken');
+            if (!storedRefreshToken) {
+                throw new Error('No refresh token available');
+            }
+            
+            const response = await authService.refreshToken(storedRefreshToken);
+            const { accessToken, refreshToken: newRefreshToken } = response.data;
+            
+            // Update tokens in localStorage
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', newRefreshToken);
+            
+            // Fetch updated user profile
             const profile = await authService.getProfile();
             setUser(profile.data);
             return profile.data;
         } catch (err) {
+            // Refresh failed, clear tokens and user
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
             setUser(null);
             throw err;
         }
@@ -71,7 +100,7 @@ export const AuthProvider = ({ children }) => {
     const register = async (userData) => {
         try {
             setError(null);
-            const response = await authService.register(userData);
+            await authService.register(userData);
             // After successful registration, login the user
             return await login(userData.username, userData.password);
         } catch (err) {

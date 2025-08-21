@@ -9,17 +9,16 @@ function UserDashboard() {
     const [activeTab, setActiveTab] = useState('overview');
     const [enquiries, setEnquiries] = useState([]);
     const [enquiriesLoading, setEnquiriesLoading] = useState(true);
-    const isAdmin = user && user.role === 'admin';
 
     useEffect(() => {
         const fetchEnquiries = async () => {
             if (!user) return;
             setEnquiriesLoading(true);
             try {
-                const response = await enquiryService.getUserEnquiries();
+                const response = await enquiryService.getMyEnquiries();
                 console.log(response);
-                if (response.data && response.data.success) {
-                    setEnquiries(response.data.data);
+                if (response && response.success) {
+                    setEnquiries(response.data);
                 } else {
                     setEnquiries([]);
                 }

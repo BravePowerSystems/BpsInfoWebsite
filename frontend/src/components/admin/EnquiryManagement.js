@@ -21,14 +21,14 @@ function EnquiryManagement() {
     const fetchEnquiries = async () => {
         setLoading(true);
         try {
-            const response = await enquiryService.getEnquiries();
-            if (response.data && response.data.success) {
-                setEnquiries(response.data.data);
+            const response = await enquiryService.getAllEnquiries();
+            if (response && response.success) {
+                setEnquiries(response.data);
                 // Fetch wishlists for all enquiries with userId
-                response.data.data.forEach(async (enq) => {
+                response.data.forEach(async (enq) => {
                     if (enq.userId) {
-                        const wlRes = await enquiryService.getUserWishlist(enq.userId);
-                        setWishlists(prev => ({ ...prev, [enq._id]: wlRes.data.data }));
+                        const wlRes = await enquiryService.getWishlistEnquiries(enq.userId);
+                        setWishlists(prev => ({ ...prev, [enq._id]: wlRes.data }));
                     }
                 });
             } else {
@@ -62,7 +62,7 @@ function EnquiryManagement() {
     const handleResponseSubmit = async (id) => {
         setSavingResponse(prev => ({ ...prev, [id]: true }));
         try {
-            await enquiryService.updateEnquiryResponseMessage(id, responseMessages[id] || '');
+            await enquiryService.respondToEnquiry(id, responseMessages[id] || '');
             setEnquiries(enquiries =>
                 enquiries.map(enq =>
                     enq._id === id ? { ...enq, responseMessage: responseMessages[id] || '' } : enq

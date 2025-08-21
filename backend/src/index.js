@@ -10,7 +10,6 @@ import wishlistRoutes from './routes/wishlistRoutes.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import cookieParser from 'cookie-parser';
 import { ImageService } from './services/imageService.js';
 // Load environment variables first
 dotenv.config();
@@ -48,15 +47,11 @@ app.use(cors({
     // Allow the request but log it (more permissive for development)
     return callback(null, true);
   },
-  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  exposedHeaders: ['Set-Cookie']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
 
-
 app.use(express.json());  // this is used to parse the request body as JSON
-app.use(cookieParser());
 
 // Connect to database
 try {
@@ -73,45 +68,6 @@ app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 
-// Debug endpoint for cookie testing
-app.get('/api/debug/cookies', (req, res) => {
-  const cookies = req.headers.cookie;
-  const origin = req.get('Origin');
-  const userAgent = req.get('User-Agent');
-  
-  res.json({
-    message: 'Cookie debug info',
-    cookies: cookies || 'No cookies sent',
-    origin: origin || 'No origin',
-    userAgent: userAgent || 'No user agent',
-    nodeEnv: process.env.NODE_ENV,
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Test endpoint to set a simple cookie
-app.get('/api/debug/set-test-cookie', (req, res) => {
-  const isProd = process.env.NODE_ENV === 'production';
-  const origin = req.get('Origin');
-  
-  const cookieOptions = {
-    httpOnly: false, // Make it readable by frontend for testing
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
-    path: '/',
-    // Don't set domain - let the browser handle it
-    maxAge: 60 * 60 * 1000 // 1 hour
-  };
-  
-  res.cookie('testCookie', 'testValue123', cookieOptions);
-  res.json({
-    message: 'Test cookie set',
-    cookieOptions,
-    origin,
-    nodeEnv: process.env.NODE_ENV
-  });
-});
-
 // Environment check endpoint
 app.get('/api/debug/env', (req, res) => {
   res.json({
@@ -124,65 +80,14 @@ app.get('/api/debug/env', (req, res) => {
   });
 });
 
-// Comprehensive cookie test endpoint
-app.get('/api/debug/test-cookies', (req, res) => {
-  const isProd = process.env.NODE_ENV === 'production';
-  const origin = req.get('Origin');
-  
-  // Test different cookie configurations
-  const cookies = [
-    {
-      name: 'testCookie1',
-      value: 'value1',
-      options: {
-        httpOnly: false,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 1000
-      }
-    },
-    {
-      name: 'testCookie2',
-      value: 'value2',
-      options: {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 1000
-      }
-    }
-  ];
-  
-  // Set all test cookies
-  cookies.forEach(cookie => {
-    res.cookie(cookie.name, cookie.value, cookie.options);
-  });
-  
-  // Get response headers for debugging
-  const responseHeaders = res.getHeaders();
-  
-  res.json({
-    message: 'Test cookies set with comprehensive options',
-    cookies: cookies,
-    origin: origin,
-    nodeEnv: process.env.NODE_ENV,
-    responseHeaders: responseHeaders,
-    timestamp: new Date().toISOString()
-  });
-});
-
 // Add request logging middleware
 app.use((req, res, next) => {
   const origin = req.get('Origin');
   const userAgent = req.get('User-Agent');
-  const cookies = req.headers.cookie;
   
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   console.log(`  Origin: ${origin || 'No Origin'}`);
   console.log(`  User-Agent: ${userAgent || 'No User-Agent'}`);
-  console.log(`  Cookies: ${cookies || 'No Cookies'}`);
   console.log(`  NODE_ENV: ${process.env.NODE_ENV}`);
   
   next();

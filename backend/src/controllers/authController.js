@@ -43,42 +43,12 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const authData = await AuthService.loginUser(req.body);
-        // Set JWT as cookie (not httpOnly so frontend can read it)
-        const isProd = process.env.NODE_ENV === 'production';
         
-        // Get the origin from the request to determine the domain
-        const origin = req.get('Origin');
-        
-        // For cross-origin requests in production, don't set domain
-        // This allows cookies to work across different domains
-        const cookieOptions = {
-            httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? 'none' : 'lax', // 'none' for cross-origin
-            path: '/', // Ensure cookie is available across all paths
-            maxAge: 60 * 60 * 1000, // 1 hour
-            // Don't set domain - let the browser handle it
-        };
-        
-        const refreshCookieOptions = {
-            httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? 'none' : 'lax', // 'none' for cross-origin
-            path: '/',
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            // Don't set domain - let the browser handle it
-        };
-        
-        // Log cookie options for debugging
-        if (isProd) {
-            console.log('Setting cookies with options:', { cookieOptions, refreshCookieOptions, origin });
-        }
-        
-        res.cookie('accessToken', authData.accessToken, cookieOptions);
-        res.cookie('refreshToken', authData.refreshToken, refreshCookieOptions);
         res.status(200).json({
             message: `User logged in successfully as ${authData.user.role}`,
-            user: authData.user
+            user: authData.user,
+            accessToken: authData.accessToken,
+            refreshToken: authData.refreshToken
         });
     } catch (error) {
         console.error("Login error:", error);
@@ -86,23 +56,8 @@ export const login = async (req, res) => {
     }
 };
 
-// Logout controller to clear cookies
+// Logout controller - no need to clear cookies since we're using localStorage
 export const logout = (req, res) => {
-    const isProd = process.env.NODE_ENV === 'production';
-    
-    // Get the origin from the request to determine the domain
-    const origin = req.get('Origin');
-    
-    const clearOptions = {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
-        path: '/',
-        // Don't set domain - let the browser handle it
-    };
-    
-    res.clearCookie('accessToken', clearOptions);
-    res.clearCookie('refreshToken', clearOptions);
     res.status(200).json({ message: 'Logged out successfully' });
 };
 
@@ -110,27 +65,18 @@ export const logout = (req, res) => {
 // access token is used to authenticate and authorize the user for accessing protected routes
 export const refreshToken = async (req, res) => {
     try {
-        const tokens = await AuthService.refreshUserToken(
-            req.body.refreshToken
-        );
-        // Set new accessToken as cookie
-        const isProd = process.env.NODE_ENV === 'production';
+        const { refreshToken } = req.body;
+        if (!refreshToken) {
+            return res.status(400).json({ error: "Refresh token is required" });
+        }
         
-        // Get the origin from the request to determine the domain
-        const origin = req.get('Origin');
+        const tokens = await AuthService.refreshUserToken(refreshToken);
         
-        const cookieOptions = {
-            httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? 'none' : 'lax',
-            path: '/',
-            maxAge: 60 * 60 * 1000, // 1 hour
-            // Don't set domain - let the browser handle it
-        };
-        
-        res.cookie('accessToken', tokens.accessToken, cookieOptions);
-        // Do not send tokens in response
-        res.status(200).json({ message: 'Token refreshed' });
+        res.status(200).json({ 
+            message: 'Token refreshed',
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken
+        });
     } catch (error) {
         res.status(401).json({ error: "Invalid refresh token" });
     }

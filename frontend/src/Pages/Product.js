@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
 import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Product.scss";
@@ -32,7 +32,6 @@ export default function Product() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { user, isAdmin } = useAuth();
-    const navigate = useNavigate();
     const location = useLocation(); // Add this line to get the current location
     const [showUnauthorized, setShowUnauthorized] = useState(false);
 
@@ -54,12 +53,12 @@ export default function Product() {
                     formattedCategory,
                     formattedProduct
                 );
-                const productData = response.data;
+                const productData = response;
                 setProduct(productData);
 
                 // Load all products to get related products from same category
                 const allProductsResponse = await productService.getAllProducts();
-                const allProducts = allProductsResponse.data;
+                const allProducts = allProductsResponse;
                 const categoryObj = allProducts.find(
                     (item) => Object.keys(item)[0].toLowerCase() === formattedCategory.toLowerCase()
                 );
