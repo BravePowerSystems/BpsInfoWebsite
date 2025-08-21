@@ -20,7 +20,6 @@ const app = express();
 import cors from 'cors';
 
 const allowedOrigins = [
-  'http://localhost:3000',     // local frontend
   'https://bps-info-website.vercel.app'   // production frontend
 ];
 
