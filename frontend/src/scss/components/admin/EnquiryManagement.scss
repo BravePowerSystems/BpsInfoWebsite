@@ -237,116 +237,68 @@
       }
     }
     
-         .enquiry-response {
-       label {
-         display: block;
-         margin-bottom: 0.5rem;
-         font-size: 0.9rem;
-         color: rgba(255, 255, 255, 0.8);
-         font-weight: 500;
-       }
-       
-       .existing-response {
-         background: rgba(103, 141, 246, 0.1);
-         border: 1px solid rgba(103, 141, 246, 0.2);
-         border-radius: 8px;
-         padding: 1rem;
-         margin-bottom: 1rem;
-         
-         strong {
-           color: #678df6;
-           display: block;
-           margin-bottom: 0.5rem;
-         }
-         
-         p {
-           color: rgba(255, 255, 255, 0.8);
-           margin: 0;
-           line-height: 1.4;
-         }
-       }
-       
-       textarea {
-         width: 100%;
-         padding: 0.8rem;
-         background: rgba(255, 255, 255, 0.05);
-         border: 1px solid rgba(255, 255, 255, 0.1);
-         border-radius: 8px;
-         color: $primary-text-color;
-         font-size: 1rem;
-         resize: vertical;
-         min-height: 80px;
-         margin-bottom: 1rem;
-         transition: all 0.3s ease;
-         
-         &:focus {
-           outline: none;
-           border-color: #678df6;
-           background: rgba(255, 255, 255, 0.1);
-           box-shadow: 0 0 10px rgba(103, 141, 246, 0.2);
-         }
-         
-         &::placeholder {
-           color: rgba(255, 255, 255, 0.4);
-         }
-       }
-       
-       .response-actions {
-         display: flex;
-         gap: 0.75rem;
-         align-items: center;
-         
-         .save-response-btn {
-           padding: 0.8rem 1.5rem;
-           background: linear-gradient(90deg, #678df6, #8f94fb);
-           border: none;
-           border-radius: 8px;
-           color: $primary-text-color;
-           font-weight: 600;
-           cursor: pointer;
-           transition: all 0.3s ease;
-           font-size: 1rem;
-           
-           &:hover {
-             transform: translateY(-2px);
-             box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
-           }
-           
-           &:disabled {
-             opacity: 0.7;
-             cursor: not-allowed;
-             transform: none !important;
-             
-             &:hover {
-               transform: none;
-               box-shadow: none;
-             }
-           }
-         }
-         
-         .clear-response-btn {
-           padding: 0.6rem 1rem;
-           background: rgba(255, 255, 255, 0.1);
-           border: 1px solid rgba(255, 255, 255, 0.2);
-           border-radius: 6px;
-           color: rgba(255, 255, 255, 0.7);
-           font-weight: 500;
-           cursor: pointer;
-           transition: all 0.3s ease;
-           font-size: 0.9rem;
-           
-           &:hover {
-             background: rgba(255, 255, 255, 0.2);
-             color: rgba(255, 255, 255, 0.9);
-           }
-           
-           &:disabled {
-             opacity: 0.5;
-             cursor: not-allowed;
-           }
-         }
-       }
-     }
+    .enquiry-response {
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+      }
+      
+      textarea {
+        width: 100%;
+        padding: 0.8rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: $primary-text-color;
+        font-size: 1rem;
+        resize: vertical;
+        min-height: 80px;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        
+        &:focus {
+          outline: none;
+          border-color: #678df6;
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: 0 0 10px rgba(103, 141, 246, 0.2);
+        }
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.4);
+        }
+      }
+      
+      button {
+        padding: 0.8rem 1.5rem;
+        background: linear-gradient(90deg, #678df6, #8f94fb);
+        border: none;
+        border-radius: 8px;
+        color: $primary-text-color;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
+        }
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none !important;
+          
+          &:hover {
+            transform: none;
+            box-shadow: none;
+          }
+        }
+      }
+    }
   }
   
   .empty-message, .error-message {
