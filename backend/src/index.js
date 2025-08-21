@@ -17,13 +17,25 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(
-    cors({
-        origin: '*'
-    })
-);
-  
+import cors from 'cors';
+
+const allowedOrigins = [
+  'http://localhost:3000',     // local frontend
+  'https://bps-info-website.vercel.app'   // production frontend
+];
+
+// Dynamic origin handling
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow non-browser clients (like curl, Postman)
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
+
 
 app.use(express.json());  // this is used to parse the request body as JSON
 app.use(cookieParser());
