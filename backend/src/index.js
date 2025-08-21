@@ -20,7 +20,10 @@ const app = express();
 // Middleware
 app.use(
     cors({
-        origin: 'http://localhost:3000', // Set to frontend origin for credentials
+        origin: [
+            'http://localhost:3000', // Development
+            'https://bps-info-website.vercel.app' // Production
+        ],
         credentials: true,
     })
 );
