@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import '../scss/pages/UserProfile.scss';
 import { systemNotifications, formNotifications } from '../utils/notificationHelper';
 import { authService } from '../services/authService';
+import Loading from '../components/Loading';
 
 const UserProfile = () => {
     const { user, loading, setUser } = useAuth();
@@ -64,7 +65,7 @@ const UserProfile = () => {
     };
     
     if (loading) {
-        return <div className="loading">Loading profile...</div>;
+        return <Loading text="Loading profile..." />;
     }
     
     return (

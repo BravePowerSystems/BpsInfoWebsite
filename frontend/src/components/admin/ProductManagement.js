@@ -3,6 +3,7 @@ import { productService } from "../../services/productService";
 import "../../scss/components/admin/ProductManagement.scss";
 import ProductCard from "./ProductCard";
 import Notify from "simple-notify";
+import Loading from "../Loading";
 
 function ProductManagement({ onShowProductForm }) {
     const [products, setProducts] = useState([]);
@@ -200,7 +201,7 @@ function ProductManagement({ onShowProductForm }) {
             </div>
 
             {loading ? (
-                <div className="loading">Loading products...</div>
+                <Loading text="Loading products..." />
             ) : (
                 <div className="product-grid">
                     {filteredProducts.map((product) => (

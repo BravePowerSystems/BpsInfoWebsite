@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { formNotifications } from '../utils/notificationHelper';
 import { publicClient, protectedClient } from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
+import { openWhatsAppProductEnquiry } from '../utils/whatsappHelper';
 
 const ProductModal = ({ productName, onClose }) => {
     const { user, isAuthenticated } = useAuth();
@@ -204,6 +205,15 @@ const ProductModal = ({ productName, onClose }) => {
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
+                        </button>
+                        <button 
+                            type="button"
+                            className="whatsapp-btn"
+                            onClick={() => openWhatsAppProductEnquiry(productName)}
+                            title="Contact us on WhatsApp"
+                        >
+                            <img src="/whatsapp.png" alt="WhatsApp" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+                            WhatsApp Enquiry
                         </button>
                     </div>
                 </form>

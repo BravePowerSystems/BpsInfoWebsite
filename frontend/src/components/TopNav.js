@@ -6,6 +6,7 @@ import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
 import { productService } from "../services/productService";
 import Sidebar from "./Sidebar";
+import { openWhatsAppContact } from "../utils/whatsappHelper";
 
 const ProductsList = ({ onLinkClick, categories, loading, error }) => {
     // Memoize the cleaned categories to prevent unnecessary re-renders
@@ -207,12 +208,19 @@ export default function TopNav() {
                                         <img src="../../save.svg" alt="Save" />
                                     </Link>
                                 </div>
-                                <div className="whatsapp-icon">
+                                <a
+                                    href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="whatsapp-icon"
+                                    title="Contact us on WhatsApp"
+                                    style={{ cursor: 'pointer', textDecoration: 'none' }}
+                                >
                                     <img
                                         src="../../whatsapp.png"
                                         alt="WhatsApp"
                                     />
-                                </div>
+                                </a>
 
                                 {isAuthenticated && (
                                     <div

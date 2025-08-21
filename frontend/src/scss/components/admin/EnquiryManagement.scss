@@ -301,7 +301,7 @@
     }
   }
   
-  .loading-state, .empty-message, .error-message {
+  .empty-message, .error-message {
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
     font-size: 1.13rem;
@@ -310,12 +310,6 @@
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .loading-state {
-    color: #678df6;
-    border-color: rgba(103, 141, 246, 0.3);
-    background: rgba(103, 141, 246, 0.05);
   }
   
   .error-message {

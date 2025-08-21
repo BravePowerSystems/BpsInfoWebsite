@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { enquiryService } from '../../services/enquiryService';
 import '../../scss/components/admin/EnquiryManagement.scss';
+import Loading from '../Loading';
 
 const statusOptions = ['new', 'in-progress', 'completed', 'archived'];
 
@@ -94,7 +95,7 @@ function EnquiryManagement() {
                 </select>
             </div>
             {loading ? (
-                <div className="loading-state">Loading enquiries...</div>
+                <Loading text="Loading enquiries..." />
             ) : error ? (
                 <div className="error-message">{error}</div>
             ) : filteredEnquiries.length === 0 ? (

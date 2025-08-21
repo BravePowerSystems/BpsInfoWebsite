@@ -80,11 +80,12 @@
     .form-actions {
         display: flex;
         justify-content: center;
+        gap: 1rem;
         margin-top: 1rem;
+        flex-wrap: wrap;
         
-        .submit-btn {
+        .submit-btn, .whatsapp-btn {
             padding: 0.8rem 2rem;
-            background: linear-gradient(90deg, #678df6, #8661c1);
             border: none;
             border-radius: 5px;
             color: white;
@@ -92,10 +93,12 @@
             cursor: pointer;
             transition: all 0.3s ease;
             min-width: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             
             &:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(103, 141, 246, 0.3);
             }
             
             &:disabled {
@@ -103,6 +106,22 @@
                 cursor: not-allowed;
                 transform: none;
                 box-shadow: none;
+            }
+        }
+        
+        .submit-btn {
+            background: linear-gradient(90deg, #678df6, #8661c1);
+            
+            &:hover {
+                box-shadow: 0 4px 12px rgba(103, 141, 246, 0.3);
+            }
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            
+            &:hover {
+                box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
             }
         }
     }
@@ -115,6 +134,28 @@
         .contact-form {
             .form-row {
                 gap: 2rem;
+            }
+        }
+    }
+}
+
+// Mobile-specific styles
+@media (max-width: 767px) {
+    .contact-form-container {
+        padding: 1.5rem;
+        margin: 1rem;
+        
+        .contact-form {
+            .form-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+                
+                .submit-btn, .whatsapp-btn {
+                    width: 100%;
+                    padding: 0.875rem 1.5rem;
+                    font-size: 0.95rem;
+                }
             }
         }
     }

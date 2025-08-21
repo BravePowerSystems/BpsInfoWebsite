@@ -7,7 +7,7 @@ import { fadeInUpVariants } from "../components/HeroSection";
 import "../scss/components/CategoryCarousel.scss";
 import "../scss/pages/CategoryPage.scss";
 import { productService } from "../services/productService";
-import { Loading } from "./Product";
+import Loading from "../components/Loading";
 
 const motionConfig = {
     categoryPage: {
@@ -69,7 +69,7 @@ function CategoryPage() {
         }
     };
 
-    if (loading) return <Loading/>;
+    if (loading) return <Loading text="Loading products..." />;
     if (error) return <div>Error: {error}</div>;
     if (!products.length) return <div>No products found in this category</div>;
 

@@ -13,21 +13,8 @@ import { productNotifications } from "../utils/notificationHelper";
 import { useAuth } from "../context/AuthContext";
 import SpecificationsAccordion from "../components/SpecificationsAccordion";
 import UnauthorizedPage from "./UnauthorizedPage";
-export const Loading = () => {
-    return (
-        <h1
-            style={{
-                position: "absolute",
-                color: "white",
-                width: "100%",
-                height: "100%",
-                padding:"30vh 40vw"
-            }}
-        >
-            Loading....
-        </h1>
-    );
-};
+import Loading from "../components/Loading";
+// Loading component is now imported from ../components/Loading
 const motionConfig = {
     product: {
         variants: fadeInUpVariants,

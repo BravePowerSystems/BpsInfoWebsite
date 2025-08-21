@@ -2,6 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+
 export default function BottomNav() {
     return (
         <motion.div
@@ -74,10 +75,11 @@ export default function BottomNav() {
                         <img src="/facebook.png" alt="Facebook" />
                     </a>
                     <a
-                        href="https://www.whatsapp.com"
+                        href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="whatsapp-link"
+                        title="Contact us on WhatsApp"
                     >
                         <img src="/whatsapp.png" alt="WhatsApp" />
                     </a>

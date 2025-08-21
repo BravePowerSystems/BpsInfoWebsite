@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import '../scss/pages/Dashboard.scss';
-import { Loading } from './Product';
+import Loading from '../components/Loading';    
 import { enquiryService } from '../services/enquiryService';
 
 function UserDashboard() {
@@ -34,7 +34,7 @@ function UserDashboard() {
 
     // Show loading state while auth is being initialized
     if (loading) {
-        return <Loading />
+        return <Loading text="Loading dashboard..." />
     }
 
     // Redirect or show error if no user (though ProtectedRoute should prevent this)
@@ -49,7 +49,7 @@ function UserDashboard() {
         return 'Good evening';
     };
 
-    if (enquiriesLoading) return <Loading />;
+    if (enquiriesLoading) return <Loading text="Loading enquiries..." />;
 
     return (
         <div className="dashboard-container">

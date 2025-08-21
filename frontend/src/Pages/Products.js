@@ -5,7 +5,7 @@ import CategoryCarousel from "../components/CategoryCarousel";
 import { motion } from "framer-motion";
 import { fadeInUpVariants } from "../components/HeroSection";
 import { productService } from "../services/productService";
-import { Loading } from "./Product";
+import Loading from "../components/Loading";
 
 const motionConfig = {
     path: {
@@ -53,7 +53,7 @@ function Products() {
         }
     };
 
-    if (loading) return <Loading />
+    if (loading) return <Loading text="Loading products..." />
     if (error) return <div>Error: {error}</div>;
 
     return (

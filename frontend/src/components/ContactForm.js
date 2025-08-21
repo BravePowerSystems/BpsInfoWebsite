@@ -3,6 +3,7 @@ import "../scss/components/ContactForm.scss";
 import { motion } from "framer-motion";
 import { formNotifications } from '../utils/notificationHelper';
 import { publicClient } from '../services/apiClient';
+import { openWhatsAppGeneralEnquiry } from '../utils/whatsappHelper';
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({
@@ -178,6 +179,15 @@ const ContactForm = () => {
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? 'Submitting...' : 'Submit'}
+                    </button>
+                    <button 
+                        type="button"
+                        className="whatsapp-btn"
+                        onClick={() => openWhatsAppGeneralEnquiry()}
+                        title="Contact us on WhatsApp"
+                    >
+                        <img src="/whatsapp.png" alt="WhatsApp" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+                        WhatsApp
                     </button>
                 </div>
             </form>

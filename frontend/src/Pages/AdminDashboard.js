@@ -6,6 +6,7 @@ import ProductManagement from '../components/admin/ProductManagement';
 import ProductForm from '../components/admin/ProductForm';
 import { AnimatePresence } from 'framer-motion';
 import EnquiryManagement from '../components/admin/EnquiryManagement';
+import Loading from '../components/Loading';
 
 function AdminDashboard() {
     const { user, loading } = useAuth();
@@ -20,7 +21,7 @@ function AdminDashboard() {
     }
     
     if (loading) {
-        return <div className="loading">Loading...</div>;
+        return <Loading text="Loading..." />;
     }
 
     const handleShowProductForm = (product, categories) => {
