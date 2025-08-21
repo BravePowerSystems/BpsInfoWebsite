@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import {  Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../scss/pages/CaseStudy.scss";
 
@@ -19,7 +19,6 @@ const fadeInRightVariants = {
 };
 
 function CaseStudy() {
-    const { caseStudySlug } = useParams();
     
     useEffect(() => {
         window.scrollTo(0, 0);

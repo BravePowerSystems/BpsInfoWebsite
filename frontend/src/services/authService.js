@@ -1,30 +1,29 @@
-import { publicClient, protectedClient } from './apiClient';
+import { publicClientMethods, privateClientMethods } from './apiClient';
 
 export const authService = {
     // Public routes
     login: (username, password) => {
-        return publicClient.post('/auth/login', { username, password }, { withCredentials: true });
+        return publicClientMethods.post('/auth/login', { username, password });
     },
     
     register: (userData) => {
-        return publicClient.post('/auth/register', userData, { withCredentials: true });
+        return publicClientMethods.post('/auth/register', userData);
     },
     
-    refreshToken: () => {
-        // No parameter, use cookie
-        return publicClient.post('/auth/refresh-token', {}, { withCredentials: true });
+    refreshToken: (refreshToken) => {
+        return publicClientMethods.post('/auth/refresh-token', { refreshToken });
     },
     
     // Protected routes
     logout: () => {
-        return publicClient.post('/auth/logout', {}, { withCredentials: true });
+        return publicClientMethods.post('/auth/logout');
     },
     
     getProfile: () => {
-        return protectedClient.get('/user/profile', { withCredentials: true });
+        return privateClientMethods.get('/user/profile');
     },
     
     updateProfile: (userData) => {
-        return protectedClient.put('/user/profile', userData, { withCredentials: true });
+        return privateClientMethods.put('/user/profile', userData);
     }
 };

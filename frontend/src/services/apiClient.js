@@ -1,15 +1,88 @@
-import axios from 'axios';
+// src/services/apiClient.js
+// Reusable API client for making authenticated and unauthenticated requests
 
-// Public client for unauthenticated requests
-export const publicClient = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:7001/api',
-    withCredentials: true
-});
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:7001/api';
 
-// Protected client for authenticated requests
-export const protectedClient = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:7001/api',
-    withCredentials: true
-});
+export const apiClientOptions = {
+  method: 'GET',
+  headers: {},
+  body: undefined,
+  token: undefined
+};
+
+export async function apiClient(
+  url,
+  options = {}
+) {
+  const { method = 'GET', headers = {}, body, token } = options;
+  const finalHeaders = {
+    'Content-Type': 'application/json',
+    ...headers,
+  };
+  
+  // Attach JWT if available
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('accessToken') : undefined);
+  if (authToken) {
+    finalHeaders['Authorization'] = `Bearer ${authToken}`;
+  }
+  
+  // Prepend base URL if not absolute
+  const fullUrl = url.startsWith('http') ? url : `${BASE_URL}${url}`;
+  
+  const res = await fetch(fullUrl, {
+    method,
+    headers: finalHeaders,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  
+  const data = await res.json();
+  
+  if (!res.ok) {
+    throw new Error(data.message || data.error || 'API request failed');
+  }
+  
+  return data;
+}
+
+// Public client: does not attach token
+export async function publicClient(url, options = {}) {
+  // Ensure no token is sent
+  return apiClient(url, { ...options, token: undefined });
+}
+
+// Private client: always attaches token from localStorage (or passed token)
+export async function privateClient(url, options = {}) {
+  // Use token from localStorage or throw if not present
+  const token = (typeof window !== 'undefined' ? localStorage.getItem('accessToken') : undefined);
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+  return apiClient(url, { ...options, token });
+}
+
+// Convenience methods for common HTTP operations
+export const apiClientMethods = {
+  get: (url, options = {}) => apiClient(url, { ...options, method: 'GET' }),
+  post: (url, body, options = {}) => apiClient(url, { ...options, method: 'POST', body }),
+  put: (url, body, options = {}) => apiClient(url, { ...options, method: 'PUT', body }),
+  delete: (url, options = {}) => apiClient(url, { ...options, method: 'DELETE' }),
+  patch: (url, body, options = {}) => apiClient(url, { ...options, method: 'PATCH', body })
+};
+
+export const publicClientMethods = {
+  get: (url, options = {}) => publicClient(url, { ...options, method: 'GET' }),
+  post: (url, body, options = {}) => publicClient(url, { ...options, method: 'POST', body }),
+  put: (url, body, options = {}) => publicClient(url, { ...options, method: 'PUT', body }),
+  delete: (url, options = {}) => publicClient(url, { ...options, method: 'DELETE' }),
+  patch: (url, body, options = {}) => publicClient(url, { ...options, method: 'PATCH', body })
+};
+
+export const privateClientMethods = {
+  get: (url, options = {}) => privateClient(url, { ...options, method: 'GET' }),
+  post: (url, body, options = {}) => privateClient(url, { ...options, method: 'POST', body }),
+  put: (url, body, options = {}) => privateClient(url, { ...options, method: 'PUT', body }),
+  delete: (url, options = {}) => privateClient(url, { ...options, method: 'DELETE' }),
+  patch: (url, body, options = {}) => privateClient(url, { ...options, method: 'PATCH', body })
+};
 
 

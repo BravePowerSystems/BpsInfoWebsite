@@ -1,18 +1,16 @@
-import {  protectedClient } from './apiClient';
+import { privateClientMethods } from './apiClient';
 
 export const wishlistService = {
-    // Get all wishlist items for the logged-in user
-    getUserWishlist: () => {
-        return protectedClient.get('/wishlist');
+    // All routes are protected (user must be authenticated)
+    getWishlist: () => {
+        return privateClientMethods.get('/wishlist');
     },
     
-    // Add a product to the wishlist
     addToWishlist: (productId) => {
-        return protectedClient.post('/wishlist', { productId });
+        return privateClientMethods.post('/wishlist', { productId });
     },
     
-    // Remove an item from the wishlist
     removeFromWishlist: (wishlistItemId) => {
-        return protectedClient.delete(`/wishlist/${wishlistItemId}`);
+        return privateClientMethods.delete(`/wishlist/${wishlistItemId}`);
     }
 };

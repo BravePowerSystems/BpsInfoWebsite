@@ -54,8 +54,6 @@ export const openWhatsApp = (message = '', phoneNumber = BUSINESS_WHATSAPP_NUMBE
             whatsappURL = `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`;
         }
         
-        // Try to open app first
-        const appOpened = window.open(whatsappURL, '_self');
         
         // Fallback to web version after a short delay if app doesn't open
         setTimeout(() => {
@@ -91,11 +89,3 @@ export const openWhatsAppGeneralEnquiry = (enquiryType = '', phoneNumber = BUSIN
     openWhatsApp(message, phoneNumber);
 };
 
-/**
- * Opens WhatsApp with a contact message
- * @param {string} phoneNumber - Phone number (optional, defaults to business number)
- */
-export const openWhatsAppContact = (phoneNumber = BUSINESS_WHATSAPP_NUMBER) => {
-    const message = 'Hi! I would like to get in touch with your team.';
-    openWhatsApp(message, phoneNumber);
-};

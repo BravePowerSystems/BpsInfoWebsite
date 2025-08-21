@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import "../scss/components/AuthModal.scss";
-import { publicClient } from "../services/apiClient";
+import { publicClientMethods } from "../services/apiClient";
 
 function AuthModal({ onClose, initialMode = "login" }) {
     const [mode, setMode] = useState(initialMode); // 'login' or 'register'
@@ -36,10 +36,7 @@ function AuthModal({ onClose, initialMode = "login" }) {
         setIsLoading(true);
 
         try {
-            await publicClient.post(
-                "/auth/forgot-password",
-                { email: formData.email }
-            );
+            await publicClientMethods.post('/auth/forgot-password', { email: formData.email });
 
             setShowForgotPassword(false);
         } catch (err) {
@@ -53,8 +50,8 @@ function AuthModal({ onClose, initialMode = "login" }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
         setIsLoading(true);
+        setError("");
 
         try {
             if (mode === "register") {

@@ -10,7 +10,6 @@ import wishlistRoutes from './routes/wishlistRoutes.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import cookieParser from 'cookie-parser';
 import { ImageService } from './services/imageService.js';
 // Load environment variables first
 dotenv.config();
@@ -36,21 +35,23 @@ app.use(cors({
       return callback(null, true);
     }
     
+    // For production, be more permissive with origins but log them
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`Production CORS allowing origin: ${origin}`);
+      return callback(null, true);
+    }
+    
     // Log blocked origins for debugging
     console.log(`CORS blocked origin: ${origin}`);
     
     // Allow the request but log it (more permissive for development)
     return callback(null, true);
   },
-  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  exposedHeaders: ['Set-Cookie']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
 
-
 app.use(express.json());  // this is used to parse the request body as JSON
-app.use(cookieParser());
 
 // Connect to database
 try {
@@ -67,9 +68,28 @@ app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 
+// Environment check endpoint
+app.get('/api/debug/env', (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    PORT: process.env.PORT,
+    MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
+    JWT_SECRET: process.env.JWT_SECRET ? 'Set' : 'Not set',
+    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ? 'Set' : 'Not set',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Add request logging middleware
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'No Origin'}`);
+  const origin = req.get('Origin');
+  const userAgent = req.get('User-Agent');
+  
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log(`  Origin: ${origin || 'No Origin'}`);
+  console.log(`  User-Agent: ${userAgent || 'No User-Agent'}`);
+  console.log(`  NODE_ENV: ${process.env.NODE_ENV}`);
+  
   next();
 });
 

@@ -24,7 +24,7 @@ export default function Sidebar({ open, onClose }) {
         
         const fetchProducts = async () => {
             try {
-                const { data } = await productService.getAllProducts();
+                const data = await productService.getAllProducts();
                 setCategories(data);
             } catch (err) {
                 setError("Failed to load products. Please try again later.");
@@ -38,14 +38,16 @@ export default function Sidebar({ open, onClose }) {
     // Map categories to a lookup for easy access
     const categoryMap = useMemo(() => {
         const map = {};
-        categories.forEach((categoryObj) => {
-            const [categoryName, products] = Object.entries(categoryObj)[0];
-            map[categoryName] = products.map((product) => ({
-                ...product,
-                cleanedTitle: product.title.replace(/[^a-zA-Z0-9\s]/g, "").trim(),
-                slug: product.title.replace(/\s+/g, "-"),
-            }));
-        });
+        if (categories && Array.isArray(categories)) {
+            categories.forEach((categoryObj) => {
+                const [categoryName, products] = Object.entries(categoryObj)[0];
+                map[categoryName] = products.map((product) => ({
+                    ...product,
+                    cleanedTitle: product.title.replace(/[^a-zA-Z0-9\s]/g, "").trim(),
+                    slug: product.title.replace(/\s+/g, "-"),
+                }));
+            });
+        }
         return map;
     }, [categories]);
 

@@ -6,7 +6,6 @@ import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
 import { productService } from "../services/productService";
 import Sidebar from "./Sidebar";
-import { openWhatsAppContact } from "../utils/whatsappHelper";
 
 const ProductsList = ({ onLinkClick, categories, loading, error }) => {
     // Memoize the cleaned categories to prevent unnecessary re-renders

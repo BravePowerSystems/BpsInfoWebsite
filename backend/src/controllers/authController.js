@@ -43,26 +43,12 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const authData = await AuthService.loginUser(req.body);
-        // Set JWT as cookie (not httpOnly so frontend can read it)
-        const isProd = process.env.NODE_ENV === 'production';
-        const cookieOptions = {
-            httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? 'strict' : 'lax',
-            path: '/', // Ensure cookie is available across all paths
-            maxAge: 60 * 60 * 1000 // 1 hour
-        };
-        const refreshCookieOptions = {
-            httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? 'strict' : 'lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-        };
-        res.cookie('accessToken', authData.accessToken, cookieOptions);
-        res.cookie('refreshToken', authData.refreshToken, refreshCookieOptions);
+        
         res.status(200).json({
             message: `User logged in successfully as ${authData.user.role}`,
-            user: authData.user
+            user: authData.user,
+            accessToken: authData.accessToken,
+            refreshToken: authData.refreshToken
         });
     } catch (error) {
         console.error("Login error:", error);
@@ -70,16 +56,8 @@ export const login = async (req, res) => {
     }
 };
 
-// Logout controller to clear cookies
+// Logout controller - no need to clear cookies since we're using localStorage
 export const logout = (req, res) => {
-    const isProd = process.env.NODE_ENV === 'production';
-    const clearOptions = {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'strict' : 'lax',
-    };
-    res.clearCookie('accessToken', clearOptions);
-    res.clearCookie('refreshToken', clearOptions);
     res.status(200).json({ message: 'Logged out successfully' });
 };
 
@@ -87,20 +65,18 @@ export const logout = (req, res) => {
 // access token is used to authenticate and authorize the user for accessing protected routes
 export const refreshToken = async (req, res) => {
     try {
-        const tokens = await AuthService.refreshUserToken(
-            req.body.refreshToken
-        );
-        // Set new accessToken as cookie
-        const isProd = process.env.NODE_ENV === 'production';
-        const cookieOptions = {
-            httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? 'strict' : 'lax',
-            maxAge: 60 * 60 * 1000 // 1 hour
-        };
-        res.cookie('accessToken', tokens.accessToken, cookieOptions);
-        // Do not send tokens in response
-        res.status(200).json({ message: 'Token refreshed' });
+        const { refreshToken } = req.body;
+        if (!refreshToken) {
+            return res.status(400).json({ error: "Refresh token is required" });
+        }
+        
+        const tokens = await AuthService.refreshUserToken(refreshToken);
+        
+        res.status(200).json({ 
+            message: 'Token refreshed',
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken
+        });
     } catch (error) {
         res.status(401).json({ error: "Invalid refresh token" });
     }

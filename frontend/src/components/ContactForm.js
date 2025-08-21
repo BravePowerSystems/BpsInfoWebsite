@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "../scss/components/ContactForm.scss";
 import { motion } from "framer-motion";
+import { publicClientMethods } from '../services/apiClient';
 import { formNotifications } from '../utils/notificationHelper';
-import { publicClient } from '../services/apiClient';
 import { openWhatsAppGeneralEnquiry } from '../utils/whatsappHelper';
 
 const ContactForm = () => {
@@ -32,40 +32,34 @@ const ContactForm = () => {
         }));
     };
 
-    const submitContact = async (contactData) => {
-        const response = await publicClient.post('/enquiries', {
-            ...contactData,
-            submittedAt: new Date().toISOString()
-        });
-        
-        if (!response.data || response.status !== 201) {
-            throw new Error('Failed to submit contact form');
-        }
-        
-        return response.data;
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
         if (isSubmitting) return;
         
         setIsSubmitting(true);
         try {
-            await submitContact(formData);
-            formNotifications.submitSuccess('contact form');
+            const response = await publicClientMethods.post('/enquiries', {
+                ...formData,
+                submittedAt: new Date().toISOString()
+            });
+            
+            if (!response) {
+                throw new Error('Failed to submit enquiry');
+            }
+            
+            formNotifications.submitSuccess('contact enquiry');
             setFormData({
                 firstName: "",
                 lastName: "",
                 email: "",
                 company: "",
                 phone: "",
-                message: "",
                 enquiryType: "general",
+                message: ""
             });
         } catch (error) {
-            console.error('Contact form submission error:', error);
-            formNotifications.submitError('contact form');
+            console.error('Enquiry submission error:', error);
+            formNotifications.submitError('contact enquiry');
         } finally {
             setIsSubmitting(false);
         }
@@ -91,6 +85,8 @@ const ContactForm = () => {
                             type="text" 
                             id="firstName"
                             name="firstName" 
+                            value={formData.firstName}
+                            onChange={handleChange}
                             placeholder="First Name *" 
                             required 
                             aria-required="true"
@@ -103,6 +99,8 @@ const ContactForm = () => {
                             type="text" 
                             id="lastName"
                             name="lastName" 
+                            value={formData.lastName}
+                            onChange={handleChange}
                             placeholder="Last Name *" 
                             required 
                             aria-required="true"
@@ -112,14 +110,16 @@ const ContactForm = () => {
 
                 <div className="form-group-single">
                     <label htmlFor="email" className="visually-hidden">Email Address</label>
-                    <input 
-                        type="email" 
-                        id="email"
-                        name="email" 
-                        placeholder="Email Address *" 
-                        required 
-                        aria-required="true"
-                    />
+                                            <input 
+                            type="email" 
+                            id="email"
+                            name="email" 
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="Email Address *" 
+                            required 
+                            aria-required="true"
+                        />
                 </div>
 
                 <div className="form-row">
@@ -129,6 +129,8 @@ const ContactForm = () => {
                             type="text" 
                             id="company"
                             name="company" 
+                            value={formData.company}
+                            onChange={handleChange}
                             placeholder="Company Name"
                         />
                     </div>
@@ -139,6 +141,8 @@ const ContactForm = () => {
                             type="tel" 
                             id="phone"
                             name="phone" 
+                            value={formData.phone}
+                            onChange={handleChange}
                             placeholder="Phone Number"
                         />
                     </div>
@@ -149,6 +153,8 @@ const ContactForm = () => {
                     <select 
                         id="enquiryType"
                         name="enquiryType" 
+                        value={formData.enquiryType}
+                        onChange={handleChange}
                         required 
                         aria-required="true"
                     >
@@ -165,6 +171,8 @@ const ContactForm = () => {
                     <textarea 
                         id="message"
                         name="message" 
+                        value={formData.message}
+                        onChange={handleChange}
                         placeholder="Your Message *" 
                         required 
                         aria-required="true"

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import "../scss/components/ProductModal.scss";
 import { motion } from "framer-motion";
 import { formNotifications } from '../utils/notificationHelper';
-import { publicClient, protectedClient } from '../services/apiClient';
+import { publicClientMethods, privateClientMethods } from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
 import { openWhatsAppProductEnquiry } from '../utils/whatsappHelper';
 
 const ProductModal = ({ productName, onClose }) => {
-    const { user, isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth();
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -51,18 +51,18 @@ const ProductModal = ({ productName, onClose }) => {
     };
 
     const submitEnquiry = async (enquiryData) => {
-        const client = isAuthenticated ? protectedClient : publicClient;
+        const client = isAuthenticated ? privateClientMethods : publicClientMethods;
         const response = await client.post('/enquiries', {
             ...enquiryData,
             productName,
             submittedAt: new Date().toISOString()
-        }, { withCredentials: true });
+        });
         
-        if (!response.data || (response.status !== 200 && response.status !== 201)) {
+        if (!response) {
             throw new Error('Failed to submit enquiry');
         }
         
-        return response.data;
+        return response;
     };
 
     const handleSubmit = async (e) => {
