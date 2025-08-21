@@ -2,330 +2,590 @@
 @import "../base/variables";
 @import "../base/mixins";
 
-
-.container{
-    .components{
-        margin: 0rem;
-        margin-top: 2rem;
-    .component1{
-        display: grid;
-        grid-template-columns: 40% 35% 25%;
-        background-color: rgb(255, 255, 255);
-        padding: 1.5rem 0.5rem;
-        .left-images{
-            
-           display: grid;
-           gap: 0.2rem ;
-           grid-template-columns: 1fr auto 1fr;
-           grid-template-areas:
-           "image1 image2 image2"
-           "image1 image3 image3";
-            height: 80%;
-            .image1{
-                grid-area: image1;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-            .image2{
-                grid-area: image2;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-            .image3{
-                grid-area: image3;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-            
-        }
-
-
-        .serialNumber{
-            display: flex;
-            flex-direction: column;
+.case-study-page {
+    margin-bottom: 4rem;
+    
+    .case-study-hero {
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 1rem;
+        margin-bottom: 3rem;
+        background: linear-gradient(135deg, rgba(12, 24, 40, 0.8) 0%, rgba(0, 0, 0, 0.9) 100%);
+        border-radius: 10px;
+        
+        @include tablet {
+            flex-direction: row;
             align-items: center;
-            justify-content: center;
-            width: 25px; 
-            height: 30px; 
-            color: white;
-            text-align: center;
-            position: relative;
-            .square {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            background-color: black;
-            }
+            padding: 3rem 2rem;
+            gap: 2rem;
+        }
         
+        .hero-content {
+            flex: 1;
+            
+            .back-link {
+                display: inline-block;
+                color: #e0e0e0;
+                text-decoration: none;
+                margin-bottom: 1.5rem;
+                transition: color 0.3s ease;
+                
+                &:hover {
+                    color: #678df6;
+                }
+            }
+            
             h1 {
-            font-size: 25px;
-            font-weight: bold;
-            z-index: 1;
-            padding-left: 0.3rem;
+                font-size: clamp(1.8rem, 4vw, 3rem);
+                margin-bottom: 1.5rem;
+                background: linear-gradient(90deg, #fff0f3, #678df6);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
+            
+            .case-meta {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                
+                .meta-item {
+                    .label {
+                        display: block;
+                        font-size: 0.9rem;
+                        color: #b0b0b0;
+                        margin-bottom: 0.3rem;
+                    }
+                    
+                    .value {
+                        font-size: 1.1rem;
+                        color: #ffffff;
+                    }
+                }
+            }
+        }
         
-            p {
-            font-size: 5px;
-            text-transform: uppercase;
-            z-index: 1;
-            position: absolute;
-            top:50%;
-            left: 0px;
-            transform: rotate(-90deg);
+        .hero-image-container {
+            margin-top: 2rem;
+            
+            @include tablet {
+                margin-top: 0;
+                flex: 1;
             }
-        }
-
-        .content{
-            padding: 0rem 0.3rem;
-            .light-theme{
-                margin-left: 0.5rem;
-                margin-top: 0.5rem;
-                overflow-wrap: break-word;
-                white-space: normal;
-                width: 90%;
-                .title{
-                    font-size: 0.5rem;
-                    font-weight: bold;
-                    margin-bottom: 0.2rem;
-                }
-                .description{
-                    font-size: 0.35rem;
-                }
+            
+            .hero-image {
+                width: 100%;
+                height: auto;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             }
-        }
-        .right-image{
-           align-content: center;
-         img{
-            height: 60%;
-            object-fit: cover;
-         }
         }
     }
 
-    .component2{
-        display: grid;
-        grid-template-columns: auto auto;
-        background-color: transparent;
-        padding: 1.5rem 0.5rem;
-        .serialNumber1{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 25px; 
-            height:30px; 
-            text-align: center;
-            position: relative;
-            .square1{
-            width: 100%;
-            height: 100%;
-            position: absolute;
+    .container {
+        .components {
+            margin: 0rem;
+            margin-top: 2rem;
+            
+            .component1 {
+                display: grid;
+                grid-template-columns: 40% 35% 25%;
+                background-color: rgb(255, 255, 255, 0.03);
+                padding: 1.5rem 0.5rem;
+                border-radius: 8px;
+                margin-bottom: 2rem;
+                
+                .left-images {
+                    display: grid;
+                    gap: 0.2rem;
+                    grid-template-columns: 1fr auto 1fr;
+                    grid-template-areas:
+                    "image1 image2 image2"
+                    "image1 image3 image3";
+                    height: 80%;
+                    
+                    .image1, .image2, .image3 {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        border-radius: 4px;
+                    }
+                    
+                    .image1 {
+                        grid-area: image1;
+                    }
+                    
+                    .image2 {
+                        grid-area: image2;
+                    }
+                    
+                    .image3 {
+                        grid-area: image3;
+                    }
+                }
+
+                .serialNumber {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width: 2rem;
+                    height: 30px; 
+                    color: white;
+                    text-align: center;
+                    position: relative;
+                    
+                    .square {
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        background-color: #678df6;
+                        border-radius: 4px;
+                    }
+                
+                    h1 {
+                        font-size: 25px;
+                        font-weight: bold;
+                        z-index: 1;
+                        padding-left: 0.3rem;
+                    }
+                
+                    p {
+                        font-size: 5px;
+                        text-transform: uppercase;
+                        z-index: 1;
+                        position: absolute;
+                        top: 50%;
+                        left: 0px;
+                        transform: rotate(-90deg);
+                    }
+                }
+
+                .content {
+                    padding: 0rem 0.3rem;
+                    
+                    .light-theme {
+                        margin-left: 0.5rem;
+                        margin-top: 0.5rem;
+                        overflow-wrap: break-word;
+                        white-space: normal;
+                        width: 90%;
+                        
+                        .title {
+                            font-size: 1rem;
+                            font-weight: bold;
+                            margin-bottom: 0.5rem;
+                            color: #678df6;
+                        }
+                        
+                        .description {
+                            font-size: 0.875rem;
+                            color: #e0e0e0;
+                            line-height: 1.6;
+                        }
+                    }
+                }
+                
+                .right-image {
+                    align-content: center;
+                    
+                    img {
+                        height: 60%;
+                        object-fit: cover;
+                        border-radius: 4px;
+                    }
+                }
             }
-        
-            h1 {
-            font-size: 25px;
-            font-weight: bold;
-            z-index: 1;
-            padding-left: 0.3rem;
-            color: white;
-            }
-        
-            p {
-            font-size: 5px;
-            text-transform: uppercase;
-            z-index: 1;
-            position: absolute;
-            top:50%;
-            left: 0px;
-            transform: rotate(-90deg);
-            padding-left: 0.1rem;
-            color: white;
+
+            .component2 {
+                display: grid;
+                grid-template-columns: auto auto;
+                background-color: rgba(103, 141, 246, 0.05);
+                padding: 1.5rem 0.5rem;
+                border-radius: 8px;
+                margin-bottom: 2rem;
+                
+                .serialNumber1 {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width: 25px; 
+                    height: 30px; 
+                    text-align: center;
+                    position: relative;
+                    
+                    .square1 {
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        background-color: #678df6;
+                        border-radius: 4px;
+                    }
+                
+                    h1 {
+                        font-size: 25px;
+                        font-weight: bold;
+                        z-index: 1;
+                        padding-left: 0.3rem;
+                        color: white;
+                    }
+                
+                    p {
+                        font-size: 5px;
+                        text-transform: uppercase;
+                        z-index: 1;
+                        position: absolute;
+                        top: 50%;
+                        left: 0px;
+                        transform: rotate(-90deg);
+                        padding-left: 0.1rem;
+                        color: white;
+                    }
+                }
+                
+                .content1 {
+                    .dark-theme {
+                        margin-left: 0.5rem;
+                        margin-top: 0.5rem;
+                        overflow-wrap: break-word;
+                        white-space: normal;
+                        width: 90%;
+                        color: white;
+                        
+                        .title1 {
+                            font-size: 1rem;
+                            font-weight: bold;
+                            margin-bottom: 0.5rem;
+                            color: #678df6;
+                        }
+                        
+                        .description1 {
+                            font-size: 0.875rem;
+                            line-height: 1.6;
+                        }
+                    }
+                }
+
+                .left-images1 {
+                    display: grid;
+                    gap: 0.2rem;
+                    grid-template-columns: 1fr auto 1fr;
+                    grid-template-areas:
+                    "image1 image2 image2"
+                    "image1 image3 image3";
+                    height: 80%;
+                    
+                    .image12, .image22, .image32 {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        border-radius: 4px;
+                    }
+                    
+                    .image12 {
+                        grid-area: image1;
+                    }
+                    
+                    .image22 {
+                        grid-area: image2;
+                    }
+                    
+                    .image32 {
+                        grid-area: image3;
+                    }
+                }
             }
         }
-        .content1{
-            .dark-theme{
-                margin-left: 0.5rem;
-                margin-top: 0.5rem;
-                overflow-wrap: break-word;
-                white-space: normal;
-                width: 90%;
-                color: white;
-                .title1{
-                    font-size: 0.5rem;
-                    font-weight: bold;
-                    margin-bottom: 0.3rem;
+    }
+    
+    .case-study-results {
+        margin: 4rem auto;
+        max-width: 1200px;
+        padding: 0 1rem;
+        
+        h2 {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(90deg, #fff0f3, #678df6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            
+            @include tablet {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            @include desktop {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .result-item {
+                background-color: rgba(255, 255, 255, 0.03);
+                border-radius: 8px;
+                padding: 1.5rem;
+                text-align: center;
+                position: relative;
+                transition: transform 0.3s ease;
+                
+                &:hover {
+                    transform: translateY(-5px);
                 }
-                .description1{
-                    font-size: 0.4rem;
+                
+                .result-number {
+                    position: absolute;
+                    top: -15px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 30px;
+                    height: 30px;
+                    background-color: #678df6;
+                    color: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                }
+                
+                p {
+                    color: #e0e0e0;
+                    font-size: 1rem;
+                    line-height: 1.6;
                 }
             }
-      
+        }
     }
-
-    .left-images1{
-
-        display: grid;
-        gap: 0.2rem ;
-        grid-template-columns: 1fr auto 1fr;
-        grid-template-areas:
-        "image1 image2 image2"
-        "image1 image3 image3";
-        height: 80%;
-            .image12{
-             grid-area: image1;
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-         }
-         .image22{
-             grid-area: image2;
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-         }
-         .image32{
-             grid-area: image3;
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-         }
-         
-     }
-}   
-
-
+    
+    .case-study-testimonial {
+        background-color: rgba(103, 141, 246, 0.05);
+        padding: 3rem 2rem;
+        margin: 4rem auto;
+        max-width: 900px;
+        border-radius: 10px;
+        position: relative;
+        
+        .quote-mark {
+            position: absolute;
+            top: -30px;
+            left: 30px;
+            font-size: 6rem;
+            color: #678df6;
+            opacity: 0.3;
+        }
+        
+        blockquote {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: #ffffff;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-author {
+            text-align: right;
+            
+            .author-name {
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: #678df6;
+                margin-bottom: 0.3rem;
+            }
+            
+            .author-position {
+                font-size: 0.9rem;
+                color: #b0b0b0;
+            }
+        }
+    }
+    
+    .case-study-cta {
+        text-align: center;
+        margin: 4rem auto;
+        max-width: 800px;
+        padding: 0 1rem;
+        
+        h2 {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff0f3, #678df6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(90deg, #678df6, #8661c1);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(103, 141, 246, 0.3);
+            }
+        }
     }
 }
-
 
 @include tablet {
-    .container{
-        .components{
-            .component1{
+    .container {
+        .components {
+            .component1 {
                 padding: 1.5rem 1.5rem;
-                .serialNumber{
+                
+                .serialNumber {
                     width: 30px; 
                     height: 35px; 
 
-                    h1{
+                    h1 {
                         font-size: 30px;
                         padding-left: 0.5rem;
                     }
-                    p{
+                    
+                    p {
                         font-size: 7px;
                     }
                 }
-                .content{
+                
+                .content {
                     padding: 0rem 0.6rem;
-                    .light-theme{
-                        .title{
-                            font-size: 1.2rem;
+                    
+                    .light-theme {
+                        .title {
+                            font-size: 1.5rem;
                         }
-                        .description{
-                            font-size: 0.7rem;
+                        
+                        .description {
+                            font-size: 1rem;
                         }
                     }
                 }
             }
 
-            .component2{
+            .component2 {
                 padding: 1.5rem 1.5rem;
-                .left-images1{
+                
+                .left-images1 {
                     height: 80%;
                 }
-                .serialNumber1{
+                
+                .serialNumber1 {
                     width: 30px; 
                     height: 35px; 
 
-                    h1{
+                    h1 {
                         font-size: 30px;
                         padding-left: 0.5rem;
                     }
-                    p{
+                    
+                    p {
                         font-size: 7px;
                     }
                 }
-                .content1{
+                
+                .content1 {
                     padding: 0rem 0.6rem;
-                    .dark-theme{
-                        .title1{
-                            font-size: 1.2rem;
+                    
+                    .dark-theme {
+                        .title1 {
+                            font-size: 1.5rem;
                         }
-                        .description1{
-                            font-size: 0.7rem;
-                        }
-                    }
-                }
-        }
-    }
-}
-
-}
-
-
-@include large_desktop{
-    .container{
-        .components{
-            .component1{
-                padding: 2rem 2rem;
-                .left-images{
-                }
-                .serialNumber{
-                    width: 45px; 
-                    height: 50px; 
-
-                    h1{
-                        font-size: 50px;
-                        padding-left:1rem;
-                    }
-                    p{
-                        font-size: 10px;
-                    }
-                }
-                .content{
-                    padding: 0rem 1rem;
-                    .light-theme{
-                        .title{
-                            font-size: 2rem;
-                        }
-                        .description{
+                        
+                        .description1 {
                             font-size: 1rem;
                         }
                     }
                 }
             }
-
-            .component2{
-                padding: 2rem 2rem;
-                .left-images1{
-                }
-                .serialNumber1{
-                    width: 45px; 
-                    height: 50px; 
-
-                    h1{
-                        font-size: 50px;
-                        padding-left:1rem;
-                    }
-                    p{
-                        font-size: 10px;
-                    }
-                }
-                .content1{
-                    padding: 0rem 1rem;
-                    .dark-theme{
-                        .title1{
-                            font-size: 2rem;
-                        }
-                        .description1{
-                            font-size: 1rem;
-                        }
-                    }
-                }
         }
     }
 }
+
+@include large_desktop {
+    .container {
+        .components {
+            .component1 {
+                padding: 2rem 2rem;
+                
+                .serialNumber {
+                    width: 45px; 
+                    height: 50px; 
+
+                    h1 {
+                        font-size: 50px;
+                        padding-left: 1rem;
+                    }
+                    
+                    p {
+                        font-size: 10px;
+                    }
+                }
+                
+                .content {
+                    padding: 0rem 1rem;
+                    
+                    .light-theme {
+                        .title {
+                            font-size: 2.25rem;
+                        }
+                        
+                        .description {
+                            font-size: 1.25rem;
+                        }
+                    }
+                }
+            }
+
+            .component2 {
+                padding: 2rem 2rem;
+                
+                .serialNumber1 {
+                    width: 45px; 
+                    height: 50px; 
+
+                    h1 {
+                        font-size: 50px;
+                        padding-left: 1rem;
+                    }
+                    
+                    p {
+                        font-size: 10px;
+                    }
+                }
+                
+                .content1 {
+                    padding: 0rem 1rem;
+                    
+                    .dark-theme {
+                        .title1 {
+                            font-size: 2.25rem;
+                        }
+                        
+                        .description1 {
+                            font-size: 1.25rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

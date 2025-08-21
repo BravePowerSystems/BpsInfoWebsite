@@ -1,31 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = "https://bpsinfowebsite-production.up.railway.app/api";
-
-// Public API client (no auth required)
+// Public client for unauthenticated requests
 export const publicClient = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:7001/api',
+    
+    withCredentials: true // Always send cookies
 });
 
-// Protected API client (auth required)
+// Protected client for authenticated requests
 export const protectedClient = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
-
-// Add auth interceptor only to protected client
-protectedClient.interceptors.request.use((config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:7001/api' ,
+    withCredentials: true // Always send cookies
 });
 
 
-// this file contains the code for creating the api client. api client is used to make api requests to the backend. 

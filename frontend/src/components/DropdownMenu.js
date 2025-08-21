@@ -1,5 +1,5 @@
 import "../scss/components/DropdownMenu.scss";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 function DropdownMenu({ element }) {
     return (

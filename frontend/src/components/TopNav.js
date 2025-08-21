@@ -1,47 +1,14 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "motion/react";
-import Skeleton from "react-loading-skeleton";
+import { motion } from "framer-motion";
 import DropdownMenu from "./DropdownMenu";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
 import { productService } from "../services/productService";
+import Sidebar from "./Sidebar";
+import { openWhatsAppContact } from "../utils/whatsappHelper";
 
-const ProductsList = ({ onLinkClick }) => {
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        // Check localStorage for cached data
-        const cachedData = localStorage.getItem("products");
-        if (cachedData) {
-            setCategories(JSON.parse(cachedData));
-            setLoading(false);
-            return;
-        }
-
-        const fetchProducts = async () => {
-            try {
-                const { data } = await productService.getAllProducts();
-                setCategories(data);
-                // Cache data in localStorage with a TTL (e.g., 1 hour)
-                localStorage.setItem("products", JSON.stringify(data));
-                localStorage.setItem(
-                    "productsCacheTime",
-                    Date.now().toString()
-                );
-            } catch (err) {
-                console.error("Error fetching products:", err);
-                setError("Failed to load products. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, []);
-
+const ProductsList = ({ onLinkClick, categories, loading, error }) => {
     // Memoize the cleaned categories to prevent unnecessary re-renders
     const formattedCategories = useMemo(() => {
         return categories.map((categoryObj) => {
@@ -64,21 +31,8 @@ const ProductsList = ({ onLinkClick }) => {
         });
     }, [categories]);
 
-    if (loading) {
-        return (
-            <div aria-live="polite">
-                <Skeleton count={5} height={200} />
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div role="alert" className="error">
-                Error: {error}
-            </div>
-        );
-    }
+    if (loading) return null;
+    if (error) return null;
 
     return (
         <>
@@ -131,6 +85,33 @@ export default function TopNav() {
     const { isAuthenticated, isAdmin, logout } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authMode, setAuthMode] = useState("login");
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const openSidebar = () => setSidebarOpen(true);
+    const closeSidebar = () => setSidebarOpen(false);
+
+    // Prefetch products once on mount to avoid loading flash on hover
+    const [productCategories, setProductCategories] = useState([]);
+    const [productsLoading, setProductsLoading] = useState(true);
+    const [productsError, setProductsError] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchProducts = async () => {
+            try {
+                const { data } = await productService.getAllProducts();
+                if (isMounted) setProductCategories(data);
+            } catch (err) {
+                console.error("Error fetching products:", err);
+                if (isMounted) setProductsError("Failed to load products. Please try again later.");
+            } finally {
+                if (isMounted) setProductsLoading(false);
+            }
+        };
+        fetchProducts();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const openDropdown = (type) => setActiveDropdown(type);
     const closeDropdown = () => setActiveDropdown(null);
@@ -193,12 +174,11 @@ export default function TopNav() {
                                 <NavLink to="/Products" withDropdown="products">
                                     PRODUCTS
                                 </NavLink>
-                                <NavLink to="/tools">TOOLS</NavLink>
                                 <NavLink withDropdown="resources">
                                     RESOURCES
                                 </NavLink>
                                 <NavLink to="/about">ABOUT US</NavLink>
-                                <NavLink to="/support">SUPPORT</NavLink>
+                                <NavLink to="/faqs">FAQs</NavLink>
                                 <NavLink to="/contact">CONTACT US</NavLink>
                                 {!isAuthenticated && (
                                     <div className="auth-buttons">
@@ -223,20 +203,24 @@ export default function TopNav() {
 
                         <div className="icons">
                             <div className="icon-container">
-                                <div className="search-icon">
-                                    <img src="../../search.svg" alt="Search" />
-                                </div>
                                 <div className="save-icon">
                                     <Link to="/wishlist">
                                         <img src="../../save.svg" alt="Save" />
                                     </Link>
                                 </div>
-                                <div className="whatsapp-icon">
+                                <a
+                                    href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="whatsapp-icon"
+                                    title="Contact us on WhatsApp"
+                                    style={{ cursor: 'pointer', textDecoration: 'none' }}
+                                >
                                     <img
                                         src="../../whatsapp.png"
                                         alt="WhatsApp"
                                     />
-                                </div>
+                                </a>
 
                                 {isAuthenticated && (
                                     <div
@@ -258,9 +242,7 @@ export default function TopNav() {
                                                 }
                                                 onMouseLeave={handleMouseLeave}
                                             >
-                                                <Link to="/dashboard">
-                                                    Dashboard
-                                                </Link>
+                                               
                                                 <Link to="/profile">
                                                     Profile
                                                 </Link>
@@ -280,7 +262,7 @@ export default function TopNav() {
                                     </div>
                                 )}
 
-                                <div className="hamburger-menu">
+                                <div className="hamburger-menu" onClick={openSidebar}>
                                     <div></div>
                                     <div></div>
                                     <div></div>
@@ -291,14 +273,14 @@ export default function TopNav() {
                 </div>
             </motion.div>
 
-            {activeDropdown === "products" && (
+            {activeDropdown === "products" && !productsLoading && !productsError && (
                 <div
                     className="products-dropdown-container"
                     onMouseEnter={clearDropdownTimeout}
                     onMouseLeave={handleMouseLeave}
                 >
                     <DropdownMenu
-                        element={<ProductsList onLinkClick={closeDropdown} />}
+                        element={<ProductsList onLinkClick={closeDropdown} categories={productCategories} loading={productsLoading} error={productsError} />}
                     />
                 </div>
             )}
@@ -321,6 +303,7 @@ export default function TopNav() {
                     initialMode={authMode}
                 />
             )}
+            <Sidebar open={sidebarOpen} onClose={closeSidebar} />
         </>
     );
 }

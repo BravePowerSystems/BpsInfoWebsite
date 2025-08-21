@@ -14,6 +14,7 @@
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
+    overflow: hidden; /* Prevent scrolling within the modal overlay */
 
     .modal-content {
         width: 90%;
@@ -26,8 +27,10 @@
         position: relative;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        overflow-y: scroll;
-        scrollbar-width: none;
+        overflow-y: auto;
+        max-height: 90vh;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 
         &::-webkit-scrollbar {
             width: 8px;
@@ -40,6 +43,10 @@
         &::-webkit-scrollbar-thumb {
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 4px;
+            
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+            }
         }
 
         &:focus {
@@ -171,6 +178,9 @@
             .form-actions {
                 margin-top: 1rem;
                 align-self: flex-end;
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
 
                 button {
                     padding: 1rem 2rem;
@@ -181,6 +191,10 @@
                     font-weight: 600;
                     cursor: pointer;
                     transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 140px;
 
                     &:hover {
                         transform: translateY(-2px);
@@ -196,6 +210,15 @@
                         &:hover {
                             transform: none;
                             box-shadow: none;
+                        }
+                    }
+
+                    &.whatsapp-btn {
+                        background: linear-gradient(45deg, #25D366, #128C7E);
+                        
+                        &:hover {
+                            background: linear-gradient(45deg, #128C7E, #25D366);
+                            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
                         }
                     }
                 }
@@ -219,6 +242,15 @@
                         min-width: 250px;
                     }
                 }
+                
+                .form-actions {
+                    flex-direction: column;
+                    align-items: stretch;
+                    
+                    button {
+                        width: 100%;
+                    }
+                }
             }
         }
     }
@@ -237,6 +269,36 @@
                     .form-group {
                         flex: 1 1 calc(50% - 2rem);
                         min-width: 300px;
+                    }
+                }
+                
+                .form-actions {
+                    flex-direction: row;
+                    align-items: center;
+                }
+            }
+        }
+    }
+}
+
+// Mobile-specific styles
+@media (max-width: 767px) {
+    .modal-overlay {
+        .modal-content {
+            width: 95%;
+            padding: 1.5rem;
+            margin: 1rem;
+
+            .enquiry-form {
+                .form-actions {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 0.75rem;
+                    
+                    button {
+                        width: 100%;
+                        padding: 0.875rem 1.5rem;
+                        font-size: 0.95rem;
                     }
                 }
             }

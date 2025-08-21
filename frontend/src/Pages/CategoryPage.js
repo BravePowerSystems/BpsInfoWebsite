@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import CategoryCarousel from "../components/CategoryCarousel";
 import { fadeInUpVariants } from "../components/HeroSection";
 import "../scss/components/CategoryCarousel.scss";
 import "../scss/pages/CategoryPage.scss";
 import { productService } from "../services/productService";
-import { Loading } from "./Product";
+import Loading from "../components/Loading";
 
 const motionConfig = {
     categoryPage: {
@@ -46,6 +46,11 @@ function CategoryPage() {
             const response = await productService.getAllProducts();
             const { data } = response;
             
+            if (!data || !Array.isArray(data)) {
+                setError('Invalid data format received from server');
+                return;
+            }
+            
             const categoryObj = data.find(
                 (item) => Object.keys(item)[0] === categoryName
             );
@@ -57,14 +62,14 @@ function CategoryPage() {
             
             setProducts(Object.values(categoryObj)[0]);
         } catch (err) {
-            setError('Failed to load products');
+            setError('Failed to load products: ' + (err.message || 'Unknown error'));
             console.error(err);
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading) return <Loading/>;
+    if (loading) return <Loading text="Loading products..." />;
     if (error) return <div>Error: {error}</div>;
     if (!products.length) return <div>No products found in this category</div>;
 

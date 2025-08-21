@@ -1,121 +1,95 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom';
 import '../scss/pages/Dashboard.scss';
-import { Loading } from './Product';
+import ProductManagement from '../components/admin/ProductManagement';
+import ProductForm from '../components/admin/ProductForm';
+import { AnimatePresence } from 'framer-motion';
+import EnquiryManagement from '../components/admin/EnquiryManagement';
+import Loading from '../components/Loading';
 
 function AdminDashboard() {
     const { user, loading } = useAuth();
-    const [activeTab, setActiveTab] = useState('overview');
-
+    const [activeTab, setActiveTab] = useState('products');
+    const [showProductForm, setShowProductForm] = useState(false);
+    const [editingProduct, setEditingProduct] = useState(null);
+    const [productCategories, setProductCategories] = useState([]);
+    
+    // Redirect if not admin
+    if (!loading && (!user || user.role !== 'admin')) {
+        return <Navigate to="/login" />;
+    }
+    
     if (loading) {
-        return <Loading />
+        return <Loading text="Loading..." />;
     }
 
-    if (!user) {
-        return <div>Please log in to access the admin dashboard</div>;
-    }
-
-    const mockData = {
-        totalUsers: 150,
-        totalProducts: 42,
-        totalCategories: 4,
-        recentUsers: [
-            { id: 1, username: 'user1', role: 'user', createdAt: '2024-03-15' },
-            { id: 2, username: 'user2', role: 'user', createdAt: '2024-03-14' },
-            { id: 3, username: 'user3', role: 'admin', createdAt: '2024-03-13' },
-        ]
+    const handleShowProductForm = (product, categories) => {
+        setEditingProduct(product);
+        setProductCategories(categories);
+        setShowProductForm(true);
     };
 
+    const handleHideProductForm = () => {
+        setShowProductForm(false);
+        setEditingProduct(null);
+    };
+    
     return (
-        <div className="dashboard-container admin">
-            <div className="dashboard-header">
+        <div className="admin-dashboard">
+            <div className="admin-header">
                 <h1>Admin Dashboard</h1>
-                <p>Welcome, Admin {user.username}</p>
+                <p className="welcome-message">Welcome back, {user.firstName}!</p>
             </div>
-
-            <div className="admin-nav">
+            
+            <div className="admin-tabs">
                 <button 
-                    className={activeTab === 'overview' ? 'active' : ''} 
-                    onClick={() => setActiveTab('overview')}
-                >
-                    Overview
-                </button>
-                <button 
-                    className={activeTab === 'users' ? 'active' : ''} 
-                    onClick={() => setActiveTab('users')}
-                >
-                    Users
-                </button>
-                <button 
-                    className={activeTab === 'products' ? 'active' : ''} 
+                    className={activeTab === 'products' ? 'active' : ''}
                     onClick={() => setActiveTab('products')}
                 >
                     Products
                 </button>
+                <button 
+                    className={activeTab === 'enquiries' ? 'active' : ''}
+                    onClick={() => setActiveTab('enquiries')}
+                >
+                    Enquiries
+                </button>
+               
+            </div>
+            
+            <div className="admin-content">
+                {activeTab === 'products' && 
+                    <ProductManagement 
+                        onShowProductForm={handleShowProductForm}
+                    />
+                }
+                {activeTab === 'enquiries' && <EnquiryManagement />}
+                {/* {activeTab === 'users' && <UserManagement />} */}
             </div>
 
-            {activeTab === 'overview' && (
-                <div className="dashboard-grid">
-                    <div className="dashboard-card">
-                        <h3>Total Users</h3>
-                        <span className="count">{mockData.totalUsers}</span>
-                    </div>
-
-                    <div className="dashboard-card">
-                        <h3>Total Products</h3>
-                        <span className="count">{mockData.totalProducts}</span>
-                    </div>
-
-                    <div className="dashboard-card">
-                        <h3>Categories</h3>
-                        <span className="count">{mockData.totalCategories}</span>
-                    </div>
-
-                    <div className="dashboard-card">
-                        <h3>Quick Actions</h3>
-                        <div className="button-group">
-                            <button className="dashboard-button">Add Product</button>
-                            <button className="dashboard-button">Add User</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {activeTab === 'users' && (
-                <div className="table-container">
-                    <table className="dashboard-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Username</th>
-                                <th>Role</th>
-                                <th>Created At</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {mockData.recentUsers.map(user => (
-                                <tr key={user.id}>
-                                    <td>{user.id}</td>
-                                    <td>{user.username}</td>
-                                    <td>{user.role}</td>
-                                    <td>{user.createdAt}</td>
-                                    <td>
-                                        <button className="table-button">Edit</button>
-                                        <button className="table-button delete">Delete</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-
-            {activeTab === 'products' && (
-                <div className="coming-soon">
-                    <h2>Products Management Coming Soon</h2>
-                </div>
-            )}
+            <AnimatePresence>
+                {showProductForm && (
+                    <ProductForm
+                        product={editingProduct}
+                        categories={productCategories}
+                        onSave={(productData) => {
+                            // Pass the save event back to ProductManagement
+                            if (activeTab === 'products') {
+                                const productManagementElement = document.querySelector('.product-management');
+                                if (productManagementElement) {
+                                    const event = new CustomEvent('product-save', { 
+                                        detail: { product: editingProduct, productData } 
+                                    });
+                                    productManagementElement.dispatchEvent(event);
+                                }
+                            }
+                            handleHideProductForm();
+                        }}
+                        onCancel={handleHideProductForm}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }

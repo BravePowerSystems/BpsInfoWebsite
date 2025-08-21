@@ -5,76 +5,100 @@ import Products from "./Pages/Products";
 import Home from "./Pages/Home";
 import Blog from "./Pages/Blog";
 import CaseStudy from "./Pages/CaseStudy";
+import CaseStudiesPreview from "./Pages/CaseStudiesPreview";
 import Product from "./Pages/Product";
 import Wishlist from "./Pages/Wishlist";
 import CategoryPage from "./Pages/CategoryPage";
+import Contact from "./Pages/Contact";
+import About from "./Pages/About";
+import FAQ from "./Pages/FAQ";
+import UserProfile from "./Pages/UserProfile";
+import NotFound from "./Pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import UserDashboard from "./Pages/UserDashboard";
 import AdminDashboard from "./Pages/AdminDashboard";
 import "./scss/main.scss";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
     return (
         <AuthProvider>
             <Router>
                 <ScrollToTop />
-                <Layout>
-                    <div className="App">
-                        <Routes>
-                            {/* Public Routes */}
-                            <Route path="/" element={<Home />} />
-                            <Route path="/Products" element={<Products />} />
-                            <Route
-                                path="/Products/:categoryName"
-                                element={<CategoryPage />}
-                            />
-                            <Route
-                                path="/Products/:categoryName/:productName"
-                                element={<Product />}
-                            />
-                            <Route path="/Blog" element={<Blog />} />
-                            <Route
-                                path="/case-studies"
-                                element={<CaseStudy />}
-                            />
+                <ErrorBoundary>
+                    <Layout>
+                        <div className="App">
+                            <Routes>
+                                {/* Public Routes */}
+                                <Route path="/" element={<Home />} />
+                                <Route path="/Products" element={<Products />} />
+                                <Route
+                                    path="/Products/:categoryName"
+                                    element={<CategoryPage />}
+                                />
+                                <Route
+                                    path="/Products/:categoryName/:productName"
+                                    element={<Product />}
+                                />
+                                <Route path="/Blog" element={<Blog />} />
+                                <Route path="/about" element={<About />} />
+                                <Route path="/faqs" element={<FAQ />} />
+                                <Route
+                                    path="/case-studies"
+                                    element={<CaseStudiesPreview />}
+                                />
+                                <Route
+                                    path="/case-studies/:caseStudySlug"
+                                    element={<CaseStudy />}
+                                />
+                                <Route path="/contact" element={<Contact />} />
 
-                            {/* Protected Routes (Requires Authentication) */}
-                            <Route
-                                path="/wishlist"
-                                element={
-                                    <ProtectedRoute>
-                                        <Wishlist />
-                                    </ProtectedRoute>
-                                }
-                            />
-                            <Route
-                                path="/dashboard"
-                                element={
-                                    <ProtectedRoute>
-                                        <UserDashboard />
-                                    </ProtectedRoute>
-                                }
-                            />
+                                {/* Protected Routes (Requires Authentication) */}
+                                <Route
+                                    path="/wishlist"
+                                    element={
+                                        <ProtectedRoute requireUser>
+                                            <Wishlist />
+                                        </ProtectedRoute>
+                                    }
+                                />
+                                <Route
+                                    path="/dashboard"
+                                    element={
+                                        <ProtectedRoute>
+                                            <UserDashboard />
+                                        </ProtectedRoute>
+                                    }
+                                />
+                                <Route
+                                    path="/profile"
+                                    element={
+                                        <ProtectedRoute>
+                                            <UserProfile />
+                                        </ProtectedRoute>
+                                    }
+                                />
 
-                            {/* Admin Routes */}
-                            <Route
-                                path="/admin/*"
-                                element={
-                                    <ProtectedRoute requireAdmin>
-                                        <AdminDashboard />
-                                    </ProtectedRoute>
-                                }
-                            />
+                                {/* Admin Routes */}
+                                <Route
+                                    path="/admin/*"
+                                    element={
+                                        <ProtectedRoute requireAdmin>
+                                            <AdminDashboard />
+                                        </ProtectedRoute>
+                                    }
+                                />
 
-                            {/* 404 Route */}
-                            <Route
-                                path="*"
-                                element={<div>Page not found</div>}
-                            />
-                        </Routes>
-                    </div>
-                </Layout>
+                                {/* 404 Route */}
+                                <Route
+                                    path="*"
+                                    element={<NotFound />}
+                                />
+                            </Routes>
+                        </div>
+                    </Layout>
+                </ErrorBoundary>
             </Router>
         </AuthProvider>
     );

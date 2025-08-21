@@ -1,0 +1,117 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+
+.admin-product-card {
+    @include glass-card;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(31, 38, 135, 0.5);
+    }
+    
+    .product-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 70%, rgba(0,0,0,0.7) 100%);
+        }
+        
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+            
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
+    
+    .product-info {
+        padding: 1.2rem;
+        flex-grow: 1;
+        
+        .product-title {
+            font-size: 1.2rem;
+            margin: 0 0 0.5rem;
+            color: $primary-text-color;
+            font-weight: 600;
+        }
+        
+        .product-model, 
+        .product-category {
+            font-size: 0.9rem;
+            margin: 0.25rem 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .product-description-preview {
+            margin: 0.75rem 0;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+        
+        .product-specs-preview,
+        .product-apps-preview {
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+            color: rgba(255, 255, 255, 0.6);
+            
+            strong {
+                color: #678df6;
+            }
+        }
+    }
+    
+    .product-actions {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        
+        button {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            
+            &.edit-btn {
+                background: linear-gradient(90deg, #678df6, #8f94fb);
+                color: white;
+                
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(103, 141, 246, 0.3);
+                }
+            }
+            
+            &.delete-btn {
+                background-color: rgba(255, 255, 255, 0.05);
+                color: #ff6b6b;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                
+                &:hover {
+                    background-color: rgba(255, 59, 59, 0.1);
+                    transform: translateY(-2px);
+                }
+            }
+        }
+    }
+}

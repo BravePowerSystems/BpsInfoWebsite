@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthModal from './AuthModal';
 import '../scss/components/UnauthorizedAccess.scss';
-import {motion} from "motion/react";
+import {motion} from "framer-motion";
 import {fadeInUpVariants} from './HeroSection';
 
 const motionConfig = {

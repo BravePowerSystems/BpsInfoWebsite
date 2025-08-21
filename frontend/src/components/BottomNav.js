@@ -1,7 +1,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
+
 export default function BottomNav() {
     return (
         <motion.div
@@ -15,10 +16,10 @@ export default function BottomNav() {
                     <ul>
                         <span className="about-us-span">ABOUT US</span>
                         <li>
-                            <Link to="/our-story">Our Story</Link>
+                            <Link to="/about">Our Story</Link>
                         </li>
                         <li>
-                            <Link to="/contact-us">Contact Us</Link>
+                            <Link to="/contact">Contact Us</Link>
                         </li>
                     </ul>
                 </div>
@@ -32,11 +33,6 @@ export default function BottomNav() {
                                 Transmitters
                             </Link>
                         </li>
-                        {/* <li>
-                            <Link to="/Products/Power-Monitors">
-                                Power Monitors
-                            </Link>
-                        </li> */}
                         <li>
                             <Link to="/Products/Controllers">Controllers</Link>
                         </li>
@@ -71,29 +67,30 @@ export default function BottomNav() {
             <div className="bottom">
                 <p>© 2021 Brave power systems. All rights reserved</p>
                 <div className="social-links">
-                    <Link
-                        to="https://www.facebook.com"
+                    <a
+                        href="https://www.facebook.com"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <img src="../facebook.png" alt="Facebook" />
-                    </Link>
-                    <Link
-                        to="https://www.whatsapp.com"
+                        <img src="/facebook.png" alt="Facebook" />
+                    </a>
+                    <a
+                        href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="whatsapp-link"
+                        title="Contact us on WhatsApp"
                     >
-                        <img src="../whatsapp.png" alt="WhatsApp" />
-                    </Link>
-                    <Link
-                        to="https://www.youtube.com"
+                        <img src="/whatsapp.png" alt="WhatsApp" />
+                    </a>
+                    <a
+                        href="https://www.youtube.com"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="youtube-link"
                     >
-                        <img src="../youtube.png" alt="youtube" />
-                    </Link>
+                        <img src="/youtube.png" alt="youtube" />
+                    </a>
                 </div>
             </div>
         </motion.div>

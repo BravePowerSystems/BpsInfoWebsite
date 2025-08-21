@@ -44,20 +44,52 @@
                 max-height: 30px;
             }
 
-            a {
+            .card-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
 
-                height: 30px;
-                width: 70px;
-                font-size: 1rem;
-                text-align: center;
-                padding: 0%;
-                background-color: rgb(32, 7, 100);
-                color: $primary-text-color;
+                a {
+                    height: 30px;
+                    width: 70px;
+                    font-size: 1rem;
+                    text-align: center;
+                    padding: 0%;
+                    background-color: rgb(32, 7, 100);
+                    color: $primary-text-color;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 4px;
 
-                &:hover {
-                    filter: brightness(1.2);
-                    background-color: rgb(103, 51, 248);
+                    &:hover {
+                        filter: brightness(1.2);
+                        background-color: rgb(103, 51, 248);
+                    }
+                }
 
+                .whatsapp-btn {
+                    height: 30px;
+                    width: 70px;
+                    font-size: 0.8rem;
+                    text-align: center;
+                    padding: 0%;
+                    background: linear-gradient(45deg, #25D366, #128C7E);
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        background: linear-gradient(45deg, #128C7E, #25D366);
+                        transform: translateY(-1px);
+                    }
                 }
             }
         }
@@ -114,12 +146,22 @@
         max-height: 300px;
 
         .card-body {
-
             .card-title {
                 min-height: 20px;
             }
+            
+            .card-content {
+                .card-actions {
+                    gap: 0.75rem;
+                    
+                    a, .whatsapp-btn {
+                        height: 35px;
+                        width: 80px;
+                        font-size: 1.1rem;
+                    }
+                }
+            }
         }
-
     }
 }
 
@@ -130,16 +172,23 @@
         max-height: 320px;
 
         .card-body {
-
             .card-content {
-
                 .card-text {
                     font-size: 14px;
                     min-height: 40px;
                     max-height: 55px;
                 }
+                
+                .card-actions {
+                    gap: 1rem;
+                    
+                    a, .whatsapp-btn {
+                        height: 40px;
+                        width: 90px;
+                        font-size: 1.2rem;
+                    }
+                }
             }
-
         }
     }
 }

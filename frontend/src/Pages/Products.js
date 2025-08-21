@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Products.scss";
 import CategoryCarousel from "../components/CategoryCarousel";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { fadeInUpVariants } from "../components/HeroSection";
 import { productService } from "../services/productService";
-import { Loading } from "./Product";
+import Loading from "../components/Loading";
 
 const motionConfig = {
     path: {
@@ -41,17 +41,19 @@ function Products() {
         try {
             setLoading(true);
             const response = await productService.getAllProducts();
-            const  {data}  = response;
-            setProducts(data);
+            if (!response || !response.data) {
+                throw new Error('Invalid response from server');
+            }
+            setProducts(response.data);
         } catch (err) {
-            setError('Failed to load products');
-            console.error(err);
+            setError('Failed to load products: ' + (err.message || 'Unknown error'));
+            console.error('Error loading products:', err);
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading) return <Loading />
+    if (loading) return <Loading text="Loading products..." />
     if (error) return <div>Error: {error}</div>;
 
     return (
