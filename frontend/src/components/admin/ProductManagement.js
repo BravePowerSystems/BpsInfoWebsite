@@ -5,6 +5,68 @@ import ProductCard from "./ProductCard";
 import Notify from "simple-notify";
 import Loading from "../Loading";
 
+// Custom Category Selector Component
+const CategorySelector = ({ categories, selectedCategory, onCategoryChange }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleToggle = () => setIsOpen(!isOpen);
+    const handleSelect = (category) => {
+        onCategoryChange(category);
+        setIsOpen(false);
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.category-selector')) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    return (
+        <div className="category-selector">
+            <button 
+                className="category-selector__trigger"
+                onClick={handleToggle}
+                aria-expanded={isOpen}
+                aria-haspopup="listbox"
+            >
+                <span className="category-selector__selected">
+                    {selectedCategory}
+                </span>
+                <span className={`category-selector__arrow ${isOpen ? 'rotated' : ''}`}>
+                    <img src="/arrow_down.svg" alt="" />
+                </span>
+            </button>
+            
+            {isOpen && (
+                <div className="category-selector__dropdown">
+                    <ul className="category-selector__list" role="listbox">
+                        {categories.map((category) => (
+                            <li key={category} role="option">
+                                <button
+                                    className={`category-selector__option ${
+                                        selectedCategory === category ? 'selected' : ''
+                                    }`}
+                                    onClick={() => handleSelect(category)}
+                                    role="option"
+                                    aria-selected={selectedCategory === category}
+                                >
+                                    {category}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
+};
+
 function ProductManagement({ onShowProductForm }) {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -183,18 +245,16 @@ function ProductManagement({ onShowProductForm }) {
             <div className="product-management-header">
                 <h2>Product Management</h2>
                 <div className="product-controls">
-                    <select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="category-filter"
+                    <CategorySelector
+                        categories={categories}
+                        selectedCategory={selectedCategory}
+                        onCategoryChange={setSelectedCategory}
+                    />
+                    <button 
+                        id="add-product-button"
+                        className="add-product-btn" 
+                        onClick={handleAddProduct}
                     >
-                        {categories.map((category) => (
-                            <option key={category} value={category}>
-                                {category}
-                            </option>
-                        ))}
-                    </select>
-                    <button className="add-product-btn" onClick={handleAddProduct}>
                         Add New Product
                     </button>
                 </div>

@@ -5,6 +5,68 @@ import Loading from '../Loading';
 
 const statusOptions = ['new', 'in-progress', 'completed', 'archived'];
 
+// Custom Status Selector Component
+const StatusSelector = ({ options, selectedValue, onValueChange, placeholder, className = "" }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleToggle = () => setIsOpen(!isOpen);
+    const handleSelect = (value) => {
+        onValueChange(value);
+        setIsOpen(false);
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.status-selector')) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    return (
+        <div className={`status-selector ${className}`}>
+            <button 
+                className="status-selector__trigger"
+                onClick={handleToggle}
+                aria-expanded={isOpen}
+                aria-haspopup="listbox"
+            >
+                <span className="status-selector__selected">
+                    {selectedValue || placeholder}
+                </span>
+                <span className={`status-selector__arrow ${isOpen ? 'rotated' : ''}`}>
+                    <img src="/arrow_down.svg" alt="" />
+                </span>
+            </button>
+            
+            {isOpen && (
+                <div className="status-selector__dropdown">
+                    <ul className="status-selector__list" role="listbox">
+                        {options.map((option) => (
+                            <li key={option} role="option">
+                                <button
+                                    className={`status-selector__option ${
+                                        selectedValue === option ? 'selected' : ''
+                                    }`}
+                                    onClick={() => handleSelect(option)}
+                                    role="option"
+                                    aria-selected={selectedValue === option}
+                                >
+                                    {option}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
+};
+
 function EnquiryManagement() {
     const [enquiries, setEnquiries] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -96,16 +158,12 @@ function EnquiryManagement() {
         <div className="enquiry-management clean-admin">
             <h2>All Enquiries</h2>
             <div className="product-controls">
-                <select
-                    value={filter}
-                    onChange={e => setFilter(e.target.value)}
-                    className="category-filter"
-                >
-                    <option value="">All Statuses</option>
-                    {statusOptions.map(status => (
-                        <option key={status} value={status}>{status}</option>
-                    ))}
-                </select>
+                <StatusSelector
+                    options={statusOptions}
+                    selectedValue={filter}
+                    onValueChange={setFilter}
+                    placeholder="All Statuses"
+                />
             </div>
             {loading ? (
                 <Loading text="Loading enquiries..." />
@@ -148,15 +206,12 @@ function EnquiryManagement() {
                             )}
                             <div className="enquiry-actions">
                                 <label>Status: </label>
-                                <select
-                                    value={enq.status}
-                                    onChange={e => handleStatusChange(enq._id, e.target.value)}
-                                    className="category-filter"
-                                >
-                                    {statusOptions.map(status => (
-                                        <option key={status} value={status}>{status}</option>
-                                    ))}
-                                </select>
+                                <StatusSelector
+                                    options={statusOptions}
+                                    selectedValue={enq.status}
+                                    onValueChange={(newStatus) => handleStatusChange(enq._id, newStatus)}
+                                    className="status-change-selector"
+                                />
                             </div>
                             <div className="enquiry-response">
                                 <label>Admin Response:</label>

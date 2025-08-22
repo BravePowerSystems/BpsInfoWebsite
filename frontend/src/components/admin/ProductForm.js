@@ -3,6 +3,79 @@ import '../../scss/components/admin/ProductForm.scss';
 import { motion } from 'framer-motion';
 import { privateClientMethods } from '../../services/apiClient';
 
+// Custom Category Selector Component (same as in ProductManagement)
+const CategorySelector = ({ categories, selectedCategory, onCategoryChange, required = false }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleToggle = () => setIsOpen(!isOpen);
+    const handleSelect = (category) => {
+        onCategoryChange(category);
+        setIsOpen(false);
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.category-selector')) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    return (
+        <div className="category-selector">
+            <button 
+                className="category-selector__trigger"
+                onClick={handleToggle}
+                aria-expanded={isOpen}
+                aria-haspopup="listbox"
+                type="button"
+            >
+                <span className="category-selector__selected">
+                    {selectedCategory || "Select Category"}
+                </span>
+                <span className={`category-selector__arrow ${isOpen ? 'rotated' : ''}`}>
+                    <img src="/arrow_down.svg" alt="" />
+                </span>
+            </button>
+            
+            {isOpen && (
+                <div className="category-selector__dropdown">
+                    <ul className="category-selector__list" role="listbox">
+                        <li role="option">
+                            <button
+                                className="category-selector__option"
+                                onClick={() => handleSelect("")}
+                                role="option"
+                                aria-selected={!selectedCategory}
+                            >
+                                Select Category
+                            </button>
+                        </li>
+                        {categories.map((category) => (
+                            <li key={category} role="option">
+                                <button
+                                    className={`category-selector__option ${
+                                        selectedCategory === category ? 'selected' : ''
+                                    }`}
+                                    onClick={() => handleSelect(category)}
+                                    role="option"
+                                    aria-selected={selectedCategory === category}
+                                >
+                                    {category}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
+};
+
 function ProductForm({ product, categories, onSave, onCancel }) {
     const [formData, setFormData] = useState({
         title: '',
@@ -248,18 +321,12 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="category">Category</label>
-                                <select
-                                    id="category"
-                                    name="category"
-                                    value={formData.category}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">Select Category</option>
-                                    {categories.map((cat) => (
-                                        <option key={cat} value={cat}>{cat}</option>
-                                    ))}
-                                </select>
+                                <CategorySelector
+                                    categories={categories}
+                                    selectedCategory={formData.category}
+                                    onCategoryChange={(category) => setFormData(prev => ({ ...prev, category }))}
+                                    required={true}
+                                />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="imageUpload">Product Image</label>

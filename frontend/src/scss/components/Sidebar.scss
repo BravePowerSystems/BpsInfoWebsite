@@ -8,113 +8,162 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.7);
+    background: linear-gradient(135deg, rgba(103, 141, 246, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+    backdrop-filter: blur(8px);
     z-index: 2000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    &.open {
-        opacity: 1;
-        pointer-events: auto;
-    }
+    display: flex;
+    justify-content: flex-end;
 }
 
 .sidebar {
-    position: fixed;
-    top: 0;
-    right: 0;
+    position: relative;
     height: 100vh;
     width: 85vw;
-    max-width: 350px;
-    background: rgba(11, 20, 25, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: -4px 0 16px rgba(0,0,0,0.2);
-    z-index: 2100;
-    transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    max-width: 400px;
+    background: linear-gradient(135deg, rgba(20, 20, 25, 0.95) 50%, rgba(10, 10, 15, 0.98) 100%);
+    backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
     color: $primary-text-color;
     font-family: inherit;
-    &.open {
-        transform: translateX(0);
-    }
     display: flex;
     flex-direction: column;
-    padding: 2rem 1.5rem 1.5rem 1.5rem;
-    overflow-y: auto;
-    max-height: 100vh;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .sidebar__close {
     background: none;
     border: none;
     color: $primary-text-color;
-    font-size: 2rem;
-    align-self: flex-end;
     cursor: pointer;
-    margin-bottom: 1rem;
-    transition: color 0.2s;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
     &:hover {
-        color: red;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ff4d4d;
+        transform: scale(1.1);
+    }
+    
+    svg {
+        width: 20px;
+        height: 20px;
     }
 }
 
 .sidebar__nav {
     flex: 1;
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem  ;
-        li {
-            a {
-                color: $primary-text-color;
-                text-decoration: none;
-                font-size: 1rem;
-                font-weight: 600;
-                transition: color 0.2s;
-                &:hover {
-                    color: red;
-                }
-            }
-        }
+    padding: 1rem 1.5rem;
+    margin-top: 1rem;
+    overflow-y: auto;
+    
+    &::-webkit-scrollbar {
+        width: 4px;
     }
-}
-
-// Accordion theme override for sidebar
-.sidebar .accordion {
-    background: transparent;
-    .accordion__item {
-        border-bottom: 1px solid rgba(255,255,255,0.15);
+    
+    &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
     }
-    .accordion__header {
-        background: transparent;
-        color: $primary-text-color;
-        font-size: 1rem;
-        font-weight: 600;
+    
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        
         &:hover {
-            background: rgba(103, 141, 246, 0.1);
+            background: rgba(255, 255, 255, 0.5);
         }
-    }
-    .accordion__title {
-        font-size: 1rem;
-        font-weight: 600;
-    }
-    .accordion__content {
-        background: transparent;
-        color: $primary-text-color;
     }
 }
 
-.sidebar-custom-accordion, .sidebar-accordion-item {
-    font-family: inherit;
+.nav-section {
+    margin-bottom: 1rem;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+    
+    &.auth-section {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+.nav-link {
+    display: block;
+    color: $primary-text-color;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(103, 141, 246, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    &:hover {
+        background: rgba(103, 141, 246, 0.1);
+        color: #678df6;
+        transform: translateX(4px);
+        
+        &::before {
+            left: 100%;
+        }
+    }
+    
+
+}
+
+
+
+// Accordion styling with modern design
+.sidebar-accordion-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        border-color: rgba(103, 141, 246, 0.3);
+        box-shadow: 0 4px 12px rgba(103, 141, 246, 0.1);
+    }
+    
+    &.open {
+        background: rgba(103, 141, 246, 0.05);
+        border-color: rgba(103, 141, 246, 0.2);
+    }
 }
 
 .sidebar-accordion-header {
     width: 100%;
-    padding: 0.5rem 0;
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -124,66 +173,248 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
     position: relative;
-
+    
     &:hover {
         background: rgba(103, 141, 246, 0.1);
     }
+    
+        &.main-accordion {
+        border-bottom: 1px solid rgba(103, 141, 246, 0.3);
+        
+        &:hover {
+            background: rgba(103, 141, 246, 0.1);
+        }
+    }
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .sidebar-accordion-arrow {
-    display: inline-block;
-    margin-left: 0.5rem;
-    transition: transform 0.3s;
-    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
     color: $primary-text-color;
-    transform: rotate(0deg);
-}
-.sidebar-accordion-arrow.open {
-    transform: rotate(180deg);
-}
-
-.sidebar-accordion-item {
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    background: transparent;
-}
-
-.sidebar-accordion-item:last-child {
-    border-bottom: none;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    
+    svg {
+        width: 16px;
+        height: 16px;
+    }
 }
 
 .sidebar-accordion-content {
     background: transparent;
     color: $primary-text-color;
-    padding: 0 1.5rem;
-    transition: max-height 0.3s, padding 0.3s;
-}
-
-
-
-.sidebar-accordion-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-
-.sidebar-accordion-content li:last-child {
-    margin-bottom:  1rem;
-}
-
-.sidebar-accordion-content .product-link {
-    color: $primary-text-color;
-    text-decoration: none;
-    transition: color 0.2s;
-    &:hover {
-        color: red;
+    overflow: hidden;
+    margin-top: 1rem;
+    &.main-content {
+        padding: 1rem;
     }
 }
 
+// Products grid styling
+.sidebar-products-grid {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.sidebar-product-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: rgba(103, 141, 246, 0.1);
+        transform: translateX(4px);
+    }
+}
+
+.sidebar-product-link {
+    display: block;
+    color: $primary-text-color;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+// Resources styling
+.resources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.resource-link {
+    display: block;
+    color: $primary-text-color;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: rgba(103, 141, 246, 0.1);
+        color: #678df6;
+        transform: translateX(4px);
+    }
+}
+
+
+
+// Loading and error states
+.loading-state, .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    text-align: center;
+    color: $primary-text-color;
+    opacity: 0.8;
+}
+
+.loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid #678df6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+// Custom accordion for product sections
+.sidebar-custom-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sidebar-custom-accordion .sidebar-accordion-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    
+    &:hover {
+        border-color: rgba(103, 141, 246, 0.2);
+    }
+    
+    &.open {
+        background: rgba(103, 141, 246, 0.03);
+        border-color: rgba(103, 141, 246, 0.15);
+    }
+}
+
+.sidebar-custom-accordion .sidebar-accordion-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.sidebar-custom-accordion .sidebar-accordion-content {
+    padding: 0 0.75rem 0.75rem 0.75rem;
+}
+
+// Media queries for larger screens
+@include tablet {
+    .sidebar {
+        max-width: 450px;
+    }
+    
+    .sidebar-products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+
+@include desktop {
+    .sidebar {
+        max-width: 500px;
+    }
+    
+    .sidebar-products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .nav-link, .sidebar-accordion-header {
+        font-size: 1.1rem;
+    }
+}
+
+@include large_desktop {
+    .sidebar {
+        max-width: 550px;
+    }
+    
+    .sidebar-products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+    
+    .nav-link, .sidebar-accordion-header {
+        font-size: 1.2rem;
+    }
+    
+    .sidebar-product-link {
+        font-size: 1rem;
+    }
+}
+
+// Hide sidebar on larger screens
 @media (min-width: 900px) {
     .sidebar-overlay, .sidebar {
         display: none !important;
+    }
+}
+
+// Auth buttons styling (same as TopNav)
+.auth-buttons-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+
+    button {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: $primary-text-color;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 500;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        &:first-child {
+            background: linear-gradient(90deg, #678df6, #8f94fb);
+            border: none;
+
+            &:hover {
+                box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
+            }
+        }
     }
 } 

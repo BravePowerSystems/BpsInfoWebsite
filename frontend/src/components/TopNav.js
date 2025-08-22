@@ -37,11 +37,11 @@ const ProductsList = ({ onLinkClick, categories, loading, error }) => {
         <>
             {formattedCategories.map(
                 ({ categoryName, cleanedCategory, products }) => (
-                    <ul key={categoryName} className="category-list">
+                    <ul key={categoryName} className="dropdown-category-list">
                         <Link
                             to={`/Products/${categoryName}`}
                             onClick={onLinkClick}
-                            className="category-link"
+                            className="dropdown-category-link"
                             aria-label={`View all products in ${cleanedCategory}`}
                         >
                             {cleanedCategory}
@@ -51,7 +51,7 @@ const ProductsList = ({ onLinkClick, categories, loading, error }) => {
                                 <Link
                                     to={`/Products/${categoryName}/${product.slug}`}
                                     onClick={onLinkClick}
-                                    className="product-link"
+                                    className="dropdown-product-link"
                                     aria-label={`View ${product.cleanedTitle}`}
                                 >
                                     {product.cleanedTitle}
@@ -202,24 +202,29 @@ export default function TopNav() {
 
                         <div className="icons">
                             <div className="icon-container">
+                                 {!isAdmin && (
                                 <div className="save-icon">
                                     <Link to="/wishlist">
                                         <img src="../../save.svg" alt="Save" />
                                     </Link>
                                 </div>
-                                <a
-                                    href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="whatsapp-icon"
-                                    title="Contact us on WhatsApp"
-                                    style={{ cursor: 'pointer', textDecoration: 'none' }}
-                                >
-                                    <img
-                                        src="../../whatsapp.png"
-                                        alt="WhatsApp"
-                                    />
-                                </a>
+                                )}
+                               {!isAdmin && (
+                                    <div className="whatsapp-icon">
+                                        <a
+                                            href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="Contact us on WhatsApp"
+                                            style={{ cursor: 'pointer', textDecoration: 'none' }}
+                                        >
+                                            <img
+                                                src="../../whatsapp.png"
+                                                alt="WhatsApp"
+                                            />
+                                        </a>
+                                    </div>
+                                )}
 
                                 {isAuthenticated && (
                                     <div
