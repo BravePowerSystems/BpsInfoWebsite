@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import '../scss/pages/FAQ.scss';
 
 const FAQ = () => {
+    const navigate = useNavigate();
     const [activeIndex, setActiveIndex] = useState(null);
     
     const toggleFAQ = (index) => {
@@ -16,7 +18,7 @@ const FAQ = () => {
         },
         {
             question: "How can I request a quote for a product?",
-            answer: "You can request a quote by visiting the specific product page and clicking on the 'Enquire Now' button. Alternatively, you can contact our sales team directly through our Contact page or by calling our customer service number."
+            answer: "You can request a quote by visiting the specific product page and clicking on the 'Enquire Now' button. Alternatively, you can contact our sales team directly through our contact section or by calling our customer service number."
         },
         {
             question: "Do you offer customized solutions?",
@@ -40,7 +42,7 @@ const FAQ = () => {
         },
         {
             question: "How can I become a distributor for Brave Power Systems?",
-            answer: "If you're interested in becoming a distributor, please visit our Contact page and fill out the distributor application form. Our business development team will review your application and get in touch with you."
+            answer: "If you're interested in becoming a distributor, please contact us through our contact section and fill out the distributor application form. Our business development team will review your application and get in touch with you."
         }
     ];
     
@@ -92,7 +94,15 @@ const FAQ = () => {
                 >
                     <h2>Still have questions?</h2>
                     <p>Our support team is here to help you with any other questions you might have.</p>
-                    <a href="/contact" className="contact-button">Contact Us</a>
+                    <button 
+                        className="contact-button"
+                        onClick={() => {
+                            // Navigate to home page with contact hash
+                            window.location.href = '/#contact';
+                        }}
+                    >
+                        Contact Us
+                    </button>
                 </motion.div>
             </div>
         </div>

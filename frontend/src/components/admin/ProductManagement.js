@@ -1,180 +1,99 @@
-import React, { useState, useEffect } from "react";
-import { productService } from "../../services/productService";
+import React, { useState, useEffect, useMemo } from "react";
+import { useProducts } from "../../context/ProductsContext";
+import { useModal } from "../../context/ModalContext";
+import CustomDropdown from "../CustomDropdown";
 import "../../scss/components/admin/ProductManagement.scss";
 import ProductCard from "./ProductCard";
 import Notify from "simple-notify";
 import Loading from "../Loading";
 
 function ProductManagement({ onShowProductForm }) {
-    const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { products, categories, loading, deleteProduct: deleteProductFromContext } = useProducts();
+    const { openConfirmationModal, closeConfirmationModal } = useModal();
     const [selectedCategory, setSelectedCategory] = useState("All");
 
-    useEffect(() => {
-        loadProducts();
-        
-        // Add event listener for product save events
-        const handleProductSave = async (event) => {
-            const { product, productData } = event.detail;
-            await handleSaveProduct(product, productData);
-        };
-        
-        const element = document.querySelector('.product-management');
-        if (element) {
-            element.addEventListener('product-save', handleProductSave);
+    // Extract all products and category names from the context data
+    const { allProducts, categoryNames } = useMemo(() => {
+        if (!categories || !Array.isArray(categories)) {
+            return { allProducts: [], categoryNames: ["All"] };
         }
-        
-        return () => {
-            if (element) {
-                element.removeEventListener('product-save', handleProductSave);
+
+        let allProducts = [];
+        let categoryList = [];
+
+        categories.forEach((categoryObj) => {
+            const categoryEntries = Object.entries(categoryObj);
+            if (categoryEntries.length > 0) {
+                const [categoryName, categoryProducts] = categoryEntries[0];
+                categoryList.push(categoryName);
+
+                if (Array.isArray(categoryProducts)) {
+                    allProducts = [...allProducts, ...categoryProducts];
+                }
             }
+        });
+
+        return {
+            allProducts,
+            categoryNames: ["All", ...categoryList.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))]
         };
+    }, [categories]);
+
+    useEffect(() => {
+        // No need for event listeners since product operations are now handled by ProductsContext
     }, []);
 
-    const loadProducts = async () => {
-        try {
-            setLoading(true);
-            const response = await productService.getAllProducts();
-            const { data } = response;
-
-            if (!data || !Array.isArray(data)) {
-                console.error("Invalid data format received:", data);
-                throw new Error("Invalid data format received from server");
-            }
-
-            // Extract all products from the category structure
-            let allProducts = [];
-            let categoryList = [];
-
-            data.forEach((categoryObj) => {
-                const categoryEntries = Object.entries(categoryObj);
-                if (categoryEntries.length > 0) {
-                    const [categoryName, categoryProducts] = categoryEntries[0];
-                    categoryList.push(categoryName);
-
-                    if (Array.isArray(categoryProducts)) {
-                        allProducts = [...allProducts, ...categoryProducts];
-                    }
-                }
-            });
-
-            setProducts(allProducts);
-            setCategories(["All", ...categoryList.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))]);
-        } catch (error) {
-            console.error("Failed to load products:", error);
-            new Notify({
-                status: "error",
-                title: "Error",
-                text: "Failed to load products: " + (error.message || "Unknown error"),
-                effect: "fade",
-                speed: 300,
-                autoclose: true,
-                autotimeout: 3000,
-                position: "right top",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleAddProduct = () => {
-        onShowProductForm(null, categories.filter(cat => cat !== "All"));
+        onShowProductForm(null, categoryNames.filter(cat => cat !== "All"));
     };
 
     const handleEditProduct = (product) => {
-        onShowProductForm(product, categories.filter(cat => cat !== "All"));
-    };
-
-    const handleSaveProduct = async (editingProduct, productData) => {
-        try {
-            setLoading(true);
-
-            if (editingProduct) {
-                // Update existing product
-                await productService.updateProduct(editingProduct._id, productData);
-                new Notify({
-                    status: "success",
-                    title: "Success",
-                    text: "Product updated successfully",
-                    effect: "fade",
-                    speed: 300,
-                    autoclose: true,
-                    autotimeout: 3000,
-                    position: "right top",
-                });
-            } else {
-                // Create new product
-                await productService.createProduct(productData);
-                new Notify({
-                    status: "success",
-                    title: "Success",
-                    text: "Product created successfully",
-                    effect: "fade",
-                    speed: 300,
-                    autoclose: true,
-                    autotimeout: 3000,
-                    position: "right top",
-                });
-            }
-
-            // Reload products
-            await loadProducts();
-        } catch (error) {
-            console.error("Failed to save product:", error);
-            new Notify({
-                status: "error",
-                title: "Error",
-                text: "Failed to save product",
-                effect: "fade",
-                speed: 300,
-                autoclose: true,
-                autotimeout: 3000,
-                position: "right top",
-            });
-        } finally {
-            setLoading(false);
-        }
+        onShowProductForm(product, categoryNames.filter(cat => cat !== "All"));
     };
 
     const handleDeleteProduct = async (productId) => {
-        if (window.confirm("Are you sure you want to delete this product?")) {
-            try {
-                setLoading(true);
-                await productService.deleteProduct(productId);
-                new Notify({
-                    status: "success",
-                    title: "Success",
-                    text: "Product deleted successfully",
-                    effect: "fade",
-                    speed: 300,
-                    autoclose: true,
-                    autotimeout: 3000,
-                    position: "right top",
-                });
-                await loadProducts();
-            } catch (error) {
-                console.error("Failed to delete product:", error);
-                new Notify({
-                    status: "error",
-                    title: "Error",
-                    text: "Failed to delete product",
-                    effect: "fade",
-                    speed: 300,
-                    autoclose: true,
-                    autotimeout: 3000,
-                    position: "right top",
-                });
-            } finally {
-                setLoading(false);
+        openConfirmationModal(
+            "Delete Product",
+            "Are you sure you want to delete this product?",
+            async () => {
+                try {
+                    await deleteProductFromContext(productId);
+                    closeConfirmationModal();
+                    new Notify({
+                        status: "success",
+                        title: "Success",
+                        text: "Product deleted successfully",
+                        effect: "fade",
+                        speed: 300,
+                        autoclose: true,
+                        autotimeout: 3000,
+                        position: "right top",
+                    });
+                    // No need to call loadProducts() - the context will automatically update all components
+                } catch (error) {
+                    console.error("Failed to delete product:", error);
+                    new Notify({
+                        status: "error",
+                        title: "Error",
+                        text: "Failed to delete product",
+                        effect: "fade",
+                        speed: 300,
+                        autoclose: true,
+                        autotimeout: 3000,
+                        position: "right top",
+                    });
+                }
+            },
+            () => {
+                closeConfirmationModal();
             }
-        }
+        );
     };
 
     const filteredProducts =
         selectedCategory === "All"
-            ? products
-            : products.filter((product) =>
+            ? allProducts
+            : allProducts.filter((product) =>
                 product.category && product.category.trim().toLowerCase() === selectedCategory.trim().toLowerCase()
             );
 
@@ -183,18 +102,20 @@ function ProductManagement({ onShowProductForm }) {
             <div className="product-management-header">
                 <h2>Product Management</h2>
                 <div className="product-controls">
-                    <select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="category-filter"
+                    <CustomDropdown
+                        options={categoryNames}
+                        selectedValue={selectedCategory}
+                        onSelect={setSelectedCategory}
+                        placeholder="Type to search categories..."
+                        searchOnly={true}
+                        onInputChange={(value) => setSelectedCategory(value)}
+                        width="200px"
+                    />
+                    <button 
+                        id="add-product-button"
+                        className="add-product-btn" 
+                        onClick={handleAddProduct}
                     >
-                        {categories.map((category) => (
-                            <option key={category} value={category}>
-                                {category}
-                            </option>
-                        ))}
-                    </select>
-                    <button className="add-product-btn" onClick={handleAddProduct}>
                         Add New Product
                     </button>
                 </div>

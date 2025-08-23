@@ -1,39 +1,26 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "../scss/components/Sidebar.scss";
 import { Link } from "react-router-dom";
-import { productService } from "../services/productService";
-
-
-const PRODUCT_SECTIONS = [
-    { key: "Transmitters", label: "Transmitters" },
-    { key: "Controllers", label: "Controllers" },
-    { key: "IOT-and-PLC-Modules", label: "IOT & PLC Modules" },
-];
+import { useProducts } from "../context/ProductsContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
+import AuthModal from "./AuthModal";
 
 export default function Sidebar({ open, onClose }) {
+    // --- Authentication state ---
+    const { isAuthenticated, user, logout, isAdmin } = useAuth();
+    const { categories, loading, error } = useProducts();
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authMode, setAuthMode] = useState("login");
+
     // --- Products logic ---
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // Remove local state since it's now handled by ProductsContext
 
     // Custom accordion state
     const [productsOpen, setProductsOpen] = useState(false);
-    const [sectionOpen, setSectionOpen] = useState({}); // {Transmitters: true, ...}
+    const [sectionOpen, setSectionOpen] = useState({}); // {categoryName: true, ...}
 
-    useEffect(() => {
-        
-        const fetchProducts = async () => {
-            try {
-                const data = await productService.getAllProducts();
-                setCategories(data);
-            } catch (err) {
-                setError("Failed to load products. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchProducts();
-    }, []);
+    // Remove the useEffect for fetching products since it's now handled by ProductsContext
 
     // Map categories to a lookup for easy access
     const categoryMap = useMemo(() => {
@@ -43,7 +30,7 @@ export default function Sidebar({ open, onClose }) {
                 const [categoryName, products] = Object.entries(categoryObj)[0];
                 map[categoryName] = products.map((product) => ({
                     ...product,
-                    cleanedTitle: product.title.replace(/[^a-zA-Z0-9\s]/g, "").trim(),
+                    cleanedTitle: product.title.replace(/[-_]/g, " ").trim(),
                     slug: product.title.replace(/\s+/g, "-"),
                 }));
             });
@@ -51,124 +38,311 @@ export default function Sidebar({ open, onClose }) {
         return map;
     }, [categories]);
 
-    // --- Resources logic (static, as in ResourcesList) ---
-    const resourcesItems = [
-        {
-            title: "RESOURCES",
-            content: (
-                <ul>
-                    <li>
-                        <Link to="/blog" onClick={onClose}>BLOG</Link>
-                    </li>
-                    <li>
-                        <Link to="/case-studies" onClick={onClose}>CASE STUDIES</Link>
-                    </li>
-                </ul>
-            ),
-        },
-    ];
+    // Generate dynamic product sections from API data
+    const productSections = useMemo(() => {
+        if (!categories || !Array.isArray(categories)) return [];
+        
+        return categories.map((categoryObj) => {
+            const [categoryName, products] = Object.entries(categoryObj)[0];
+            return {
+                key: categoryName,
+                label: categoryName,
+                products: products || []
+            };
+        });
+    }, [categories]);
 
-    // Custom Accordion rendering for sidebar
+    const handleAuthClick = (mode) => {
+        setAuthMode(mode);
+        setShowAuthModal(true);
+        // Close the sidebar when auth button is clicked
+        if (onClose) onClose();
+    };
+
+    const handleLogout = () => {
+        // Close the sidebar first
+        if (onClose) onClose();
+        // Then logout
+        logout();
+    };
+
+    // Custom Accordion rendering for sidebar with modern design
     const renderProductSections = () => (
         <div className="sidebar-custom-accordion">
-            {PRODUCT_SECTIONS.map(({ key, label }) => {
+            {productSections.map(({ key, label, products }) => {
                 const isOpen = !!sectionOpen[key];
-                const products = categoryMap[key] || [];
+                const formattedProducts = categoryMap[key] || [];
                 return (
-                    <div className={`sidebar-accordion-item${isOpen ? " open" : ""}`} key={key}>
+                    <motion.div 
+                        className={`sidebar-accordion-item${isOpen ? " open" : ""}`} 
+                        key={key}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
                         <button
                             className="sidebar-accordion-header"
                             aria-expanded={isOpen}
                             onClick={() => setSectionOpen((prev) => ({ ...prev, [key]: !isOpen }))}
                         >
-                            <span>{label}</span>
-                            <span className={`sidebar-accordion-arrow${isOpen ? " open" : ""}`}>
+                            <span className="section-title">{label}</span>
+                            <motion.span 
+                                className="sidebar-accordion-arrow"
+                                animate={{ rotate: isOpen ? 180 : 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
-                            </span>
+                            </motion.span>
                         </button>
-                        <div className="sidebar-accordion-content" style={{ maxHeight: isOpen ? '1000px' : 0, overflow: 'hidden', transition: 'max-height 0.3s' }}>
-                            <ul>
-                                {products.map((product) => (
-                                    <li key={product._id || product.title}>
-                                        <Link
-                                            to={`/Products/${key}/${product.slug}`}
-                                            onClick={() => {
-                                                if (onClose) onClose();
-                                            }}
-                                            className="product-link"
-                                        >
-                                            {product.cleanedTitle}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
+                        <AnimatePresence>
+                            {isOpen && (
+                                <motion.div 
+                                    className="sidebar-accordion-content"
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                >
+                                    <div className="sidebar-products-grid">
+                                        {formattedProducts.map((product) => (
+                                            <motion.div
+                                                key={product._id || product.title}
+                                                className="sidebar-product-item"
+                                                initial={{ opacity: 0, x: -20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ duration: 0.2, delay: 0.1 }}
+                                            >
+                                                                                            <Link
+                                                to={`/Products/${key}/${product.slug}`}
+                                                onClick={() => {
+                                                    if (onClose) onClose();
+                                                }}
+                                                className="sidebar-product-link"
+                                            >
+                                                {product.cleanedTitle}
+                                            </Link>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
                 );
             })}
         </div>
     );
 
     return (
-        <div className={`sidebar-overlay${open ? " open" : ""}`} onClick={onClose}>
-            <aside className={`sidebar${open ? " open" : ""}`} onClick={e => e.stopPropagation()}>
-                <button className="sidebar__close" onClick={onClose} aria-label="Close sidebar">&times;</button>
-                <nav className="sidebar__nav">
-                    <ul>
-                        <li><Link to="/" onClick={onClose}>Home</Link></li>
-                        <li>
-                            <div className={`sidebar-accordion-item${productsOpen ? " open" : ""}`}>
-                                <button
-                                    className="sidebar-accordion-header"
-                                    aria-expanded={productsOpen}
-                                    onClick={() => setProductsOpen((prev) => !prev)}
-                                >
-                                    <span>Products</span>
-                                    <span className={`sidebar-accordion-arrow${productsOpen ? " open" : ""}`}>
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
-                                    </span>
-                                </button>
-                                <div className="sidebar-accordion-content" style={{ maxHeight: productsOpen ? '2000px' : 0, overflow: 'hidden', transition: 'max-height 0.3s' }}>
-                                    {loading ? null : error ? (
-                                        <div className="error">{error}</div>
-                                    ) : (
-                                        renderProductSections()
-                                    )}
+        <AnimatePresence>
+            {open && (
+                <motion.div 
+                    className="sidebar-overlay" 
+                    onClick={onClose}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <motion.aside 
+                        className="sidebar"
+                        onClick={e => e.stopPropagation()}
+                        initial={{ x: "100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "100%" }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                        <div className="sidebar-header">
+                            <div className="header-content">
+                                {isAuthenticated && (
+                                    <div className="user-info">
+                                        <div className="user-avatar">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <div className="user-details">
+                                            <span className="user-name">{user?.username || user?.email}</span>
+                                            {isAdmin && <span className="admin-badge">Admin</span>}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <button className="sidebar__close" onClick={onClose} aria-label="Close sidebar">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <nav className="sidebar__nav">
+                            <div className="nav-section">
+                                <Link to="/" onClick={onClose} className="nav-link home-link">
+                                    Home
+                                </Link>
+                            </div>
+
+                            <div className="nav-section">
+                                <div className={`sidebar-accordion-item${productsOpen ? " open" : ""}`}>
+                                    <button
+                                        className="sidebar-accordion-header main-accordion"
+                                        aria-expanded={productsOpen}
+                                        onClick={() => setProductsOpen((prev) => !prev)}
+                                    >
+                                        <span className="section-title">
+                                            Products
+                                        </span>
+                                        <motion.span 
+                                            className="sidebar-accordion-arrow"
+                                            animate={{ rotate: productsOpen ? 180 : 0 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                        </motion.span>
+                                    </button>
+                                    <AnimatePresence>
+                                        {productsOpen && (
+                                            <motion.div 
+                                                className="sidebar-accordion-content main-content"
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: "auto" }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                            >
+                                                {loading ? (
+                                                    <div className="loading-state">
+                                                        <div className="loading-spinner"></div>
+                                                        <span>Loading products...</span>
+                                                    </div>
+                                                ) : error ? (
+                                                    <div className="error-state">
+                                                        <span>⚠️ {error}</span>
+                                                    </div>
+                                                ) : (
+                                                    renderProductSections()
+                                                )}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </div>
-                        </li>
-                        <li>
-                            <div className="sidebar-accordion-item">
-                                <button
-                                    className="sidebar-accordion-header"
-                                    aria-expanded={resourcesItems[0].open}
+
+                            <div className="nav-section">
+                                <div className="sidebar-accordion-item">
+                                    <button
+                                        className="sidebar-accordion-header"
+                                        aria-expanded={sectionOpen.resources}
+                                        onClick={() => {
+                                            setSectionOpen((prev) => ({ ...prev, resources: !prev.resources }));
+                                        }}
+                                    >
+                                        <span className="section-title">
+                                            Resources
+                                        </span>
+                                        <motion.span 
+                                            className="sidebar-accordion-arrow"
+                                            animate={{ rotate: sectionOpen.resources ? 180 : 0 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                        </motion.span>
+                                    </button>
+                                    <AnimatePresence>
+                                        {sectionOpen.resources && (
+                                            <motion.div 
+                                                className="sidebar-accordion-content"
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: "auto" }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                            >
+                                                <div className="resources-list">
+                                                    <Link to="/blog" onClick={onClose} className="resource-link">
+                                                        Blog
+                                                    </Link>
+                                                    <Link to="/case-studies" onClick={onClose} className="resource-link">
+                                                        Case Studies
+                                                    </Link>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            </div>
+
+                            <div className="nav-section">
+                                <Link to="/about" onClick={onClose} className="nav-link">
+                                    About Us
+                                </Link>
+                            </div>
+
+                            <div className="nav-section">
+                                <Link to="/faqs" onClick={onClose} className="nav-link">
+                                    FAQs
+                                </Link>
+                            </div>
+
+                            <div className="nav-section">
+                                <button 
+                                    className="nav-link-button"
                                     onClick={() => {
-                                        // Only one resources accordion, so just toggle a boolean
-                                        setSectionOpen((prev) => ({ ...prev, resources: !prev.resources }));
+                                        // Navigate to home page first
+                                        window.location.href = '/#contact';
+                                        if (onClose) onClose();
                                     }}
                                 >
-                                    <span>Resources</span>
-                                    <span className={`sidebar-accordion-arrow${sectionOpen.resources ? " open" : ""}`}>
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
-                                    </span>
+                                    Contact Us
                                 </button>
-                                <div className="sidebar-accordion-content" style={{ maxHeight: sectionOpen.resources ? '500px' : 0, overflow: 'hidden', transition: 'max-height 0.3s' }}>
-                                    {resourcesItems[0].content}
-                                </div>
                             </div>
-                        </li>
-                        <li><Link to="/about" onClick={onClose}>About Us</Link></li>
-                        <li><Link to="/faqs" onClick={onClose}>FAQs</Link></li>
-                        <li><Link to="/contact" onClick={onClose}>Contact Us</Link></li>
-                    </ul>
-                </nav>
-            </aside>
-        </div>
+
+                            {isAuthenticated && (
+                                <div className="nav-section user-section">
+                                    <div className="user-actions">
+                                        <Link to="/profile" onClick={onClose} className="nav-link dashboard-link">
+
+                                            Profile
+                                        </Link>
+                                        {isAdmin && (
+                                            <Link to="/admin" onClick={onClose} className="nav-link admin-link">
+                                                Admin Panel
+                                            </Link>
+                                        )}
+                                        <button onClick={handleLogout} className="logout-button">
+                                            Logout
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {!isAuthenticated && (
+                                <div className="nav-section auth-section">
+                                    <div className="auth-buttons-sidebar">
+                                        <button onClick={() => handleAuthClick("login")}>
+                                            Login
+                                        </button>
+                                        <button onClick={() => handleAuthClick("register")}>
+                                            Sign Up
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </nav>
+                    </motion.aside>
+                </motion.div>
+            )}
+            {showAuthModal && (
+                <AuthModal
+                    onClose={() => setShowAuthModal(false)}
+                    initialMode={authMode}
+                />
+            )}
+        </AnimatePresence>
     );
 } 

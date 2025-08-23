@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import DropdownMenu from "./DropdownMenu";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
-import { productService } from "../services/productService";
+import { useProducts } from "../context/ProductsContext";
 import Sidebar from "./Sidebar";
 
 const ProductsList = ({ onLinkClick, categories, loading, error }) => {
@@ -12,13 +12,16 @@ const ProductsList = ({ onLinkClick, categories, loading, error }) => {
     const formattedCategories = useMemo(() => {
         return categories.map((categoryObj) => {
             const [categoryName, products] = Object.entries(categoryObj)[0];
+            // Improved category cleaning that preserves multiple words and spaces
             const cleanedCategory = categoryName
-                .replace(/[^a-zA-Z0-9\s]/g, "") // Remove special characters, keep spaces
+                .replace(/[-_]/g, " ") // Convert hyphens and underscores to spaces
+                .replace(/\s+/g, " ") // Normalize multiple spaces to single space
                 .trim();
             const formattedProducts = products.map((product) => ({
                 ...product,
                 cleanedTitle: product.title
-                    .replace(/[^a-zA-Z0-9\s]/g, "") // Remove special characters
+                    .replace(/[-_]/g, " ") // Convert hyphens and underscores to spaces
+                    .replace(/\s+/g, " ") // Normalize multiple spaces to single space
                     .trim(),
                 slug: product.title.replace(/\s+/g, "-"), // Create URL-friendly slug
             }));
@@ -37,11 +40,11 @@ const ProductsList = ({ onLinkClick, categories, loading, error }) => {
         <>
             {formattedCategories.map(
                 ({ categoryName, cleanedCategory, products }) => (
-                    <ul key={categoryName} className="category-list">
+                    <ul key={categoryName} className="dropdown-category-list">
                         <Link
                             to={`/Products/${categoryName}`}
                             onClick={onLinkClick}
-                            className="category-link"
+                            className="dropdown-category-link"
                             aria-label={`View all products in ${cleanedCategory}`}
                         >
                             {cleanedCategory}
@@ -51,7 +54,7 @@ const ProductsList = ({ onLinkClick, categories, loading, error }) => {
                                 <Link
                                     to={`/Products/${categoryName}/${product.slug}`}
                                     onClick={onLinkClick}
-                                    className="product-link"
+                                    className="dropdown-product-link"
                                     aria-label={`View ${product.cleanedTitle}`}
                                 >
                                     {product.cleanedTitle}
@@ -82,35 +85,14 @@ export default function TopNav() {
     const [activeDropdown, setActiveDropdown] = useState(null);
     const timeoutRef = useRef(null);
     const { isAuthenticated, isAdmin, logout } = useAuth();
+    const { categories: productCategories, loading: productsLoading, error: productsError } = useProducts();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authMode, setAuthMode] = useState("login");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const openSidebar = () => setSidebarOpen(true);
     const closeSidebar = () => setSidebarOpen(false);
 
-    // Prefetch products once on mount to avoid loading flash on hover
-    const [productCategories, setProductCategories] = useState([]);
-    const [productsLoading, setProductsLoading] = useState(true);
-    const [productsError, setProductsError] = useState(null);
-
-    useEffect(() => {
-        let isMounted = true;
-        const fetchProducts = async () => {
-            try {
-                const { data } = await productService.getAllProducts();
-                if (isMounted) setProductCategories(data);
-            } catch (err) {
-                console.error("Error fetching products:", err);
-                if (isMounted) setProductsError("Failed to load products. Please try again later.");
-            } finally {
-                if (isMounted) setProductsLoading(false);
-            }
-        };
-        fetchProducts();
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    // Remove the local product fetching logic since it's now handled by ProductsContext
 
     const openDropdown = (type) => setActiveDropdown(type);
     const closeDropdown = () => setActiveDropdown(null);
@@ -178,7 +160,17 @@ export default function TopNav() {
                                 </NavLink>
                                 <NavLink to="/about">ABOUT US</NavLink>
                                 <NavLink to="/faqs">FAQs</NavLink>
-                                <NavLink to="/contact">CONTACT US</NavLink>
+                                <li>
+                                    <button 
+                                        className="nav-link-button"
+                                        onClick={() => {
+                                            // Navigate to home page first
+                                            window.location.href = '/#contact';
+                                        }}
+                                    >
+                                        CONTACT US
+                                    </button>
+                                </li>
                                 {!isAuthenticated && (
                                     <div className="auth-buttons">
                                         <button
@@ -202,24 +194,29 @@ export default function TopNav() {
 
                         <div className="icons">
                             <div className="icon-container">
+                                 {!isAdmin && (
                                 <div className="save-icon">
                                     <Link to="/wishlist">
                                         <img src="../../save.svg" alt="Save" />
                                     </Link>
                                 </div>
-                                <a
-                                    href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="whatsapp-icon"
-                                    title="Contact us on WhatsApp"
-                                    style={{ cursor: 'pointer', textDecoration: 'none' }}
-                                >
-                                    <img
-                                        src="../../whatsapp.png"
-                                        alt="WhatsApp"
-                                    />
-                                </a>
+                                )}
+                               {!isAdmin && (
+                                    <div className="whatsapp-icon">
+                                        <a
+                                            href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="Contact us on WhatsApp"
+                                            style={{ cursor: 'pointer', textDecoration: 'none' }}
+                                        >
+                                            <img
+                                                src="../../whatsapp.png"
+                                                alt="WhatsApp"
+                                            />
+                                        </a>
+                                    </div>
+                                )}
 
                                 {isAuthenticated && (
                                     <div

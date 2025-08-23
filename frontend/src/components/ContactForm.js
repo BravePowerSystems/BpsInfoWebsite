@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { publicClientMethods } from '../services/apiClient';
 import { formNotifications } from '../utils/notificationHelper';
 import { openWhatsAppGeneralEnquiry } from '../utils/whatsappHelper';
+import { validateIndianPhone, formatIndianPhoneInput } from '../utils/phoneValidation';
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const ContactForm = () => {
         enquiryType: "general",
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [phoneError, setPhoneError] = useState("");
 
     const enquiryTypes = [
         { value: "general", label: "General Enquiry" },
@@ -24,17 +26,36 @@ const ContactForm = () => {
         { value: "custom", label: "Custom Solution" },
     ];
 
+    const validatePhone = (phone) => {
+        // Use Indian phone validation utility
+        const validation = validateIndianPhone(phone);
+        return validation.error;
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
             [name]: value,
         }));
+
+        // Validate phone number on change
+        if (name === "phone") {
+            const error = validatePhone(value);
+            setPhoneError(error);
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isSubmitting) return;
+        
+        // Validate phone number before submission
+        const phoneValidationError = validatePhone(formData.phone);
+        if (phoneValidationError) {
+            setPhoneError(phoneValidationError);
+            return;
+        }
         
         setIsSubmitting(true);
         try {
@@ -57,6 +78,7 @@ const ContactForm = () => {
                 enquiryType: "general",
                 message: ""
             });
+            setPhoneError(""); // Clear phone error on successful submission
         } catch (error) {
             console.error('Enquiry submission error:', error);
             formNotifications.submitError('contact enquiry');
@@ -101,25 +123,23 @@ const ContactForm = () => {
                             name="lastName" 
                             value={formData.lastName}
                             onChange={handleChange}
-                            placeholder="Last Name *" 
-                            required 
-                            aria-required="true"
+                            placeholder="Last Name" 
                         />
                     </div>
                 </div>
 
                 <div className="form-group-single">
                     <label htmlFor="email" className="visually-hidden">Email Address</label>
-                                            <input 
-                            type="email" 
-                            id="email"
-                            name="email" 
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="Email Address *" 
-                            required 
-                            aria-required="true"
-                        />
+                    <input 
+                        type="email" 
+                        id="email"
+                        name="email" 
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Email Address *" 
+                        required 
+                        aria-required="true"
+                    />
                 </div>
 
                 <div className="form-row">
@@ -137,14 +157,32 @@ const ContactForm = () => {
 
                     <div className="form-group">
                         <label htmlFor="phone" className="visually-hidden">Phone Number</label>
-                        <input 
-                            type="tel" 
-                            id="phone"
-                            name="phone" 
-                            value={formData.phone}
-                            onChange={handleChange}
-                            placeholder="Phone Number"
-                        />
+                        <div className={`phone-input-container ${phoneError ? "error" : ""}`}>
+                            <span className="phone-prefix">+91</span>
+                            <input 
+                                type="tel" 
+                                id="phone"
+                                name="phone" 
+                                value={formData.phone.replace('+91', '')}
+                                onChange={(e) => {
+                                    const { name, value } = e.target;
+                                    const formattedPhone = formatIndianPhoneInput(value);
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        [name]: formattedPhone
+                                    }));
+                                    
+                                    // Validate phone number on change
+                                    const error = validatePhone(formattedPhone);
+                                    setPhoneError(error);
+                                }}
+                                placeholder="Enter 10 digit mobile number" 
+                                required 
+                                aria-required="true"
+                                maxLength="10"
+                            />
+                        </div>
+                        {phoneError && <span className="error-message">{phoneError}</span>}
                     </div>
                 </div>
 

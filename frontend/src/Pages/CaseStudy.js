@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {  Link } from "react-router-dom";
+import {  Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../scss/pages/CaseStudy.scss";
 
@@ -19,6 +19,7 @@ const fadeInRightVariants = {
 };
 
 function CaseStudy() {
+    const navigate = useNavigate();
     
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -232,7 +233,6 @@ function CaseStudy() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 }}
             >
-                <div className="quote-mark">"</div>
                 <blockquote>
                     {caseStudyData.testimonial.quote}
                 </blockquote>
@@ -252,7 +252,15 @@ function CaseStudy() {
             >
                 <h2>Ready to transform your business?</h2>
                 <p>Let's discuss how our solutions can address your specific challenges.</p>
-                <Link to="/contact" className="contact-button">Contact Us</Link>
+                                        <button 
+                            className="contact-button"
+                            onClick={() => {
+                                // Navigate to home page with contact hash
+                                window.location.href = '/#contact';
+                            }}
+                        >
+                            Contact Us
+                        </button>
             </motion.div>
         </div>
     );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { motion } from "framer-motion";
@@ -6,7 +6,7 @@ import CategoryCarousel from "../components/CategoryCarousel";
 import { fadeInUpVariants } from "../components/HeroSection";
 import "../scss/components/CategoryCarousel.scss";
 import "../scss/pages/CategoryPage.scss";
-import { productService } from "../services/productService";
+import { useProducts } from "../context/ProductsContext";
 import Loading from "../components/Loading";
 
 const motionConfig = {
@@ -32,45 +32,31 @@ const motionConfig = {
 
 function CategoryPage() {
     const { categoryName } = useParams();
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { categories, loading, error } = useProducts();
 
-    useEffect(() => {
-        loadProducts();
-    }, [categoryName]);
-
-    const loadProducts = async () => {
-        try {
-            setLoading(true);
-            const response = await productService.getAllProducts();
-            const { data } = response;
-            
-            if (!data || !Array.isArray(data)) {
-                setError('Invalid data format received from server');
-                return;
-            }
-            
-            const categoryObj = data.find(
-                (item) => Object.keys(item)[0] === categoryName
-            );
-            
-            if (!categoryObj) {
-                setError('Category not found');
-                return;
-            }
-            
-            setProducts(Object.values(categoryObj)[0]);
-        } catch (err) {
-            setError('Failed to load products: ' + (err.message || 'Unknown error'));
-            console.error(err);
-        } finally {
-            setLoading(false);
+    // Find the specific category and its products
+    const { products, categoryFound } = useMemo(() => {
+        if (!categories || !Array.isArray(categories)) {
+            return { products: [], categoryFound: false };
         }
-    };
+        
+        const categoryObj = categories.find(
+            (item) => Object.keys(item)[0] === categoryName
+        );
+        
+        if (!categoryObj) {
+            return { products: [], categoryFound: false };
+        }
+        
+        return { 
+            products: Object.values(categoryObj)[0], 
+            categoryFound: true 
+        };
+    }, [categories, categoryName]);
 
     if (loading) return <Loading text="Loading products..." />;
     if (error) return <div>Error: {error}</div>;
+    if (!categoryFound) return <div>Category not found</div>;
     if (!products.length) return <div>No products found in this category</div>;
 
     return (

@@ -168,6 +168,52 @@
                     textarea {
                         resize: vertical;
                     }
+                    
+                    .error-message {
+                        color: #ff6b6b;
+                        font-size: 0.85rem;
+                        margin-top: 0.3rem;
+                        display: block;
+                    }
+                    
+                    .phone-input-container {
+                        display: flex;
+                        align-items: center;
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        border-radius: 8px;
+                        overflow: hidden;
+                        
+                        .phone-prefix {
+                            background: rgba(255, 255, 255, 0.1);
+                            color: rgba(255, 255, 255, 0.7);
+                            padding: 0.8rem;
+                            border-right: 1px solid rgba(255, 255, 255, 0.1);
+                            font-weight: 500;
+                            min-width: 50px;
+                            text-align: center;
+                        }
+                        
+                        input {
+                            border: none;
+                            background: transparent;
+                            border-radius: 0;
+                            flex: 1;
+                            
+                            &:focus {
+                                border-color: transparent;
+                                box-shadow: none;
+                            }
+                        }
+                        
+                        &:focus-within {
+                            border-color: #678df6;
+                        }
+                        
+                        &.error {
+                            border-color: #ff6b6b;
+                        }
+                    }
                 }
                 
                 .form-actions {

@@ -120,6 +120,18 @@ const uploadsDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
     console.log('Created uploads directory at', uploadsDir);
+} else {
+    console.log('Uploads directory already exists at', uploadsDir);
+}
+
+// Check directory permissions
+try {
+    const testFile = path.join(uploadsDir, 'test.txt');
+    fs.writeFileSync(testFile, 'test');
+    fs.unlinkSync(testFile);
+    console.log('Uploads directory is writable');
+} catch (error) {
+    console.error('Warning: Uploads directory is not writable:', error.message);
 }
 
 // Multer setup for file uploads
@@ -132,22 +144,91 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   }
 });
-const upload = multer({ storage: storage });
+
+// Add file filter and size limits
+const fileFilter = (req, file, cb) => {
+  // Accept only image files
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed'), false);
+  }
+};
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+    files: 1
+  }
+});
 
 // File upload endpoint
 app.post('/api/upload', (req, res, next) => {
+  console.log('Upload request received:', {
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    body: req.body,
+    files: req.files
+  });
+  
   upload.single('file')(req, res, function (err) {
     if (err) {
       console.error('Upload error:', err);
-      return res.status(500).json({ error: 'File upload failed', details: err.message });
+      
+      // Handle specific multer errors
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ 
+          error: 'File too large', 
+          details: 'File size must be less than 5MB' 
+        });
+      }
+      
+      if (err.message === 'Only image files are allowed') {
+        return res.status(400).json({ 
+          error: 'Invalid file type', 
+          details: 'Only image files are allowed' 
+        });
+      }
+      
+      return res.status(500).json({ 
+        error: 'File upload failed', 
+        details: err.message 
+      });
     }
+    
     if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+      return res.status(400).json({ 
+        error: 'No file uploaded',
+        details: 'Please select an image file to upload'
+      });
     }
-    // Return full URL
-    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-    console.log('File uploaded:', fileUrl);
-    res.status(201).json({ url: fileUrl });
+    
+    try {
+      // Return full URL
+      const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+      console.log('File uploaded successfully:', {
+        url: fileUrl,
+        filename: req.file.filename,
+        size: req.file.size,
+        mimetype: req.file.mimetype,
+        originalName: req.file.originalname
+      });
+      res.status(201).json({ 
+        url: fileUrl,
+        filename: req.file.filename,
+        size: req.file.size,
+        mimetype: req.file.mimetype
+      });
+    } catch (error) {
+      console.error('Error generating file URL:', error);
+      res.status(500).json({ 
+        error: 'Error processing uploaded file',
+        details: error.message
+      });
+    }
   });
 });
 

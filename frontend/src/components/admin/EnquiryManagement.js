@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { enquiryService } from '../../services/enquiryService';
+import CustomDropdown from '../CustomDropdown';
 import '../../scss/components/admin/EnquiryManagement.scss';
 import Loading from '../Loading';
 
@@ -96,16 +97,12 @@ function EnquiryManagement() {
         <div className="enquiry-management clean-admin">
             <h2>All Enquiries</h2>
             <div className="product-controls">
-                <select
-                    value={filter}
-                    onChange={e => setFilter(e.target.value)}
-                    className="category-filter"
-                >
-                    <option value="">All Statuses</option>
-                    {statusOptions.map(status => (
-                        <option key={status} value={status}>{status}</option>
-                    ))}
-                </select>
+                <CustomDropdown
+                    options={statusOptions}
+                    selectedValue={filter}
+                    onValueChange={setFilter}
+                    placeholder="All Statuses"
+                />
             </div>
             {loading ? (
                 <Loading text="Loading enquiries..." />
@@ -148,15 +145,12 @@ function EnquiryManagement() {
                             )}
                             <div className="enquiry-actions">
                                 <label>Status: </label>
-                                <select
-                                    value={enq.status}
-                                    onChange={e => handleStatusChange(enq._id, e.target.value)}
-                                    className="category-filter"
-                                >
-                                    {statusOptions.map(status => (
-                                        <option key={status} value={status}>{status}</option>
-                                    ))}
-                                </select>
+                                <CustomDropdown
+                                    options={statusOptions}
+                                    selectedValue={enq.status}
+                                    onValueChange={(newStatus) => handleStatusChange(enq._id, newStatus)}
+                                    className="status-change-selector"
+                                />
                             </div>
                             <div className="enquiry-response">
                                 <label>Admin Response:</label>

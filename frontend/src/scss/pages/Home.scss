@@ -6,10 +6,681 @@
     position: relative;
     width: 100%;
     min-height: 100vh;
-    padding: 1rem;
-    margin-top: 1rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
     background: transparent;
     background-size: cover;
-    color: $primary-text-color;
+    color: $primary-color;
 
+    section {
+        margin: 1.5rem 0;
+        padding: 0.5rem 0;
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff0f3, #678df6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    // Services Overview Section
+    .services-overview {
+        border-radius: 15px;
+        margin: 1.5rem 0.5rem;
+
+        .services-subtitle {
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .services-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+
+            .service-card {
+                width:100%;
+                background: rgba(12, 24, 40, 0.6);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(103, 141, 246, 0.2);
+                padding: 1rem;
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                text-align: center;
+                transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+                &:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+                    border-color: rgba(103, 141, 246, 0.4);
+                }
+
+                .service-icon {
+                    font-size: 2.5rem;
+                    margin-bottom: 1rem;
+                }
+
+                h3 {
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    color: $primary-color;
+                }
+
+                p {
+                    color: white;
+                    line-height: 1.5;
+                    font-size: 0.9rem;
+                }
+            }
+        }
+    }
+
+    // Featured Products Section
+    .featured-products {
+        .category {
+            h2 {
+                display: none; // Hide the category name since we have our own title
+            }
+        }
+    }
+
+    // Company Values Section
+    .company-values {
+
+        margin: 1.5rem 0.5rem;
+
+        .values-grid {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 2rem;
+
+            .value-card {
+                background: rgba(12, 24, 40, 0.6);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(103, 141, 246, 0.2);
+                padding: 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+                text-align: center;
+                border-left: 3px solid $primary-color;
+                transition: transform 0.3s ease, border-color 0.3s ease;
+
+                &:hover {
+                    transform: translateY(-2px);
+                    border-color: rgba(103, 141, 246, 0.4);
+                }
+
+                h3 {
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    color: $primary-color;
+                }
+
+                p {
+                    color: white;
+                    line-height: 1.5;
+                    font-size: 0.9rem;
+                }
+            }
+        }
+    }
+
+    // Case Studies Preview Section
+    .case-studies-preview {
+        .case-studies-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+
+            .case-study-card {
+                display: flex;
+                flex-direction: column;
+                padding: 1rem;
+                background: rgba(12, 24, 40, 0.6);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(103, 141, 246, 0.2);
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                transition: transform 0.3s ease, border-color 0.3s ease;
+
+                &:hover {
+                    transform: translateY(-2px);
+                    border-color: rgba(103, 141, 246, 0.4);
+                }
+
+                .case-study-content {
+                    flex: 1;
+
+                    .case-study-title {
+                        font-size: 1.3rem;
+                        font-weight: 600;
+                        margin-bottom: 1rem;
+                        color: $primary-color;
+                    }
+
+                    .hr {
+                        width: 40px;
+                        height: 2px;
+                        background: $primary-color;
+                        margin-bottom: 1rem;
+                    }
+
+                    .case-study-summary {
+                        color: white;
+                        line-height: 1.5;
+                        margin-bottom: 1.5rem;
+                        font-size: 0.9rem;
+                    }
+
+                    .read-more {
+                        color: $primary-color;
+                        text-decoration: none;
+                        font-weight: 600;
+                        transition: color 0.3s ease;
+
+                        &:hover {
+                            color: lighten($primary-color, 20%);
+                        }
+                    }
+                }
+
+                .case-study-image {
+                    width: 100%;
+                    height: 180px;
+                    object-fit: cover;
+                }
+            }
+        }
+    }
+
+    // Contact Information Section
+    .contact-info-section {
+        background: rgba(12, 24, 40, 0.3);
+        margin: 1.5rem 0.5rem;
+
+        .contact-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+
+            .contact-info {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                align-items:flex-start;
+                gap: 1rem;
+
+                .info-card {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(12, 24, 40, 0.6);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(103, 141, 246, 0.2);
+                    border-radius: 10px;
+                    padding: 1rem 0;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                    transition: border-color 0.3s ease;
+
+                    &:hover {
+                        border-color: rgba(103, 141, 246, 0.4);
+                    }
+
+                    h3 {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                        margin-bottom: 0.8rem;
+                        color: $primary-color;
+                    }
+
+                    p {
+                        color: white;
+                        margin-bottom: 0.5rem;
+                        line-height: 1.4;
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+
+            .contact-form-container {
+                width: 100%;
+                background: transparent;
+                padding: 0;
+                margin: 0;
+            }
+        }
+    }
+
+    // Tablet breakpoint (768px and up)
+    @include tablet {
+        padding: 1rem;
+        margin-top: 1rem;
+        
+
+        section {
+            margin: 3rem 0;
+            padding: 1.5rem 0;
+
+            h2 {
+                font-size: 2.2rem;
+                background: linear-gradient(90deg, #fff0f3, #678df6);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .section-subtitle {
+                font-size: 1.1rem;
+                max-width: 500px;
+            }
+        }
+
+        .services-overview {
+            margin: 2rem 1rem;
+
+            .services-subtitle {
+                font-size: 1.1rem;
+                max-width: 500px;
+            }
+
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+                margin-top: 2.5rem;
+
+                .service-card {
+
+                    .service-icon {
+                        font-size: 2.8rem;
+                    }
+
+                    h3 {
+                        font-size: 1.4rem;
+                    }
+
+                    p {
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+
+        .company-values {
+            margin: 2rem 1rem;
+
+            .values-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+                margin-top: 2.5rem;
+
+                .value-card {
+                    padding: 2rem;
+
+                    h3 {
+                        font-size: 1.3rem;
+                    }
+
+                    p {
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+
+        .case-studies-preview {
+            .case-studies-list {
+                gap: 2rem;
+                margin-top: 2.5rem;
+
+                .case-study-card {
+                    flex-direction: row;
+
+                    .case-study-content {
+
+                        .case-study-title {
+                            font-size: 1.4rem;
+                        }
+
+                        .case-study-summary {
+                            font-size: 1rem;
+                        }
+                    }
+
+                    .case-study-image {
+                        width: 180px;
+                        height: 140px;
+                    }
+                }
+            }
+        }
+
+        .contact-info-section {
+            margin: 2rem 1rem;
+            .contact-content {
+                gap: 2rem;
+                margin-top: 2.5rem;
+                .contact-info {
+                    width: 100%;
+                    gap: 1.5rem;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    .info-card {
+                        width:45%;
+                        h3 {
+                            width: 100%;
+                            text-align: center;
+                            font-size: 1.2rem;
+                        }
+
+                        p {
+                            width: 100%;
+                            text-align: center;
+                            font-size: 1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Desktop breakpoint (1024px and up)
+    @include desktop {
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+
+        section {
+            margin: 4rem 0;
+            padding: 2rem 0;
+
+            h2 {
+                font-size: 2.5rem;
+                background: linear-gradient(90deg, #fff0f3, #678df6);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .section-subtitle {
+                font-size: 1.2rem;
+                max-width: 600px;
+            }
+        }
+
+        .services-overview {
+            margin: 2.5rem 1.5rem;
+
+            .services-subtitle {
+                font-size: 1.2rem;
+                max-width: 600px;
+            }
+
+            .services-grid {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 2.5rem;
+                margin-top: 3rem;
+
+                .service-card {
+                    width:45%;
+
+                    .service-icon {
+                        font-size: 3rem;
+                    }
+
+                    h3 {
+                        font-size: 1.5rem;
+                    }
+
+                    p {
+                        font-size: 1.1rem;
+                    }
+                }
+            }
+        }
+
+        .company-values {
+            margin: 2.5rem 1.5rem;
+
+                .values-grid {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 2.5rem;
+                margin-top: 3rem;
+
+                .value-card {
+                    padding: 2.5rem;
+                    width:45%;
+                    h3 {
+                        font-size: 1.4rem;
+                    }
+
+                    p {
+                        font-size: 1.1rem;
+                    }
+                }
+            }
+        }
+
+        .case-studies-preview {
+            .case-studies-list {
+                gap: 2.5rem;
+                margin-top: 3rem;
+
+                .case-study-card {
+                    padding: 1.5rem;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 1rem;
+                    .case-study-content {
+
+                        .case-study-title {
+                            font-size: 1.5rem;
+                        }
+
+                        .case-study-summary {
+                            font-size: 1.1rem;
+                        }
+                    }
+
+                    .case-study-image {
+                        width: 200px;
+                        height: 150px;
+                    }
+                }
+            }
+        }
+
+        .contact-info-section {
+            margin: 2.5rem 1.5rem;
+
+            .contact-content {
+                gap: 2.5rem;
+                margin-top: 3rem;
+
+                .contact-info {
+                    gap: 2rem;
+
+                    .info-card {
+
+                        h3 {
+                            width: 100%;
+                            font-size: 1.3rem;
+                        }
+
+                        p {
+                            font-size: 1.1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Large Desktop breakpoint (1440px and up)
+    @include large_desktop {
+        padding: 2rem;
+        margin-top: 2rem;
+
+        section {
+            margin: 5rem 0;
+            padding: 2.5rem 0;
+
+            h2 {
+                font-size: 3rem;
+                background: linear-gradient(90deg, #fff0f3, #678df6);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .section-subtitle {
+                font-size: 1.3rem;
+                max-width: 700px;
+            }
+        }
+
+        .services-overview {
+            margin: 3rem 2rem;
+
+            .services-subtitle {
+                font-size: 1.3rem;
+                max-width: 700px;
+            }
+
+            .services-grid {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 3rem;
+                margin-top: 3.5rem;
+
+                .service-card {
+
+                    .service-icon {
+                        font-size: 3.5rem;
+                    }
+
+                    h3 {
+                        font-size: 1.6rem;
+                    }
+
+                    p {
+                        font-size: 1.2rem;
+                    }
+                }
+            }
+        }
+
+        .company-values {
+            margin: 3rem 2rem;
+
+            .values-grid {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 3rem;
+                margin-top: 3.5rem;
+
+                .value-card {
+                    padding: 3rem;
+
+                    h3 {
+                        font-size: 1.5rem;
+                    }
+
+                    p {
+                        font-size: 1.2rem;
+                    }
+                }
+            }
+        }
+
+        .case-studies-preview {
+            .case-studies-list {
+                gap: 3rem;
+                margin-top: 3.5rem;
+
+                .case-study-card {
+                    .case-study-content {
+
+                        .case-study-title {
+                            font-size: 1.6rem;
+                        }
+
+                        .case-study-summary {
+                            font-size: 1.2rem;
+                        }
+                    }
+
+                    .case-study-image {
+                        width: 250px;
+                        height: 180px;
+                    }
+                }
+            }
+        }
+
+        .contact-info-section {
+            margin: 3rem 2rem;
+
+            .contact-content {
+                gap: 3rem;
+                margin-top: 3.5rem;
+
+                .contact-info {
+                    gap: 2.5rem;
+
+                    .info-card {
+
+                        h3 {
+                            font-size: 1.4rem;
+                        }
+
+                        p {
+                            font-size: 1.2rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

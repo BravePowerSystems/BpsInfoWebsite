@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         checkAuth();
     }, []);
 
-    const login = async (username, password) => {
+    const login = async (username, password, showNotification = true) => {
         try {
             setError(null);
             const response = await authService.login(username, password);
@@ -46,7 +46,12 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('refreshToken', refreshToken);
             
             setUser(userData);
-            authNotifications.loginSuccess(userData.username);
+            
+            // Only show login success notification if explicitly requested
+            if (showNotification) {
+                authNotifications.loginSuccess(userData.username);
+            }
+            
             return userData;
         } catch (err) {
             const errorMessage = err.response?.data?.error || 'Login failed';
@@ -100,9 +105,15 @@ export const AuthProvider = ({ children }) => {
     const register = async (userData) => {
         try {
             setError(null);
-            await authService.register(userData);
-            // After successful registration, login the user
-            return await login(userData.username, userData.password);
+            const response = await authService.register(userData);
+            
+            // Show registration success notification
+            authNotifications.registerSuccess(userData.username);
+            
+            // After successful registration, automatically log in the user
+            // This provides a seamless experience - user doesn't need to login again
+            // Pass false to prevent showing the "Welcome Back!" notification
+            return await login(userData.username, userData.password, false);
         } catch (err) {
             const errorMessage = err.response?.data?.error || 'Registration failed';
             setError(errorMessage);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
 import Breadcrumbs from "../components/Breadcrumbs";
@@ -11,6 +11,7 @@ import { productService } from "../services/productService";
 import { wishlistService } from "../services/wishlistService";
 import { productNotifications } from "../utils/notificationHelper";
 import { useAuth } from "../context/AuthContext";
+import { useProducts } from "../context/ProductsContext";
 import SpecificationsAccordion from "../components/SpecificationsAccordion";
 import UnauthorizedPage from "./UnauthorizedPage";
 import Loading from "../components/Loading";
@@ -28,49 +29,57 @@ export default function Product() {
     const { openProductModal } = useModal();
     const { categoryName, productName } = useParams();
     const [product, setProduct] = useState(null);
-    const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { user, isAdmin } = useAuth();
+    const { categories } = useProducts();
     const location = useLocation(); // Add this line to get the current location
     const [showUnauthorized, setShowUnauthorized] = useState(false);
+
+    // Get related products from the context
+    const relatedProducts = useMemo(() => {
+        if (!categories || !Array.isArray(categories) || !categoryName) {
+            return [];
+        }
+        
+        const formattedCategory = categoryName.replace(/-/g, ' ');
+        const categoryObj = categories.find(
+            (item) => Object.keys(item)[0].toLowerCase() === formattedCategory.toLowerCase()
+        );
+        
+        if (categoryObj) {
+            return Object.values(categoryObj)[0];
+        }
+        
+        return [];
+    }, [categories, categoryName]);
 
     useEffect(() => {
         if (!categoryName || !productName) {
             setProduct(null);
-            setRelatedProducts([]);
             setLoading(false);
             return;
         }
+        
         const loadProduct = async () => {
             try {
                 setLoading(true);
                 // Convert dashes to spaces and make case-insensitive
                 const formattedCategory = categoryName ? categoryName.replace(/-/g, ' ') : "";
                 const formattedProduct = productName ? productName.replace(/-/g, ' ') : "";
+                
                 // Load specific product
                 const response = await productService.getProductByDetails(
                     formattedCategory,
                     formattedProduct
                 );
+                
                 if (!response || !response.data) {
                     throw new Error('Invalid response from server');
                 }
+                
                 const productData = response.data;
                 setProduct(productData);
-
-                // Load all products to get related products from same category
-                const allProductsResponse = await productService.getAllProducts();
-                if (!allProductsResponse || !allProductsResponse.data) {
-                    throw new Error('Invalid response from server');
-                }
-                const allProducts = allProductsResponse.data;
-                const categoryObj = allProducts.find(
-                    (item) => Object.keys(item)[0].toLowerCase() === formattedCategory.toLowerCase()
-                );
-                if (categoryObj) {
-                    setRelatedProducts(Object.values(categoryObj)[0]);
-                }
             } catch (err) {
                 setError("Failed to load product");
                 console.error(err);
@@ -78,6 +87,7 @@ export default function Product() {
                 setLoading(false);
             }
         };
+        
         loadProduct();
     }, [categoryName, productName]);
 

@@ -14,7 +14,6 @@
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
-    overflow: hidden; /* Prevent scrolling within the modal overlay */
 
     .modal-content {
         width: 90%;
@@ -27,27 +26,9 @@
         position: relative;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        overflow-y: auto;
         max-height: 90vh;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-
-        &::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        &::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.3);
-            }
-        }
+        overflow-y: auto;
+        scrollbar-width: none;
 
         &:focus {
             outline: none;
@@ -177,13 +158,13 @@
 
             .form-actions {
                 margin-top: 1rem;
-                align-self: flex-end;
                 display: flex;
                 gap: 1rem;
-                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
 
                 button {
-                    padding: 1rem 2rem;
+                    padding: 0.5rem ;
                     background: linear-gradient(90deg, #678df6, #8f94fb);
                     border: none;
                     border-radius: 4px;
@@ -191,10 +172,6 @@
                     font-weight: 600;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    min-width: 140px;
 
                     &:hover {
                         transform: translateY(-2px);
@@ -215,7 +192,7 @@
 
                     &.whatsapp-btn {
                         background: linear-gradient(45deg, #25D366, #128C7E);
-                        
+                        align-content: center;
                         &:hover {
                             background: linear-gradient(45deg, #128C7E, #25D366);
                             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
@@ -244,11 +221,12 @@
                 }
                 
                 .form-actions {
-                    flex-direction: column;
-                    align-items: stretch;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
                     
                     button {
-                        width: 100%;
+                        width: auto;
                     }
                 }
             }
@@ -281,42 +259,22 @@
     }
 }
 
-// Mobile-specific styles
-@media (max-width: 767px) {
+
+
+@include large_desktop {
     .modal-overlay {
         .modal-content {
-            width: 95%;
-            padding: 1.5rem;
-            margin: 1rem;
-
+            width: 50%;
             .enquiry-form {
                 .form-actions {
-                    flex-direction: column;
-                    align-items: stretch;
-                    gap: 0.75rem;
-                    
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
                     button {
-                        width: 100%;
-                        padding: 0.875rem 1.5rem;
-                        font-size: 0.95rem;
+                        width: auto;
                     }
                 }
             }
         }
     }
-}
-
-@import "../base/variables";
-
-.product-modal-content {
-    h3 {
-        font-size: clamp(1.5rem, 4vw, 2.5rem);
-        margin-bottom: 1rem;
-        background: linear-gradient(90deg, #fff0f3, #678df6);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    // Your specific product modal styles...
 }
