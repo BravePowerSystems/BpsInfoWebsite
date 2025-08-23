@@ -10,6 +10,14 @@ export const ModalProvider = ({ children }) => {
         productName: null
     });
 
+    const [confirmationModal, setConfirmationModal] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: null,
+        onCancel: null
+    });
+
     const openProductModal = (productName) => {
         setProductModal({ isOpen: true, productName });
     };
@@ -18,8 +26,35 @@ export const ModalProvider = ({ children }) => {
         setProductModal({ isOpen: false, productName: null });
     };
 
+    const openConfirmationModal = (title, message, onConfirm, onCancel) => {
+        setConfirmationModal({
+            isOpen: true,
+            title,
+            message,
+            onConfirm,
+            onCancel
+        });
+    };
+
+    const closeConfirmationModal = () => {
+        setConfirmationModal({
+            isOpen: false,
+            title: '',
+            message: '',
+            onConfirm: null,
+            onCancel: null
+        });
+    };
+
     return (
-        <ModalContext.Provider value={{ productModal, openProductModal, closeProductModal }}>
+        <ModalContext.Provider value={{ 
+            productModal, 
+            openProductModal, 
+            closeProductModal,
+            confirmationModal,
+            openConfirmationModal,
+            closeConfirmationModal
+        }}>
             {children}
         </ModalContext.Provider>
     );

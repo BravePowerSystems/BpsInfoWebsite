@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useProducts } from "../../context/ProductsContext";
+import { useModal } from "../../context/ModalContext";
 import "../../scss/components/admin/ProductManagement.scss";
 import ProductCard from "./ProductCard";
 import Notify from "simple-notify";
@@ -69,6 +70,7 @@ const CategorySelector = ({ categories, selectedCategory, onCategoryChange }) =>
 
 function ProductManagement({ onShowProductForm }) {
     const { products, categories, loading, deleteProduct: deleteProductFromContext } = useProducts();
+    const { openConfirmationModal, closeConfirmationModal } = useModal();
     const [selectedCategory, setSelectedCategory] = useState("All");
 
     // Extract all products and category names from the context data
@@ -111,34 +113,42 @@ function ProductManagement({ onShowProductForm }) {
     };
 
     const handleDeleteProduct = async (productId) => {
-        if (window.confirm("Are you sure you want to delete this product?")) {
-            try {
-                await deleteProductFromContext(productId);
-                new Notify({
-                    status: "success",
-                    title: "Success",
-                    text: "Product deleted successfully",
-                    effect: "fade",
-                    speed: 300,
-                    autoclose: true,
-                    autotimeout: 3000,
-                    position: "right top",
-                });
-                // No need to call loadProducts() - the context will automatically update all components
-            } catch (error) {
-                console.error("Failed to delete product:", error);
-                new Notify({
-                    status: "error",
-                    title: "Error",
-                    text: "Failed to delete product",
-                    effect: "fade",
-                    speed: 300,
-                    autoclose: true,
-                    autotimeout: 3000,
-                    position: "right top",
-                });
+        openConfirmationModal(
+            "Delete Product",
+            "Are you sure you want to delete this product?",
+            async () => {
+                try {
+                    await deleteProductFromContext(productId);
+                    closeConfirmationModal();
+                    new Notify({
+                        status: "success",
+                        title: "Success",
+                        text: "Product deleted successfully",
+                        effect: "fade",
+                        speed: 300,
+                        autoclose: true,
+                        autotimeout: 3000,
+                        position: "right top",
+                    });
+                    // No need to call loadProducts() - the context will automatically update all components
+                } catch (error) {
+                    console.error("Failed to delete product:", error);
+                    new Notify({
+                        status: "error",
+                        title: "Error",
+                        text: "Failed to delete product",
+                        effect: "fade",
+                        speed: 300,
+                        autoclose: true,
+                        autotimeout: 3000,
+                        position: "right top",
+                    });
+                }
+            },
+            () => {
+                closeConfirmationModal();
             }
-        }
+        );
     };
 
     const filteredProducts =
