@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Breadcrumbs from "../components/Breadcrumbs";
 import "../scss/pages/Products.scss";
 import CategoryCarousel from "../components/CategoryCarousel";
 import { motion } from "framer-motion";
 import { fadeInUpVariants } from "../components/HeroSection";
-import { productService } from "../services/productService";
+import { useProducts } from "../context/ProductsContext";
 import Loading from "../components/Loading";
 
 const motionConfig = {
@@ -29,31 +29,7 @@ const motionConfig = {
 };
 
 function Products() {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        loadProducts();
-    }, []);
-
-    const loadProducts = async () => {
-        try {
-            setLoading(true);
-            const response = await productService.getAllProducts();
-            console.log('API Response:', response); // Debug log
-            if (!response || !response.data) {
-                throw new Error('Invalid response from server');
-            }
-            console.log('Products data:', response.data); // Debug log
-            setProducts(response.data);
-        } catch (err) {
-            setError('Failed to load products: ' + (err.message || 'Unknown error'));
-            console.error('Error loading products:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { categories: products, loading, error } = useProducts();
 
     if (loading) return <Loading text="Loading products..." />
     if (error) return <div>Error: {error}</div>;

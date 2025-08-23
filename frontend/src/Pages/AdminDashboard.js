@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useProducts } from '../context/ProductsContext';
 import { Navigate } from 'react-router-dom';
 import '../scss/pages/Dashboard.scss';
 import ProductManagement from '../components/admin/ProductManagement';
@@ -7,9 +8,11 @@ import ProductForm from '../components/admin/ProductForm';
 import { AnimatePresence } from 'framer-motion';
 import EnquiryManagement from '../components/admin/EnquiryManagement';
 import Loading from '../components/Loading';
+import Notify from 'simple-notify';
 
 function AdminDashboard() {
     const { user, loading } = useAuth();
+    const { addProduct, updateProduct } = useProducts();
     const [activeTab, setActiveTab] = useState('products');
     const [showProductForm, setShowProductForm] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
@@ -33,6 +36,51 @@ function AdminDashboard() {
     const handleHideProductForm = () => {
         setShowProductForm(false);
         setEditingProduct(null);
+    };
+
+    const handleSaveProduct = async (productData) => {
+        try {
+            if (editingProduct) {
+                // Update existing product
+                await updateProduct(editingProduct._id, productData);
+                new Notify({
+                    status: "success",
+                    title: "Success",
+                    text: "Product updated successfully",
+                    effect: "fade",
+                    speed: 300,
+                    autoclose: true,
+                    autotimeout: 3000,
+                    position: "right top",
+                });
+            } else {
+                // Create new product
+                await addProduct(productData);
+                new Notify({
+                    status: "success",
+                    title: "Success",
+                    text: "Product created successfully",
+                    effect: "fade",
+                    speed: 300,
+                    autoclose: true,
+                    autotimeout: 3000,
+                    position: "right top",
+                });
+            }
+            handleHideProductForm();
+        } catch (error) {
+            console.error('Error saving product:', error);
+            new Notify({
+                status: "error",
+                title: "Error",
+                text: "Failed to save product",
+                effect: "fade",
+                speed: 300,
+                autoclose: true,
+                autotimeout: 3000,
+                position: "right top",
+            });
+        }
     };
     
     return (
@@ -73,19 +121,7 @@ function AdminDashboard() {
                     <ProductForm
                         product={editingProduct}
                         categories={productCategories}
-                        onSave={(productData) => {
-                            // Pass the save event back to ProductManagement
-                            if (activeTab === 'products') {
-                                const productManagementElement = document.querySelector('.product-management');
-                                if (productManagementElement) {
-                                    const event = new CustomEvent('product-save', { 
-                                        detail: { product: editingProduct, productData } 
-                                    });
-                                    productManagementElement.dispatchEvent(event);
-                                }
-                            }
-                            handleHideProductForm();
-                        }}
+                        onSave={handleSaveProduct}
                         onCancel={handleHideProductForm}
                     />
                 )}

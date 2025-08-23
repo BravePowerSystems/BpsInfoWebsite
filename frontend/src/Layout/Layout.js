@@ -3,6 +3,7 @@ import BottomNav from "../components/BottomNav";
 import ColorCursor from "../components/ColorCursor";
 import ProductModal from "../components/ProductModal";
 import { ModalProvider, useModal } from "../context/ModalContext";
+import { ProductsProvider } from "../context/ProductsContext";
 import "../scss/layouts/layout.scss";
 
 const LayoutContent = ({ children }) => {
@@ -31,9 +32,11 @@ const LayoutContent = ({ children }) => {
 
 function Layout({ children }) {
     return (
-        <ModalProvider>
-            <LayoutContent>{children}</LayoutContent>
-        </ModalProvider>
+        <ProductsProvider>
+            <ModalProvider>
+                <LayoutContent>{children}</LayoutContent>
+            </ModalProvider>
+        </ProductsProvider>
     );
 }
 

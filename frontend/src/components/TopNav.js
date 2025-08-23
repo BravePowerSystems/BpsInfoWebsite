@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import DropdownMenu from "./DropdownMenu";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
-import { productService } from "../services/productService";
+import { useProducts } from "../context/ProductsContext";
 import Sidebar from "./Sidebar";
 
 const ProductsList = ({ onLinkClick, categories, loading, error }) => {
@@ -85,35 +85,14 @@ export default function TopNav() {
     const [activeDropdown, setActiveDropdown] = useState(null);
     const timeoutRef = useRef(null);
     const { isAuthenticated, isAdmin, logout } = useAuth();
+    const { categories: productCategories, loading: productsLoading, error: productsError } = useProducts();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authMode, setAuthMode] = useState("login");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const openSidebar = () => setSidebarOpen(true);
     const closeSidebar = () => setSidebarOpen(false);
 
-    // Prefetch products once on mount to avoid loading flash on hover
-    const [productCategories, setProductCategories] = useState([]);
-    const [productsLoading, setProductsLoading] = useState(true);
-    const [productsError, setProductsError] = useState(null);
-
-    useEffect(() => {
-        let isMounted = true;
-        const fetchProducts = async () => {
-            try {
-                const { data } = await productService.getAllProducts();
-                if (isMounted) setProductCategories(data);
-            } catch (err) {
-                console.error("Error fetching products:", err);
-                if (isMounted) setProductsError("Failed to load products. Please try again later.");
-            } finally {
-                if (isMounted) setProductsLoading(false);
-            }
-        };
-        fetchProducts();
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    // Remove the local product fetching logic since it's now handled by ProductsContext
 
     const openDropdown = (type) => setActiveDropdown(type);
     const closeDropdown = () => setActiveDropdown(null);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "../scss/components/Sidebar.scss";
 import { Link } from "react-router-dom";
-import { productService } from "../services/productService";
+import { useProducts } from "../context/ProductsContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import AuthModal from "./AuthModal";
@@ -9,42 +9,18 @@ import AuthModal from "./AuthModal";
 export default function Sidebar({ open, onClose }) {
     // --- Authentication state ---
     const { isAuthenticated, user, logout, isAdmin } = useAuth();
+    const { categories, loading, error } = useProducts();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authMode, setAuthMode] = useState("login");
 
     // --- Products logic ---
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // Remove local state since it's now handled by ProductsContext
 
     // Custom accordion state
     const [productsOpen, setProductsOpen] = useState(false);
     const [sectionOpen, setSectionOpen] = useState({}); // {categoryName: true, ...}
 
-    useEffect(() => {
-        let isMounted = true;
-        const fetchProducts = async () => {
-            try {
-                const { data } = await productService.getAllProducts();
-                if (isMounted) {
-                    setCategories(data);
-                }
-            } catch (err) {
-                console.error("Error fetching products:", err);
-                if (isMounted) {
-                    setError("Failed to load products. Please try again later.");
-                }
-            } finally {
-                if (isMounted) {
-                    setLoading(false);
-                }
-            }
-        };
-        fetchProducts();
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    // Remove the useEffect for fetching products since it's now handled by ProductsContext
 
     // Map categories to a lookup for easy access
     const categoryMap = useMemo(() => {
