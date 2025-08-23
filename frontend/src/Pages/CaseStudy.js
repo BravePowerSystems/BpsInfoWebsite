@@ -232,7 +232,6 @@ function CaseStudy() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 }}
             >
-                <div className="quote-mark">"</div>
                 <blockquote>
                     {caseStudyData.testimonial.quote}
                 </blockquote>

@@ -15,10 +15,16 @@ export async function apiClient(
   options = {}
 ) {
   const { method = 'GET', headers = {}, body, token } = options;
+  
+  // Don't set Content-Type for FormData (let browser set it with boundary)
   const finalHeaders = {
-    'Content-Type': 'application/json',
     ...headers,
   };
+  
+  // Only set Content-Type for JSON requests
+  if (body && !(body instanceof FormData)) {
+    finalHeaders['Content-Type'] = 'application/json';
+  }
   
   // Attach JWT if available
   const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('accessToken') : undefined);
@@ -32,7 +38,7 @@ export async function apiClient(
   const res = await fetch(fullUrl, {
     method,
     headers: finalHeaders,
-    body: body ? JSON.stringify(body) : undefined,
+    body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : undefined,
   });
   
   const data = await res.json();

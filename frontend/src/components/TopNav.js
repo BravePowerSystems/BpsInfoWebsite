@@ -12,13 +12,16 @@ const ProductsList = ({ onLinkClick, categories, loading, error }) => {
     const formattedCategories = useMemo(() => {
         return categories.map((categoryObj) => {
             const [categoryName, products] = Object.entries(categoryObj)[0];
+            // Improved category cleaning that preserves multiple words and spaces
             const cleanedCategory = categoryName
-                .replace(/[^a-zA-Z0-9\s]/g, "") // Remove special characters, keep spaces
+                .replace(/[-_]/g, " ") // Convert hyphens and underscores to spaces
+                .replace(/\s+/g, " ") // Normalize multiple spaces to single space
                 .trim();
             const formattedProducts = products.map((product) => ({
                 ...product,
                 cleanedTitle: product.title
-                    .replace(/[^a-zA-Z0-9\s]/g, "") // Remove special characters
+                    .replace(/[-_]/g, " ") // Convert hyphens and underscores to spaces
+                    .replace(/\s+/g, " ") // Normalize multiple spaces to single space
                     .trim(),
                 slug: product.title.replace(/\s+/g, "-"), // Create URL-friendly slug
             }));

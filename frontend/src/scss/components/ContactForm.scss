@@ -69,6 +69,64 @@
                 border-color: #678df6;
                 box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.2);
             }
+            
+            &.error {
+                border-color: #ff6b6b;
+                box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+            }
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .phone-input-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            
+            .phone-prefix {
+                background: rgba(255, 255, 255, 0.1);
+                color: rgba(255, 255, 255, 0.7);
+                padding: 0.8rem;
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                font-weight: 500;
+                min-width: 50px;
+                text-align: center;
+            }
+            
+            input {
+                border: none;
+                background: transparent;
+                border-radius: 0;
+                flex: 1;
+                
+                &:focus {
+                    border-color: transparent;
+                    box-shadow: none;
+                }
+                
+                &.error {
+                    border-color: transparent;
+                    box-shadow: none;
+                }
+            }
+            
+            &:focus-within {
+                border-color: #678df6;
+                box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.2);
+            }
+            
+            &.error {
+                border-color: #ff6b6b;
+                box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+            }
         }
         
         textarea {

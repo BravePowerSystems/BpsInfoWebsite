@@ -106,21 +106,18 @@ export const getProfile = async (req, res) => {
     }
 };
 
-// Update current user's profile (username, email, firstName, lastName, company, phone, address)
+// Update current user's profile (username, firstName, lastName, phone)
 export const updateProfile = async (req, res) => {
     try {
         const user = req.user; // Populated by verifyToken middleware
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        const { username, email, firstName, lastName, company, phone, address } = req.body;
+        const { username, firstName, lastName, phone } = req.body;
         if (username) user.username = username;
-        if (email) user.email = email;
         if (firstName !== undefined) user.firstName = firstName;
         if (lastName !== undefined) user.lastName = lastName;
-        if (company !== undefined) user.company = company;
         if (phone !== undefined) user.phone = phone;
-        if (address !== undefined) user.address = address;
         await user.save();
         res.json({
             message: 'Profile updated successfully',

@@ -29,13 +29,6 @@ const Contact = () => {
                         <p>📞 +917942701967</p>
                         <p>✉️ info@bravepowersystems.com</p>
                     </div>
-                    
-                    <div className="info-card">
-                        <h3>Business Hours</h3>
-                        <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                        <p>Saturday: 10:00 AM - 2:00 PM</p>
-                        <p>Sunday: Closed</p>
-                    </div>
                 </div>
                 
                 <ContactForm />

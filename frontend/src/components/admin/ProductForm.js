@@ -90,6 +90,7 @@ function ProductForm({ product, categories, onSave, onCancel }) {
     
     const [currentTab, setCurrentTab] = useState('basic');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isImageUploading, setIsImageUploading] = useState(false);
     
 
     
@@ -229,18 +230,57 @@ function ProductForm({ product, categories, onSave, onCancel }) {
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file (JPEG, PNG, GIF, etc.)');
+            return;
+        }
+        
+        // Validate file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be less than 5MB');
+            return;
+        }
+        
+        setIsImageUploading(true);
         const formDataObj = new FormData();
         formDataObj.append('file', file);
+        
         try {
+            console.log('Uploading file:', file.name, 'Size:', file.size, 'Type:', file.type);
             const response = await privateClientMethods.post('/upload', formDataObj);
-            if (response && response.url) {
+            
+            if (response && response.data && response.data.url) {
                 // The backend now returns full URLs, so use directly
-                setFormData(prev => ({ ...prev, imageUrl: response.url }));
+                setFormData(prev => ({ ...prev, imageUrl: response.data.url }));
+                console.log('Image uploaded successfully:', response.data.url);
             } else {
-                alert('Image upload failed');
+                console.error('Upload response missing URL:', response);
+                alert('Image upload failed: Invalid response from server');
             }
         } catch (err) {
-            alert('Image upload error');
+            console.error('Image upload error:', err);
+            
+            // Provide more specific error messages
+            if (err.response) {
+                const errorData = err.response.data;
+                if (errorData.error === 'File too large') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else if (errorData.error === 'Invalid file type') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else if (errorData.error === 'No file uploaded') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else {
+                    alert(`Upload failed: ${errorData.error} - ${errorData.details || 'Unknown error'}`);
+                }
+            } else if (err.message) {
+                alert(`Upload failed: ${err.message}`);
+            } else {
+                alert('Image upload failed: Unknown error occurred');
+            }
+        } finally {
+            setIsImageUploading(false);
         }
     };
     
@@ -328,6 +368,17 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                                     required={true}
                                 />
                             </div>
+                            <div className="description-field">
+                                <label htmlFor="description">Product Description</label>
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    placeholder="Enter detailed product description..."
+                                    rows="4"
+                                />
+                            </div>
                             <div className="form-group">
                                 <label htmlFor="imageUpload">Product Image</label>
                                 <input
@@ -335,7 +386,13 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                                     id="imageUpload"
                                     accept="image/*"
                                     onChange={handleImageUpload}
+                                    disabled={isImageUploading}
                                 />
+                                {isImageUploading && (
+                                    <div className="upload-status">
+                                        <span>Uploading image...</span>
+                                    </div>
+                                )}
                                 {formData.imageUrl && (
                                     <div className="image-preview">
                                         <img src={formData.imageUrl} alt="Product Preview" style={{ maxWidth: '200px', marginTop: '10px' }} />
@@ -346,33 +403,35 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                     )}
                     
                     {currentTab === 'specs' && (
-                        <div className="form-section">
+                        <div className="form-section specs-section">
                             <h3>Product Specifications</h3>
                             <p className="help-text">Add technical specifications for this product.</p>
                             
                             {formData.specifications.map((spec, index) => (
                                 <div key={index} className="spec-row">
                                     <div className="spec-inputs">
+                                        <button 
+                                            type="button" 
+                                            className="remove-btn"
+                                            onClick={() => removeSpecification(index)}
+                                        >
+                                            <img src="/close.png" alt="Remove" />
+                                        </button>
                                         <input 
                                             type="text" 
                                             value={spec.name} 
                                             onChange={(e) => handleSpecChange(index, 'name', e.target.value)}
-                                            placeholder="Specification name"
+                                            placeholder="Specification name (e.g., Power Rating)"
+                                            className="spec-key-input"
                                         />
                                         <input 
                                             type="text" 
                                             value={spec.value} 
                                             onChange={(e) => handleSpecChange(index, 'value', e.target.value)}
-                                            placeholder="Specification value"
+                                            placeholder="Specification value (e.g., 100W)"
+                                            className="spec-value-input"
                                         />
                                     </div>
-                                    <button 
-                                        type="button" 
-                                        className="remove-btn"
-                                        onClick={() => removeSpecification(index)}
-                                    >
-                                        ×
-                                    </button>
                                 </div>
                             ))}
                             

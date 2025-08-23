@@ -8,7 +8,7 @@ import AuthModal from "./AuthModal";
 
 export default function Sidebar({ open, onClose }) {
     // --- Authentication state ---
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user, logout, isAdmin } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authMode, setAuthMode] = useState("login");
 
@@ -54,7 +54,7 @@ export default function Sidebar({ open, onClose }) {
                 const [categoryName, products] = Object.entries(categoryObj)[0];
                 map[categoryName] = products.map((product) => ({
                     ...product,
-                    cleanedTitle: product.title.replace(/[^a-zA-Z0-9\s]/g, "").trim(),
+                    cleanedTitle: product.title.replace(/[-_]/g, " ").trim(),
                     slug: product.title.replace(/\s+/g, "-"),
                 }));
             });
@@ -79,6 +79,15 @@ export default function Sidebar({ open, onClose }) {
     const handleAuthClick = (mode) => {
         setAuthMode(mode);
         setShowAuthModal(true);
+        // Close the sidebar when auth button is clicked
+        if (onClose) onClose();
+    };
+
+    const handleLogout = () => {
+        // Close the sidebar first
+        if (onClose) onClose();
+        // Then logout
+        logout();
     };
 
     // Custom Accordion rendering for sidebar with modern design
@@ -170,13 +179,29 @@ export default function Sidebar({ open, onClose }) {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
                         <div className="sidebar-header">
+                            <div className="header-content">
+                                {isAuthenticated && (
+                                    <div className="user-info">
+                                        <div className="user-avatar">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <div className="user-details">
+                                            <span className="user-name">{user?.username || user?.email}</span>
+                                            {isAdmin && <span className="admin-badge">Admin</span>}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                             <button className="sidebar__close" onClick={onClose} aria-label="Close sidebar">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
                             </button>
                         </div>
-                        
+
                         <nav className="sidebar__nav">
                             <div className="nav-section">
                                 <Link to="/" onClick={onClose} className="nav-link home-link">
@@ -293,6 +318,25 @@ export default function Sidebar({ open, onClose }) {
                                     Contact Us
                                 </Link>
                             </div>
+
+                            {isAuthenticated && (
+                                <div className="nav-section user-section">
+                                    <div className="user-actions">
+                                        <Link to="/profile" onClick={onClose} className="nav-link dashboard-link">
+
+                                            Profile
+                                        </Link>
+                                        {isAdmin && (
+                                            <Link to="/admin" onClick={onClose} className="nav-link admin-link">
+                                                Admin Panel
+                                            </Link>
+                                        )}
+                                        <button onClick={handleLogout} className="logout-button">
+                                            Logout
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
 
                             {!isAuthenticated && (
                                 <div className="nav-section auth-section">

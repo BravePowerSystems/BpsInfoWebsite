@@ -23,6 +23,16 @@ export const authNotifications = {
         });
     },
 
+    registerSuccess: (username) => {
+        new Notify({
+            ...defaultOptions,
+            status: 'success',
+            title: 'Welcome!',
+            text: `Account created successfully for ${username}`,
+            customIcon: '🎉'
+        });
+    },
+
     loginError: (message) => {
         new Notify({
             ...defaultOptions,

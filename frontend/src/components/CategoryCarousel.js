@@ -15,7 +15,7 @@ function CategoryCarousel({ categoryName, products }) {
     return (
         <>
             <div className="category">
-                <h2>{categoryName.replace(/[^a-zA-Z0-9]/g, " ")}</h2>
+                <h2>{categoryName.replace(/[-_]/g, " ")}</h2>
 
                 <div className="embla">
                     <button

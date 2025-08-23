@@ -13,42 +13,20 @@
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
 .product-form-content {
     width: 90%;
     max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
+    height: 90vh;
     @include glass-card;
     border-radius: 12px;
     color: $primary-text-color;
+    overflow-y: auto;
+    scrollbar-width: none;
     
-    /* Styled scrollbar for the modal content */
-    &::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0.2);
-        border-radius: 4px;
-        
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-    }
-    
-    /* Firefox scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-    
-    &:focus {
-        outline: none;
-    }
     
     .product-form-header {
         display: flex;
@@ -83,23 +61,25 @@
     .form-tabs {
         display: flex;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        gap: 1rem;
         button {
-            flex: 1;
-            background: none;
-            border: none;
-            padding: 1rem;
+            width: 45%;
+            background: rgba(98, 95, 95, 0.5);
+            border-radius: 8px;
+            padding: 0.25rem;
             color: $primary-text-color;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            
+
             &:hover {
                 background-color: rgba(255, 255, 255, 0.05);
             }
             
             &.active {
-                color: #678df6;
                 border-bottom: 2px solid #678df6;
             }
         }
@@ -118,7 +98,46 @@
             .help-text {
                 color: rgba(255, 255, 255, 0.6);
                 margin-bottom: 1.5rem;
-                font-size: 0.9rem;
+            }
+            
+            // Special styling for specifications section
+            &.specs-section {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 1rem;
+                background: rgba(103, 141, 246, 0.03);
+                border-radius: 12px;
+                padding: 1.5rem;
+                border: 1px solid rgba(103, 141, 246, 0.1);
+            }
+            
+            .description-field {
+                margin-bottom: 1.5rem;
+                
+                label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-weight: 500;
+                }
+                
+                textarea {
+                    width: 100%;
+                    min-height: 100px;
+                    padding: 0.75rem;
+                    border-radius: 8px;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    color: $primary-text-color;
+                    resize: vertical;
+                    transition: all 0.3s ease;
+                    
+                    &:focus {
+                        outline: none;
+                        border-color: #678df6;
+                        box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.2);
+                    }
+                }
             }
             
             .form-group {
@@ -284,16 +303,14 @@
             .spec-row, .app-row, .download-row {
                 display: flex;
                 gap: 1rem;
-                margin-bottom: 1rem;
+                margin-bottom: 1.5rem;
                 
                 .spec-inputs, .download-inputs {
-                    flex: 1;
                     display: flex;
                     gap: 1rem;
                 }
                 
                 input, select {
-                    flex: 1;
                     padding: 0.75rem;
                     border-radius: 8px;
                     background: rgba(255, 255, 255, 0.05);
@@ -306,16 +323,88 @@
                     }
                 }
                 
+                // Enhanced styling for specification inputs
+                .spec-inputs {
+                    position: relative;
+                    flex-direction: column;
+                    gap: 0.75rem;
+                    
+                    padding: 1.5rem;
+                    background: rgba(255, 255, 255, 0.02);
+                    border-radius: 12px;
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    
+               
+                            .remove-btn {
+                                width: 32px;
+                                height: auto;
+                                position: absolute;
+                                top: 0.2rem;
+                                right: 0;
+                                z-index: 10;
+                            }
+                        
+                    .spec-key-input {
+                        background: rgba(103, 141, 246, 0.15);
+                        border-color: rgba(103, 141, 246, 0.4);
+                        border-radius: 8px 8px 0 0;
+                        border-bottom: none;
+                        
+                        &:focus {
+                            border-color: #678df6;
+                            background: rgba(103, 141, 246, 0.2);
+                            box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.3);
+                        }
+                        
+                        &::placeholder {
+                            color: rgba(103, 141, 246, 0.7);
+                        }
+                    }
+                    
+                    .spec-value-input {
+                        background: rgba(76, 175, 80, 0.15);
+                        border-color: rgba(76, 175, 80, 0.4);
+                        border-radius: 0 0 8px 8px;
+                        border-top: none;
+                        
+                        &:focus {
+                            border-color: #4CAF50;
+                            background: rgba(76, 175, 80, 0.2);
+                            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+                        }
+                        
+                        &::placeholder {
+                            color: rgba(76, 175, 80, 0.7);
+                        }
+                    }
+                }
+
+
+                
+                
+                gap: 0.75rem;
+                
                 .remove-btn {
                     background: none;
                     border: none;
-                    color: #ff6b6b;
-                    font-size: 1.2rem;
                     cursor: pointer;
                     transition: all 0.3s ease;
+                    position: absolute;
+                    z-index: 10;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    
+                    img {
+                        filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+                    }
                     
                     &:hover {
                         transform: scale(1.1);
+                        
+                        img {
+                            filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+                        }
                     }
                 }
             }
@@ -369,7 +458,9 @@
             .image-preview {
                 margin-top: 1rem;
                 img {
-                    max-width: 200px;
+                    max-width: 300px;
+                    width: 100%;
+                    height: auto;
                     border-radius: 8px;
                     box-shadow: 0 2px 8px rgba(103, 141, 246, 0.08);
                 }
@@ -423,13 +514,92 @@
 
 @include tablet {
     .product-form-content {
+        overflow-y: auto;
+        scrollbar-width: none;
         width: 80%;
+    }
+    
+    .product-form {
+        .form-section {
+            &.specs-section {
+                padding: 2rem;
+            }
+        }
+        
+        .spec-row, .app-row, .download-row {
+
+            flex-direction: row;
+            gap: 1rem;
+            
+            .spec-inputs, .download-inputs {
+                flex-direction: row;
+                gap: 1rem;
+                padding: 0;
+                background: none;
+                border: none;
+                
+                &::after {
+                    display: none;
+                }
+                
+                .spec-key-input,
+                .spec-value-input {
+                    border-radius: 8px;
+                    border: 1px solid;
+                }
+                
+                .spec-key-input {
+                    border-color: rgba(103, 141, 246, 0.4);
+                }
+                
+                .spec-value-input {
+                    border-color: rgba(76, 175, 80, 0.4);
+                }
+            }
+            
+            .remove-btn {
+                position: absolute;
+                top: 0.2rem;
+                    z-index: 10;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+                img {
+                    filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+                }
+            }
+        }
     }
 }
 
 @include desktop {
     .product-form-content {
         width: 70%;
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+    
+    .product-form {
+        .form-section {
+            &.specs-section {
+                padding: 2.5rem;
+            }
+        }
+        
+        .spec-row, .app-row, .download-row {
+            gap: 1.5rem;
+            
+            .spec-inputs, .download-inputs {
+                gap: 1.5rem;
+                
+                .spec-key-input,
+                .spec-value-input {
+                    font-size: 1rem;
+                    padding: 1rem;
+                }
+            }
+        }
     }
 }
 
@@ -444,6 +614,3 @@
         transform: translateY(0);
     }
 }
-
-
-

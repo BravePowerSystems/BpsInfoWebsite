@@ -37,16 +37,38 @@ export default function HeroSection() {
         const handleMouseMove = (e) => {  // Event handler for mouse movement
             if (!transformRef.current) return;
 
-            const { left, top, width, height } =
-                transformRef.current.getBoundingClientRect();  // Get the bounding rectangle of the transform wrapper
-            const x = (e.clientX - left) / width - 0.5;
-            const y = (e.clientY - top) / height - 0.5;
+            // Check if mouse is within the hero section bounds
+            const heroSection = transformRef.current.closest('.hero-section');
+            if (!heroSection) return;
 
-            transformRef.current.style.transform = `  
-                perspective(1000px)
-                rotateY(${x * 5}deg)
-                rotateX(${y * -5}deg)
-            `;                                   
+            const heroRect = heroSection.getBoundingClientRect();
+            const isMouseInHero = (
+                e.clientX >= heroRect.left &&
+                e.clientX <= heroRect.right &&
+                e.clientY >= heroRect.top &&
+                e.clientY <= heroRect.bottom
+            );
+
+            // Only apply transform when mouse is in hero section
+            if (isMouseInHero) {
+                const { left, top, width, height } =
+                    transformRef.current.getBoundingClientRect();  // Get the bounding rectangle of the transform wrapper
+                const x = (e.clientX - left) / width - 0.5;
+                const y = (e.clientY - top) / height - 0.5;
+
+                transformRef.current.style.transform = `  
+                    perspective(1000px)
+                    rotateY(${x * 5}deg)
+                    rotateX(${y * -5}deg)
+                `;
+            } else {
+                // Reset transform when mouse leaves hero section
+                transformRef.current.style.transform = `
+                    perspective(1000px)
+                    rotateY(0deg)
+                    rotateX(0deg)
+                `;
+            }
         };
 
         window.addEventListener("mousemove", handleMouseMove);  // Attach event listener
