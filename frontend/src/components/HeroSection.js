@@ -107,11 +107,15 @@ export default function HeroSection() {
                                 Explore Products
                             </button>
                         </Link>
-                        <Link to="/contact">
-                            <button className="hero-cta-button secondary">
-                                Contact Us
-                            </button>
-                        </Link>
+                        <button 
+                            className="hero-cta-button secondary"
+                            onClick={() => {
+                                // Navigate to home page first
+                                window.location.href = '/#contact';
+                            }}
+                        >
+                            Contact Us
+                        </button>
                     </motion.div>
                 </div>
             </div>

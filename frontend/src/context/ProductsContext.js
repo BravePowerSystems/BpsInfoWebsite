@@ -88,6 +88,23 @@ export const ProductsProvider = ({ children }) => {
         loadProducts();
     };
 
+    const addCategory = (newCategory) => {
+        // Add the new category to the categories list
+        setCategories(prevCategories => {
+            // Check if category already exists
+            const exists = prevCategories.some(cat => {
+                const [catName] = Object.entries(cat)[0];
+                return catName === newCategory;
+            });
+            
+            if (!exists) {
+                // Add new category with empty products array
+                return [...prevCategories, { [newCategory]: [] }];
+            }
+            return prevCategories;
+        });
+    };
+
     const contextValue = {
         products,
         categories,
@@ -99,7 +116,8 @@ export const ProductsProvider = ({ children }) => {
         deleteProduct,
         getProductById,
         getProductsByCategory,
-        refreshProducts
+        refreshProducts,
+        addCategory
     };
 
     return (

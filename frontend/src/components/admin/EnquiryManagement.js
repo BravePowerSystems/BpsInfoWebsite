@@ -1,71 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { enquiryService } from '../../services/enquiryService';
+import CustomDropdown from '../CustomDropdown';
 import '../../scss/components/admin/EnquiryManagement.scss';
 import Loading from '../Loading';
 
 const statusOptions = ['new', 'in-progress', 'completed', 'archived'];
-
-// Custom Status Selector Component
-const StatusSelector = ({ options, selectedValue, onValueChange, placeholder, className = "" }) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleToggle = () => setIsOpen(!isOpen);
-    const handleSelect = (value) => {
-        onValueChange(value);
-        setIsOpen(false);
-    };
-
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (!event.target.closest('.status-selector')) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    return (
-        <div className={`status-selector ${className}`}>
-            <button 
-                className="status-selector__trigger"
-                onClick={handleToggle}
-                aria-expanded={isOpen}
-                aria-haspopup="listbox"
-            >
-                <span className="status-selector__selected">
-                    {selectedValue || placeholder}
-                </span>
-                <span className={`status-selector__arrow ${isOpen ? 'rotated' : ''}`}>
-                    <img src="/arrow_down.svg" alt="" />
-                </span>
-            </button>
-            
-            {isOpen && (
-                <div className="status-selector__dropdown">
-                    <ul className="status-selector__list" role="listbox">
-                        {options.map((option) => (
-                            <li key={option} role="option">
-                                <button
-                                    className={`status-selector__option ${
-                                        selectedValue === option ? 'selected' : ''
-                                    }`}
-                                    onClick={() => handleSelect(option)}
-                                    role="option"
-                                    aria-selected={selectedValue === option}
-                                >
-                                    {option}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-        </div>
-    );
-};
 
 function EnquiryManagement() {
     const [enquiries, setEnquiries] = useState([]);
@@ -158,7 +97,7 @@ function EnquiryManagement() {
         <div className="enquiry-management clean-admin">
             <h2>All Enquiries</h2>
             <div className="product-controls">
-                <StatusSelector
+                <CustomDropdown
                     options={statusOptions}
                     selectedValue={filter}
                     onValueChange={setFilter}
@@ -206,7 +145,7 @@ function EnquiryManagement() {
                             )}
                             <div className="enquiry-actions">
                                 <label>Status: </label>
-                                <StatusSelector
+                                <CustomDropdown
                                     options={statusOptions}
                                     selectedValue={enq.status}
                                     onValueChange={(newStatus) => handleStatusChange(enq._id, newStatus)}

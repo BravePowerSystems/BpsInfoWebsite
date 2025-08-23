@@ -15,121 +15,11 @@
     -webkit-text-fill-color: transparent;
   }
 
-  .product-controls {
+  .product-grid {
     margin-bottom: 2rem;
     display: flex;
     gap: 1rem;
     align-items: center;
-
-    // Custom Status Selector Styles
-    .status-selector {
-      position: relative;
-      min-width: 200px;
-
-      &__trigger {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        color: $primary-text-color;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9rem;
-        font-weight: 500;
-
-        &:hover {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(103, 141, 246, 0.3);
-        }
-
-        &:focus {
-          outline: none;
-          border-color: #678df6;
-          box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.2);
-        }
-      }
-
-      &__selected {
-        flex: 1;
-        text-align: left;
-      }
-
-      &__arrow {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 20px;
-        height: 20px;
-        transition: transform 0.3s ease;
-        opacity: 0.7;
-
-        img {
-          width: 16px;
-          height: 16px;
-          filter: invert(1);
-        }
-
-        &.rotated {
-          transform: rotate(180deg);
-        }
-      }
-
-      &__dropdown {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        margin-top: 0.25rem;
-        background: rgba(20, 20, 25, 0.95);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        z-index: 1000;
-        overflow: hidden;
-        animation: dropdownFadeIn 0.2s ease-out;
-      }
-
-      &__list {
-        list-style: none;
-        margin: 0;
-        padding: 0.5rem 0;
-        max-height: 200px;
-      }
-
-      &__option {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        background: transparent;
-        border: none;
-        color: $primary-text-color;
-        text-align: left;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 0.9rem;
-        font-weight: 500;
-
-        &:hover {
-          background: rgba(103, 141, 246, 0.1);
-          color: #678df6;
-        }
-
-        &.selected {
-          background: rgba(103, 141, 246, 0.15);
-          color: #678df6;
-          font-weight: 600;
-        }
-
-        &:focus {
-          outline: none;
-          background: rgba(103, 141, 246, 0.1);
-        }
-      }
-    }
   }
 
   .enquiry-cards {
@@ -282,78 +172,6 @@
     // Status change selector specific styles
     .status-change-selector {
       min-width: 140px;
-
-      .status-selector__trigger {
-        padding: 0.6rem 1.1rem;
-        font-size: 1.05rem;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        color: $primary-text-color;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: 500;
-
-        &:hover {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(103, 141, 246, 0.3);
-        }
-
-        &:focus {
-          outline: none;
-          border-color: #678df6;
-          box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.2);
-        }
-      }
-
-      .status-selector__selected {
-        color: $primary-text-color;
-      }
-
-
-
-      .status-selector__dropdown {
-        background: rgba(20, 20, 25, 0.95);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      }
-
-      .status-selector__list {
-        list-style: none;
-        margin: 0;
-        padding: 0.5rem 0;
-        max-height: 200px;
-      }
-
-      .status-selector__option {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        background: transparent;
-        border: none;
-        color: $primary-text-color;
-        text-align: left;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 0.9rem;
-        font-weight: 500;
-
-        &:hover {
-          background: rgba(103, 141, 246, 0.1);
-          color: #678df6;
-        }
-
-        &.selected {
-          background: rgba(103, 141, 246, 0.15);
-          color: #678df6;
-          font-weight: 600;
-        }
-
-        &:focus {
-          outline: none;
-          background: rgba(103, 141, 246, 0.1);
-        }
-      }
     }
   }
   
@@ -434,18 +252,6 @@
   }
 }
 
-// Dropdown animation
-@keyframes dropdownFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 // Responsive design
 @media (max-width: 768px) {
   .enquiry-management {
@@ -459,12 +265,6 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0.5rem;
-    }
-
-    .product-controls, .enquiry-actions {
-      .status-selector {
-        min-width: 100%;
-      }
     }
   }
 } 

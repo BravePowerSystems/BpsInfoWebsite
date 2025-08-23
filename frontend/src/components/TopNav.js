@@ -160,7 +160,17 @@ export default function TopNav() {
                                 </NavLink>
                                 <NavLink to="/about">ABOUT US</NavLink>
                                 <NavLink to="/faqs">FAQs</NavLink>
-                                <NavLink to="/contact">CONTACT US</NavLink>
+                                <li>
+                                    <button 
+                                        className="nav-link-button"
+                                        onClick={() => {
+                                            // Navigate to home page first
+                                            window.location.href = '/#contact';
+                                        }}
+                                    >
+                                        CONTACT US
+                                    </button>
+                                </li>
                                 {!isAuthenticated && (
                                     <div className="auth-buttons">
                                         <button

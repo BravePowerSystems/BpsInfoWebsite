@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../scss/components/Breadcrumbs.scss";
 import "../scss/pages/Home.scss";
@@ -73,6 +73,19 @@ const featuredCaseStudies = [
 ];
 
 function Home() {
+    useEffect(() => {
+        // Check if there's a hash in the URL (e.g., #contact)
+        if (window.location.hash) {
+            const element = document.querySelector(window.location.hash);
+            if (element) {
+                // Add a small delay to ensure the page is fully rendered
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }
+    }, []);
+
     return (
         <>
             <div className="home">
@@ -167,7 +180,7 @@ function Home() {
                 </section>
 
                 {/* Contact Information Section */}
-                <section className="contact-info-section">
+                <section id="contact" className="contact-info-section">
                     <div className="container">
                         <h2>Ready to Get Started?</h2>
                         <p className="section-subtitle">

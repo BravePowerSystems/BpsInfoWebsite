@@ -171,7 +171,10 @@ function Wishlist() {
                 {wishlistItems && wishlistItems.length > 0 && (
                     <button 
                         className="enquire-btn"
-                        onClick={() => navigate('/contact', { state: { fromWishlist: true } })}
+                        onClick={() => {
+                            // Navigate to home page with contact hash
+                            window.location.href = '/#contact';
+                        }}
                     >
                         Enquire about wishlist items
                     </button>

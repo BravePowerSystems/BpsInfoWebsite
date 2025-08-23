@@ -9,7 +9,7 @@ import CaseStudiesPreview from "./Pages/CaseStudiesPreview";
 import Product from "./Pages/Product";
 import Wishlist from "./Pages/Wishlist";
 import CategoryPage from "./Pages/CategoryPage";
-import Contact from "./Pages/Contact";
+
 import About from "./Pages/About";
 import FAQ from "./Pages/FAQ";
 import UserProfile from "./Pages/UserProfile";
@@ -52,7 +52,7 @@ function App() {
                                     path="/case-studies/:caseStudySlug"
                                     element={<CaseStudy />}
                                 />
-                                <Route path="/contact" element={<Contact />} />
+
 
                                 {/* Protected Routes (Requires Authentication) */}
                                 <Route

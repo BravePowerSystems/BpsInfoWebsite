@@ -305,6 +305,41 @@
                             height: 1rem;
                             width: auto;
                         }
+
+                        .nav-link-button {
+                            background: none;
+                            border: none;
+                            color: $primary-text-color;
+                            font-size: 14px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            text-decoration: none;
+                            display: inline-block;
+                            position: relative;
+                            padding: 0;
+                            
+                            &::after {
+                                content: '';
+                                position: absolute;
+                                width: 100%;
+                                transform: scaleX(0);
+                                height: 1.3px;
+                                bottom: 0;
+                                left: 0;
+                                background-color: red;
+                                transform-origin: bottom right;
+                                transition: transform 0.25s ease-out;
+                            }
+                            
+                            &:hover {
+                                color: red;
+                                
+                                &::after {
+                                    transform: scaleX(1);
+                                    transform-origin: bottom left;
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -290,9 +290,16 @@ export default function Sidebar({ open, onClose }) {
                             </div>
 
                             <div className="nav-section">
-                                <Link to="/contact" onClick={onClose} className="nav-link">
+                                <button 
+                                    className="nav-link-button"
+                                    onClick={() => {
+                                        // Navigate to home page first
+                                        window.location.href = '/#contact';
+                                        if (onClose) onClose();
+                                    }}
+                                >
                                     Contact Us
-                                </Link>
+                                </button>
                             </div>
 
                             {isAuthenticated && (
