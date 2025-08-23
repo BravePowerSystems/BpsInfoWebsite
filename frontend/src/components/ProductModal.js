@@ -212,7 +212,6 @@ const ProductModal = ({ productName, onClose }) => {
                             onClick={() => openWhatsAppProductEnquiry(productName)}
                             title="Contact us on WhatsApp"
                         >
-                            <img src="/whatsapp.png" alt="WhatsApp" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
                             WhatsApp Enquiry
                         </button>
                     </div>
