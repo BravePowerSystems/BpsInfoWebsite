@@ -301,6 +301,38 @@
                             }
                         }
 
+                        .contact-us-link {
+                            text-decoration: none !important;
+                            color: $primary-text-color !important;
+                            display: inline-block;
+                            position: relative;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+
+                        .contact-us-link::after {
+                            content: '';
+                            position: absolute;
+                            width: 100%;
+                            transform: scaleX(0);
+                            height: 1.3px;
+                            bottom: 0;
+                            left: 0;
+                            background-color: red;
+                            transform-origin: bottom right;
+                            transition: transform 0.25s ease-out;
+                        }
+
+                        .contact-us-link:hover {
+                            color: red !important;
+
+                            &::after {
+                                transform: scaleX(1);
+                                transform-origin: bottom left;
+                            }
+                        }
+
                         img {
                             height: 1rem;
                             width: auto;
@@ -383,6 +415,10 @@
                     }
 
                     gap: 4rem; // Further increase space between nav items for large desktop
+
+                    .contact-us-link {
+                        font-size: 16px;
+                    }
                 }
 
             }
@@ -438,6 +474,40 @@
             &:hover {
                 box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
             }
+        }
+    }
+}
+
+// Global override for contact-us-link to ensure it overrides browser defaults
+.contact-us-link {
+    text-decoration: none !important;
+    color: white !important;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.25s ease-out;
+
+    &::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 1.3px;
+        bottom: 0;
+        left: 0;
+        background-color: red;
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+    }
+
+    &:hover {
+        color: red !important;
+
+        &::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
         }
     }
 }

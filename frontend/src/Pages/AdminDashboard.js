@@ -7,8 +7,11 @@ import ProductManagement from '../components/admin/ProductManagement';
 import ProductForm from '../components/admin/ProductForm';
 import { AnimatePresence } from 'framer-motion';
 import EnquiryManagement from '../components/admin/EnquiryManagement';
+import ContentManagement from '../components/admin/ContentManagement';
+import ContentForm from '../components/admin/ContentForm';
 import Loading from '../components/Loading';
 import Notify from 'simple-notify';
+import { ContentService } from '../services/contentService';
 
 function AdminDashboard() {
     const { user, loading } = useAuth();
@@ -17,6 +20,9 @@ function AdminDashboard() {
     const [showProductForm, setShowProductForm] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [productCategories, setProductCategories] = useState([]);
+    const [showContentForm, setShowContentForm] = useState(false);
+    const [editingContent, setEditingContent] = useState(null);
+    const [contentOptions, setContentOptions] = useState({});
     
     // Redirect if not admin
     if (!loading && (!user || user.role !== 'admin')) {
@@ -36,6 +42,17 @@ function AdminDashboard() {
     const handleHideProductForm = () => {
         setShowProductForm(false);
         setEditingProduct(null);
+    };
+
+    const handleShowContentForm = (content, options) => {
+        setEditingContent(content);
+        setContentOptions(options);
+        setShowContentForm(true);
+    };
+
+    const handleHideContentForm = () => {
+        setShowContentForm(false);
+        setEditingContent(null);
     };
 
     const handleSaveProduct = async (productData) => {
@@ -82,6 +99,59 @@ function AdminDashboard() {
             });
         }
     };
+
+    const handleSaveContent = async (contentData) => {
+        try {
+            if (editingContent) {
+                // Update existing content
+                await ContentService.updateContent(editingContent._id, contentData);
+                new Notify({
+                    status: "success",
+                    title: "Success",
+                    text: "Content updated successfully",
+                    effect: "fade",
+                    speed: 300,
+                    autoclose: true,
+                    autotimeout: 3000,
+                    position: "right top",
+                });
+            } else {
+                // Create new content
+                await ContentService.createContent(contentData);
+                new Notify({
+                    status: "success",
+                    title: "Success",
+                    text: "Content created successfully",
+                    effect: "fade",
+                    speed: 300,
+                    autoclose: true,
+                    autotimeout: 3000,
+                    position: "right top",
+                });
+            }
+            handleHideContentForm();
+            // Refresh content list
+            if (activeTab === 'content') {
+                // Trigger refresh by changing activeTab temporarily
+                setActiveTab('products');
+                setTimeout(() => setActiveTab('content'), 100);
+            }
+        } catch (error) {
+            console.error('Error saving content:', error);
+            new Notify({
+                status: "error",
+                title: "Error",
+                text: "Failed to save content",
+                effect: "fade",
+                speed: 300,
+                autoclose: true,
+                autotimeout: 3000,
+                position: "right top",
+            });
+        }
+    };
+
+
     
     return (
         <div className="admin-dashboard">
@@ -103,6 +173,12 @@ function AdminDashboard() {
                 >
                     Enquiries
                 </button>
+                <button 
+                    className={activeTab === 'content' ? 'active' : ''}
+                    onClick={() => setActiveTab('content')}
+                >
+                    Content
+                </button>
                
             </div>
             
@@ -113,6 +189,11 @@ function AdminDashboard() {
                     />
                 }
                 {activeTab === 'enquiries' && <EnquiryManagement />}
+                {activeTab === 'content' && 
+                    <ContentManagement 
+                        onShowContentForm={handleShowContentForm}
+                    />
+                }
                 {/* {activeTab === 'users' && <UserManagement />} */}
             </div>
 
@@ -123,6 +204,14 @@ function AdminDashboard() {
                         categories={productCategories}
                         onSave={handleSaveProduct}
                         onCancel={handleHideProductForm}
+                    />
+                )}
+                {showContentForm && (
+                    <ContentForm
+                        content={editingContent}
+                        options={contentOptions}
+                        onSave={handleSaveContent}
+                        onCancel={handleHideContentForm}
                     />
                 )}
             </AnimatePresence>

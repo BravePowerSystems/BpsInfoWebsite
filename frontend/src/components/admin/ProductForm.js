@@ -291,13 +291,10 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                             <div className="form-group">
                                 <label htmlFor="category">Category</label>
                                 <CustomDropdown
-                                    options={categories}
-                                    selectedValue={formData.category}
-                                    onSelect={(category) => setFormData(prev => ({ ...prev, category }))}
-                                    placeholder="Type category name..."
-                                    searchOnly={true}
-                                    onInputChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
-                                    required={true}
+                                    options={categories.map(cat => ({ value: cat, label: cat }))}
+                                    value={formData.category}
+                                    onChange={(category) => setFormData(prev => ({ ...prev, category }))}
+                                    placeholder="Categories"
                                 />
                             </div>
                             <div className="description-field">

@@ -1,0 +1,148 @@
+import React, { useState, useEffect, useMemo } from "react";
+import { useModal } from "../../context/ModalContext";
+import CustomDropdown from "../CustomDropdown";
+import "../../scss/components/admin/ContentManagement.scss";
+import ContentCard from "./ContentCard";
+import Notify from "simple-notify";
+import Loading from "../Loading";
+import { ContentService } from "../../services/contentService";
+
+function ContentManagement({ onShowContentForm }) {
+    const { openConfirmationModal, closeConfirmationModal } = useModal();
+    const [content, setContent] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedType, setSelectedType] = useState("All");
+    const [selectedStatus, setSelectedStatus] = useState("All");
+
+    // Content types and statuses
+    const contentTypes = ["All", "blog", "case-study"];
+    const contentStatuses = ["All", "draft", "published", "archived"];
+
+
+
+    useEffect(() => {
+        fetchContent();
+    }, []);
+
+    const fetchContent = async () => {
+        try {
+            setLoading(true);
+            const data = await ContentService.getAllContent();
+            setContent(data);
+        } catch (error) {
+            console.error('Error fetching content:', error);
+            new Notify({
+                status: "error",
+                title: "Error",
+                text: "Failed to fetch content",
+                effect: "fade",
+                speed: 300,
+                autoclose: true,
+                autotimeout: 3000,
+                position: "right top",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddContent = () => {
+        onShowContentForm(null, { types: contentTypes });
+    };
+
+    const handleEditContent = (contentItem) => {
+        onShowContentForm(contentItem, { types: contentTypes });
+    };
+
+    // Refresh content after operations
+    const refreshContent = () => {
+        fetchContent();
+    };
+
+    const handleDeleteContent = async (contentId) => {
+        openConfirmationModal(
+            "Delete Content",
+            "Are you sure you want to delete this content?",
+            async () => {
+                try {
+                    await ContentService.deleteContent(contentId);
+                    // Remove from local state
+                    setContent(prev => prev.filter(item => item._id !== contentId));
+                    closeConfirmationModal();
+                    new Notify({
+                        status: "success",
+                        title: "Success",
+                        text: "Content deleted successfully",
+                        effect: "fade",
+                        speed: 300,
+                        autoclose: true,
+                        autotimeout: 3000,
+                        position: "right top",
+                    });
+                } catch (error) {
+                    console.error('Failed to delete content:', error);
+                    new Notify({
+                        status: "error",
+                        title: "Error",
+                        text: "Failed to delete content",
+                        effect: "fade",
+                        speed: 300,
+                        autoclose: true,
+                        autotimeout: 3000,
+                        position: "right top",
+                    });
+                }
+            },
+            () => {
+                closeConfirmationModal();
+            }
+        );
+    };
+
+    // Filter content based on selected filters
+    const filteredContent = useMemo(() => {
+        return content.filter(item => {
+            const typeMatch = selectedType === "All" || item.type === selectedType;
+            const statusMatch = selectedStatus === "All" || item.status === selectedStatus;
+            
+            return typeMatch && statusMatch;
+        });
+    }, [content, selectedType, selectedStatus]);
+
+    return (
+        <div className="content-management">
+            <div className="content-management-header">
+                <h2>Content Management</h2>
+                <div className="content-controls">
+                    <div className="filter-controls">
+                        <CustomDropdown
+                            options={contentTypes.map(type => ({ value: type, label: type }))}
+                            value={selectedType}
+                            onChange={setSelectedType}
+                            placeholder="Filter by type..."
+                            className="custom-dropdown--small"
+                        />
+                        <CustomDropdown
+                            options={contentStatuses.map(status => ({ value: status, label: status }))}
+                            value={selectedStatus}
+                            onChange={setSelectedStatus}
+                            placeholder="Filter by status..."
+                            className="custom-dropdown--small"
+                        />
+
+                    </div>
+                    <button 
+                        id="add-content-button"
+                        className="add-content-btn" 
+                        onClick={handleAddContent}
+                    >
+                        Add New Content
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    );
+}
+
+export default ContentManagement;

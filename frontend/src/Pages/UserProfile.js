@@ -22,31 +22,35 @@ const UserProfile = () => {
         const fetchProfile = async () => {
             try {
                 const response = await authService.getProfile();
-                setFormData({
+                const profileData = {
                     username: response.data.username || '',
                     firstName: response.data.firstName || '',
                     lastName: response.data.lastName || '',
                     phone: response.data.phone || ''
-                });
+                };
+                setFormData(profileData);
+                
+                // Also update the user in AuthContext to keep it in sync
+                if (setUser) {
+                    setUser(response.data);
+                }
             } catch (error) {
                 systemNotifications.error('Failed to load profile');
+                // Fallback to user context data if fetch fails
+                if (user) {
+                    setFormData({
+                        username: user.username || '',
+                        firstName: user.firstName || '',
+                        lastName: user.lastName || '',
+                        phone: user.phone || ''
+                    });
+                }
             }
         };
         fetchProfile();
     }, []);
 
-    // Update form data when user context changes
-    useEffect(() => {
-        if (user) {
-            const newFormData = {
-                username: user.username || '',
-                firstName: user.firstName || '',
-                lastName: user.lastName || '',
-                phone: user.phone || ''
-            };
-            setFormData(newFormData);
-        }
-    }, [user]);
+    // Remove the useEffect that was overriding fresh data with potentially incomplete context data
     
     const validatePhone = (phone) => {
         // Use Indian phone validation utility
@@ -148,10 +152,10 @@ const UserProfile = () => {
                 >
                     <div className="profile-header-section">
                         <div className="profile-avatar">
-                            {user?.firstName?.charAt(0) || user?.username?.charAt(0) || 'U'}
+                            {formData.firstName?.charAt(0) || formData.username?.charAt(0) || 'U'}
                         </div>
                         <div className="profile-info">
-                            <h2>{user?.firstName} {user?.lastName || user?.username}</h2>
+                            <h2>{formData.firstName} {formData.lastName || formData.username}</h2>
                             <p className="user-email">{user?.email}</p>
                             <p className="user-role">Account type: {user?.role === 'admin' ? 'Administrator' : 'Customer'}</p>
                         </div>
@@ -230,12 +234,12 @@ const UserProfile = () => {
                                     onClick={() => {
                                         setIsEditing(false);
                                         setErrors({});
-                                        // Reset form data to current user data
+                                        // Reset form data to current form data (which should be fresh from DB)
                                         setFormData({
-                                            username: user?.username || '',
-                                            firstName: user?.firstName || '',
-                                            lastName: user?.lastName || '',
-                                            phone: user?.phone || ''
+                                            username: formData.username || '',
+                                            firstName: formData.firstName || '',
+                                            lastName: formData.lastName || '',
+                                            phone: formData.phone || ''
                                         });
                                     }}
                                 >
@@ -249,7 +253,7 @@ const UserProfile = () => {
                                 <h3>Personal Information</h3>
                                 <div className="detail-row">
                                     <span className="detail-label">Username:</span>
-                                    <span className="detail-value">{user?.username}</span>
+                                    <span className="detail-value">{formData.username}</span>
                                 </div>
                                 <div className="detail-row">
                                     <span className="detail-label">Email:</span>
@@ -257,15 +261,15 @@ const UserProfile = () => {
                                 </div>
                                 <div className="detail-row">
                                     <span className="detail-label">First Name:</span>
-                                    <span className="detail-value">{user?.firstName || 'Not provided'}</span>
+                                    <span className="detail-value">{formData.firstName || 'Not provided'}</span>
                                 </div>
                                 <div className="detail-row">
                                     <span className="detail-label">Last Name:</span>
-                                    <span className="detail-value">{user?.lastName || 'Not provided'}</span>
+                                    <span className="detail-value">{formData.lastName || 'Not provided'}</span>
                                 </div>
                                 <div className="detail-row">
                                     <span className="detail-label">Phone:</span>
-                                    <span className="detail-value">{user?.phone || 'Not provided'}</span>
+                                    <span className="detail-value">{formData.phone || 'Not provided'}</span>
                                 </div>
                             </div>
                         </div>

@@ -160,17 +160,12 @@ export default function TopNav() {
                                 </NavLink>
                                 <NavLink to="/about">ABOUT US</NavLink>
                                 <NavLink to="/faqs">FAQs</NavLink>
-                                <li>
-                                    <button 
-                                        className="nav-link-button"
-                                        onClick={() => {
-                                            // Navigate to home page first
-                                            window.location.href = '/#contact';
-                                        }}
-                                    >
-                                        CONTACT US
-                                    </button>
-                                </li>
+
+                                
+                                
+                                    <a href="/#contact" className="contact-us-link">CONTACT US</a>
+                                
+
                                 {!isAuthenticated && (
                                     <div className="auth-buttons">
                                         <button
@@ -271,7 +266,7 @@ export default function TopNav() {
 
             {activeDropdown === "products" && !productsLoading && !productsError && (
                 <div
-                    className="products-dropdown-container"
+                    className={`products-dropdown-container ${isAuthenticated ? (isAdmin ? 'is-admin' : 'is-user') : 'logged-out'}`}
                     onMouseEnter={clearDropdownTimeout}
                     onMouseLeave={handleMouseLeave}
                 >
@@ -283,7 +278,7 @@ export default function TopNav() {
 
             {activeDropdown === "resources" && (
                 <div
-                    className="resources-dropdown-container"
+                    className={`resources-dropdown-container ${isAuthenticated ? (isAdmin ? 'is-admin' : 'is-user') : 'logged-out'}`}
                     onMouseEnter={clearDropdownTimeout}
                     onMouseLeave={handleMouseLeave}
                 >

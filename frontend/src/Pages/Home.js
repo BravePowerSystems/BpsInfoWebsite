@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../scss/components/Breadcrumbs.scss";
+import "../scss/components/ContentCard.scss";
 import "../scss/pages/Home.scss";
 import HeroSection from "../components/HeroSection";
 import CategoryCarousel from "../components/CategoryCarousel";
 import ContactForm from "../components/ContactForm";
+import ContentCard from "../components/ContentCard";
 
 // Sample featured products data for home page
 const featuredProducts = [
@@ -59,16 +61,18 @@ const featuredCaseStudies = [
     {
         id: 1,
         title: "Industrial IoT Implementation for Manufacturing",
-        summary: "How we helped a manufacturing company reduce downtime by 35% through IoT sensors and predictive maintenance.",
+        description: "How we helped a manufacturing company reduce downtime by 35% through IoT sensors and predictive maintenance.",
         image: "/pic1.jpeg",
-        slug: "industrial-iot-implementation"
+        link: "/case-studies/industrial-iot-implementation",
+        imageAlt: "Industrial IoT Implementation"
     },
     {
         id: 2,
         title: "Smart Energy Monitoring System",
-        summary: "Implementing a comprehensive energy monitoring solution that reduced energy costs by 28% for a commercial building complex.",
+        description: "Implementing a comprehensive energy monitoring solution that reduced energy costs by 28% for a commercial building complex.",
         image: "/pic2.jpg",
-        slug: "smart-energy-monitoring"
+        link: "/case-studies/smart-energy-monitoring",
+        imageAlt: "Smart Energy Monitoring"
     }
 ];
 
@@ -151,29 +155,19 @@ function Home() {
                 </section>
 
                 {/* Case Studies Preview Section */}
-                <section className="case-studies-preview">
+                <section className="content-section">
                     <div className="container">
                         <h2>Success Stories</h2>
                         <p className="section-subtitle">
                             See how our solutions have transformed businesses
                         </p>
-                        <div className="case-studies-list">
-                            {featuredCaseStudies.map((caseStudy) => (
-                                <div key={caseStudy.id} className="case-study-card">
-                                    <div className="case-study-content">
-                                        <h3 className="case-study-title">{caseStudy.title}</h3>
-                                        <div className="hr"></div>
-                                        <p className="case-study-summary">{caseStudy.summary}</p>
-                                        <Link to={`/case-studies/${caseStudy.slug}`} className="read-more">
-                                            Read more
-                                        </Link>
-                                    </div>
-                                    <img 
-                                        src={caseStudy.image} 
-                                        alt={caseStudy.title} 
-                                        className="case-study-image"
-                                    />
-                                </div>
+                        <div className="content-section__list">
+                            {featuredCaseStudies.map((caseStudy, index) => (
+                                <ContentCard
+                                    key={caseStudy.id}
+                                    {...caseStudy}
+                                    isReversed={index % 2 === 1}
+                                />
                             ))}
                         </div>
                     </div>

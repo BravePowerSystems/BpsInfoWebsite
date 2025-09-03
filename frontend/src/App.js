@@ -4,6 +4,7 @@ import Layout from "./Layout/Layout";
 import Products from "./Pages/Products";
 import Home from "./Pages/Home";
 import Blog from "./Pages/Blog";
+import BlogPost from "./Pages/BlogPost";
 import CaseStudy from "./Pages/CaseStudy";
 import CaseStudiesPreview from "./Pages/CaseStudiesPreview";
 import Product from "./Pages/Product";
@@ -42,6 +43,7 @@ function App() {
                                     element={<Product />}
                                 />
                                 <Route path="/Blog" element={<Blog />} />
+                                <Route path="/blog/:slug" element={<BlogPost />} />
                                 <Route path="/about" element={<About />} />
                                 <Route path="/faqs" element={<FAQ />} />
                                 <Route

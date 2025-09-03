@@ -1,0 +1,149 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.content-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    
+    @include tablet {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    &--reversed {
+        @include tablet {
+            flex-direction: row-reverse;
+        }
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
+        
+        @include tablet {
+            width: 50%;
+        }
+    }
+
+    &__title {
+        font-size: clamp(1.25rem, 2vw, 1.75rem);
+        margin: 0;
+        @include gradient-text;
+        font-weight: 600;
+    }
+
+    &__divider {
+        width: 3rem;
+        height: 2px;
+        background: $primary-color;
+        margin: 0;
+    }
+
+    &__description {
+        font-size: clamp(0.875rem, 1.5vw, 1.2rem);
+        margin: 0;
+        line-height: 1.6;
+        color: $primary-text-color;
+    }
+
+    &__link {
+        font-size: clamp(0.875rem, 1.5vw, 1rem);
+        text-decoration: none;
+        color: $primary-color;
+        font-weight: 600;
+        transition: color 0.3s ease;
+        position: relative;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: $primary-color;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+        
+        &:hover {
+            color: lighten($primary-color, 15%);
+            
+            &::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
+        }
+    }
+
+    &__image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4/3;
+        object-fit: cover;
+        border-radius: 8px;
+        
+        @include tablet {
+            width: 40%;
+            max-width: 400px;
+        }
+    }
+
+    &__breaker {
+        border: 1px solid rgba(217, 215, 215, 0.2);
+        margin: 2rem 0;
+        
+        &:last-child {
+            display: none;
+        }
+    }
+}
+
+// Content section styles
+.content-section {
+    padding: 2rem 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    
+    @include tablet {
+        padding: 3rem 2rem;
+    }
+    
+    &__header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    &__title {
+        font-size: clamp(1.5rem, 4vw, 3.5rem);
+        margin-bottom: 0.5rem;
+        @include gradient-text;
+    }
+
+    &__subtitle {
+        font-size: clamp(1.2rem, 2.5vw, 2rem);
+        margin: 1rem 0 0.5rem;
+        @include gradient-text;
+    }
+
+    &__description {
+        font-size: clamp(0.875rem, 1.5vw, 1.2rem);
+        margin: 0.5rem auto 2rem;
+        max-width: 800px;
+        color: rgba($primary-text-color, 0.8);
+        line-height: 1.6;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}

@@ -151,75 +151,7 @@
         }
     }
 
-    // Case Studies Preview Section
-    .case-studies-preview {
-        .case-studies-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-top: 2rem;
 
-            .case-study-card {
-                display: flex;
-                flex-direction: column;
-                padding: 1rem;
-                background: rgba(12, 24, 40, 0.6);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(103, 141, 246, 0.2);
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-                transition: transform 0.3s ease, border-color 0.3s ease;
-
-                &:hover {
-                    transform: translateY(-2px);
-                    border-color: rgba(103, 141, 246, 0.4);
-                }
-
-                .case-study-content {
-                    flex: 1;
-
-                    .case-study-title {
-                        font-size: 1.3rem;
-                        font-weight: 600;
-                        margin-bottom: 1rem;
-                        color: $primary-color;
-                    }
-
-                    .hr {
-                        width: 40px;
-                        height: 2px;
-                        background: $primary-color;
-                        margin-bottom: 1rem;
-                    }
-
-                    .case-study-summary {
-                        color: white;
-                        line-height: 1.5;
-                        margin-bottom: 1.5rem;
-                        font-size: 0.9rem;
-                    }
-
-                    .read-more {
-                        color: $primary-color;
-                        text-decoration: none;
-                        font-weight: 600;
-                        transition: color 0.3s ease;
-
-                        &:hover {
-                            color: lighten($primary-color, 20%);
-                        }
-                    }
-                }
-
-                .case-study-image {
-                    width: 100%;
-                    height: 180px;
-                    object-fit: cover;
-                }
-            }
-        }
-    }
 
     // Contact Information Section
     .contact-info-section {

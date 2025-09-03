@@ -103,13 +103,11 @@ function ProductManagement({ onShowProductForm }) {
                 <h2>Product Management</h2>
                 <div className="product-controls">
                     <CustomDropdown
-                        options={categoryNames}
-                        selectedValue={selectedCategory}
-                        onSelect={setSelectedCategory}
-                        placeholder="Type to search categories..."
-                        searchOnly={true}
-                        onInputChange={(value) => setSelectedCategory(value)}
-                        width="200px"
+                        options={categoryNames.map(name => ({ value: name, label: name }))}
+                        value={selectedCategory}
+                        onChange={setSelectedCategory}
+                        placeholder="Categories"
+                        className="custom-dropdown--small"
                     />
                     <button 
                         id="add-product-button"

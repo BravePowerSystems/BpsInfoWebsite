@@ -1,0 +1,103 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+
+.content-management {
+    padding: 20px;
+    background: $background-color;
+    min-height: 100vh;
+
+    .content-management-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: rgba(12, 24, 40, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border-radius: 12px;
+
+        h2 {
+            margin: 0;
+            color: $primary-text-color;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .content-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+
+            .filter-controls {
+                display: flex;
+                flex-direction: row;
+                gap: 15px;
+                align-items: center;
+                position: relative;
+
+                .custom-dropdown {
+                    width: 200px;
+                    min-width: 200px;
+                    max-width: 200px;
+                }
+            }
+
+            .add-content-btn {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+
+ 
+
+    // Responsive design
+    @media (max-width: 768px) {
+        padding: 15px;
+
+        .content-management-header {
+            flex-direction: column;
+            gap: 20px;
+            align-items: stretch;
+
+            .content-controls {
+                flex-direction: column;
+                gap: 15px;
+
+                .filter-controls {
+                    justify-content: center;
+                }
+            }
+        }
+
+
+    }
+
+    @media (max-width: 480px) {
+        .content-management-header {
+            .content-controls {
+                .filter-controls {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+            }
+        }
+    }
+}

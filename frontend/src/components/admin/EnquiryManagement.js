@@ -98,9 +98,9 @@ function EnquiryManagement() {
             <h2>All Enquiries</h2>
             <div className="product-controls">
                 <CustomDropdown
-                    options={statusOptions}
-                    selectedValue={filter}
-                    onValueChange={setFilter}
+                    options={statusOptions.map(status => ({ value: status, label: status }))}
+                    value={filter}
+                    onChange={setFilter}
                     placeholder="All Statuses"
                 />
             </div>
@@ -146,9 +146,9 @@ function EnquiryManagement() {
                             <div className="enquiry-actions">
                                 <label>Status: </label>
                                 <CustomDropdown
-                                    options={statusOptions}
-                                    selectedValue={enq.status}
-                                    onValueChange={(newStatus) => handleStatusChange(enq._id, newStatus)}
+                                    options={statusOptions.map(status => ({ value: status, label: status }))}
+                                    value={enq.status}
+                                    onChange={(newStatus) => handleStatusChange(enq._id, newStatus)}
                                     className="status-change-selector"
                                 />
                             </div>
