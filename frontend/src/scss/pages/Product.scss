@@ -37,9 +37,10 @@
                 color: $primary-text-color; // Changed from black to white
             }
             .product-image {
-                width: 12rem;
+                width: auto;
                 height: 12rem;
                 margin: 0 auto;
+                object-fit: cover;
                 // filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.25));
             }
             .product-description-container {
@@ -250,13 +251,34 @@
 
 
 
+@include tablet {
+    .product-page {
+        .product {
+            .product-info {
+                .product-image {
+                    width: auto;
+                    height: 15rem;
+                    object-fit: cover;
+                }
+            }
+        }
+    }
+}
+
 @include desktop {
     .product-page {
         .product {
-            height: 35rem;
             display: flex;
             justify-content: space-between;
             border-radius: 28px 32px 32px 28px;
+
+            .product-info {
+                .product-image {
+                    width: auto;
+                    height: 18rem;
+                    object-fit: cover;
+                }
+            }
 
             .product-features {
                 margin: 0;
@@ -273,7 +295,6 @@
 @include large_desktop {
     .product-page {
         .product {
-            height: 90vh;
             .breadcrumbs {
                 margin-top: 1rem;
             }
@@ -289,9 +310,9 @@
                 }
 
                 .product-image {
-                    width: 15rem;
-                    height: auto;
-
+                    width: auto;
+                    height: 20rem;
+                    object-fit: cover;
                 }
 
                 .buttons {

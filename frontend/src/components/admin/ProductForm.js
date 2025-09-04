@@ -19,6 +19,9 @@ function ProductForm({ product, categories, onSave, onCancel }) {
     const [currentTab, setCurrentTab] = useState('basic');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isImageUploading, setIsImageUploading] = useState(false);
+    const [descriptionError, setDescriptionError] = useState('');
+    
+    const MAX_DESCRIPTION_LENGTH = 60;
     
 
     
@@ -41,6 +44,17 @@ function ProductForm({ product, categories, onSave, onCancel }) {
     
     const handleChange = (e) => {
         const { name, value } = e.target;
+        
+        // Handle description character limit
+        if (name === 'description') {
+            if (value.length > MAX_DESCRIPTION_LENGTH) {
+                setDescriptionError(`Description must be ${MAX_DESCRIPTION_LENGTH} characters or less`);
+                return;
+            } else {
+                setDescriptionError('');
+            }
+        }
+        
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -306,7 +320,17 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                                     onChange={handleChange}
                                     placeholder="Enter detailed product description..."
                                     rows="4"
+                                    maxLength={MAX_DESCRIPTION_LENGTH}
+                                    className={descriptionError ? 'error' : ''}
                                 />
+                                <div className="char-counter">
+                                    <span className={formData.description.length > MAX_DESCRIPTION_LENGTH * 0.8 ? 'warning' : ''}>
+                                        {formData.description.length}/{MAX_DESCRIPTION_LENGTH}
+                                    </span>
+                                </div>
+                                {descriptionError && (
+                                    <div className="error-message">{descriptionError}</div>
+                                )}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="imageUpload">Product Image</label>

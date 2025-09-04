@@ -423,6 +423,41 @@
                     &::placeholder {
                         color: rgba(255, 255, 255, 0.4);
                     }
+                    
+                    &.error {
+                        border-color: #ff6b6b;
+                        box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+                    }
+                }
+                
+                .char-counter {
+                    display: flex;
+                    justify-content: flex-end;
+                    margin-top: 0.5rem;
+                    
+                    span {
+                        font-size: 0.8rem;
+                        color: rgba(255, 255, 255, 0.6);
+                        transition: color 0.3s ease;
+                        
+                        &.warning {
+                            color: #ffa726;
+                        }
+                    }
+                }
+                
+                .error-message {
+                    color: #ff6b6b;
+                    font-size: 0.8rem;
+                    margin-top: 0.5rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    
+                    &::before {
+                        content: "⚠";
+                        font-size: 0.9rem;
+                    }
                 }
             }
             .image-preview {

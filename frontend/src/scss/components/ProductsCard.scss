@@ -3,50 +3,40 @@
 
 .card {
     border-radius: 10px;
-    width: 190px;
+    width: 200px;
     min-height: 280px;
-    max-height: 280px;
+    max-height: 280px;  
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
     cursor: grab;
-    margin-top: 1rem;
 
     .card-body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
         height: 100%;
         width: 100%;
         background-color: white;
         z-index: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        gap: 0.5rem;
 
         img {
-            width: 150px;
+            width: 160px;
             height: auto;
             object-fit: contain;
         }
 
         .card-title {
-            margin-top: 0.5rem;
+            width: 100%;
             font-size: 0.9rem;
-            min-height: 30px;
-            max-height: 30px;
+            text-align: center;
         }
 
         .card-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-
             p {
                 font-size: 10px;
-                min-height: 30px;
-                max-height: 30px;
                 text-align: center;
-                margin: 0;
-                padding: 0;
             }
 
             .card-actions {
@@ -54,11 +44,10 @@
                 flex-direction: column;
                 gap: 0.5rem;
                 align-items: center;
-
                 .explore-btn {
                     height: 30px;
                     width: 70px;
-                    font-size: 1rem;
+                    font-size: 0.9rem;
                     text-align: center;
                     padding: 0%;
                     background-color: rgb(32, 7, 100);
@@ -111,7 +100,17 @@
 
     }
 
-
+    .card-body {
+        .card-title {
+            color: $primary-text-color;
+        }
+        
+        .card-content {
+            p {
+                color: $primary-text-color;
+            }
+        }
+    }
 
     transform: translate(5px, -5px);
 
@@ -120,36 +119,35 @@
 
 @include tablet {
     .card {
-        width: 210px;
-        min-height: 300px;
-        max-height: 300px;
+        width: 220px;
+        min-height: 320px;
+        max-height: 320px;
 
         .card-body {
             height: 100%;
+            
+            img {
+                width: 180px;
+            }
+            
             .card-title {
-                min-height: 20px;
+                min-height: 35px;
+                font-size: 1rem;
             }
             
             .card-content {
                 height: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
-
                 p {
-                    min-height: 20px;
-                    max-height: 50px;
-                    font-size: 14px;
+                    font-size: 11px;
                 }
 
                 .card-actions {
                     gap: 0.75rem;
                     
                     .explore-btn {
-                        height: 35px;
-                        width: 80px;
-                        font-size: 1.1rem;
+                        height: 32px;
+                        width: 75px;
+                        font-size: 0.95rem;
                     }
                 }
             }
@@ -159,29 +157,38 @@
 
 @include desktop {
     .card {
-        width: 230px;
-        min-height: 300px;
-        max-height: 320px;
+        width: 280px;
+        min-height: 350px;
+        max-height: 350px;
 
         .card-body {
             height: 100%;
+            
+            img {
+                width: 220px;
+            }
+            
+            .card-title {
+                font-size: 1.1rem;
+                min-height: 35px;
+            }
+            
             .card-content {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
-
+                p {
+                    font-size: 12px;
+                }
                 
                 .card-actions {
                     gap: 1rem;
                     
                     .explore-btn{
                         height: 35px;
-                        width: 90px;
-                        font-size: 1.2rem;
+                        width: 80px;
+                        font-size: 1rem;
                     }
                 }
             }
         }
     }
 }
+

@@ -22,7 +22,9 @@ $accordion: (
     $self: &;
     width: 100%;
     background: transparent;
-    overflow: hidden;
+    max-height: 700px;
+    overflow-y: auto;
+    scrollbar-width: none;
 
     &__item {
         border-bottom: 1px solid map-get($accordion, border);
@@ -33,7 +35,9 @@ $accordion: (
 
         &--open {
             #{$self}__content {
-                max-height: fit-content;
+                max-height: 700px;
+                overflow-y: auto;
+                scrollbar-width: none;
                 padding: 1rem 1.5rem;
             }
 
@@ -84,11 +88,16 @@ $accordion: (
 
     &__content {
         max-height: 0;
-        overflow: hidden;
+        overflow-y: auto;
         padding: 0 1.5rem;
         @include transition(max-height, padding);
         color: map-get($accordion, text);
         background: map-get($accordion, bg);
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 
 }
