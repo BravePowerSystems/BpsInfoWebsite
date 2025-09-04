@@ -12,13 +12,14 @@ function ProductForm({ product, categories, onSave, onCancel }) {
         description: '',
         specifications: [{ name: '', value: '' }],
         applications: [''],
-        downloads: [{ name: '', type: 'PDF', url: '' }],
+        downloads: [{ name: '', url: '' }],
         imageUrl: ''
     });
     
     const [currentTab, setCurrentTab] = useState('basic');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isImageUploading, setIsImageUploading] = useState(false);
+    const [isPdfUploading, setIsPdfUploading] = useState(false);
     const [descriptionError, setDescriptionError] = useState('');
     
     const MAX_DESCRIPTION_LENGTH = 60;
@@ -31,7 +32,7 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                 ...product,
                 specifications: product.specifications?.length ? product.specifications : [{ name: '', value: '' }],
                 applications: product.applications?.length ? product.applications : [''],
-                downloads: product.downloads?.length ? product.downloads : [{ name: '', type: 'PDF', url: '' }]
+                downloads: product.downloads?.length ? product.downloads : [{ name: '', url: '' }]
             });
         }
     }, [product]);
@@ -133,7 +134,7 @@ function ProductForm({ product, categories, onSave, onCancel }) {
     const addDownload = () => {
         setFormData(prev => ({
             ...prev,
-            downloads: [...prev.downloads, { name: '', type: 'PDF', url: '' }]
+            downloads: [...prev.downloads, { name: '', url: '' }]
         }));
     };
     
@@ -223,6 +224,71 @@ function ProductForm({ product, categories, onSave, onCancel }) {
             }
         } finally {
             setIsImageUploading(false);
+        }
+    };
+
+    // Add PDF upload handler
+    const handlePdfUpload = async (e, downloadIndex) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        if (file.type !== 'application/pdf') {
+            alert('Please select a PDF file');
+            return;
+        }
+        
+        // Validate file size (10MB limit for PDFs)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size must be less than 10MB');
+            return;
+        }
+        
+        setIsPdfUploading(true);
+        const formDataObj = new FormData();
+        formDataObj.append('file', file);
+        
+        try {
+            console.log('Uploading PDF:', file.name, 'Size:', file.size, 'Type:', file.type);
+            const response = await privateClientMethods.post('/upload', formDataObj);
+            
+            if (response && response.data && response.data.url) {
+                // Update the specific download item with the uploaded URL
+                setFormData(prev => ({
+                    ...prev,
+                    downloads: prev.downloads.map((download, index) => 
+                        index === downloadIndex 
+                            ? { ...download, url: response.data.url, name: file.name.replace('.pdf', '') }
+                            : download
+                    )
+                }));
+                console.log('PDF uploaded successfully:', response.data.url);
+            } else {
+                console.error('Upload response missing URL:', response);
+                alert('PDF upload failed: Invalid response from server');
+            }
+        } catch (err) {
+            console.error('PDF upload error:', err);
+            
+            // Provide more specific error messages
+            if (err.response) {
+                const errorData = err.response.data;
+                if (errorData.error === 'File too large') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else if (errorData.error === 'Invalid file type') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else if (errorData.error === 'No file uploaded') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else {
+                    alert(`Upload failed: ${errorData.error} - ${errorData.details || 'Unknown error'}`);
+                }
+            } else if (err.message) {
+                alert(`Upload failed: ${err.message}`);
+            } else {
+                alert('PDF upload failed: Unknown error occurred');
+            }
+        } finally {
+            setIsPdfUploading(false);
         }
     };
 
@@ -434,7 +500,7 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                     {currentTab === 'downloads' && (
                         <div className="form-section">
                             <h3>Product Downloads</h3>
-                            <p className="help-text">Add downloadable resources like manuals, datasheets, etc.</p>
+                            <p className="help-text">Add downloadable PDF resources like manuals, datasheets, etc. Only PDF files are allowed.</p>
                             
                             {formData.downloads.map((download, index) => (
                                 <div key={index} className="download-row">
@@ -443,24 +509,42 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                                             type="text" 
                                             value={download.name} 
                                             onChange={(e) => handleDownloadChange(index, 'name', e.target.value)}
-                                            placeholder="Document name"
+                                            placeholder="Document name (e.g., Product Manual, Datasheet)"
                                         />
-                                        <select 
-                                            value={download.type} 
-                                            onChange={(e) => handleDownloadChange(index, 'type', e.target.value)}
-                                        >
-                                            <option value="PDF">PDF</option>
-                                            <option value="DOC">DOC</option>
-                                            <option value="XLS">XLS</option>
-                                            <option value="ZIP">ZIP</option>
-                                            <option value="Other">Other</option>
-                                        </select>
-                                        <input 
-                                            type="text" 
-                                            value={download.url} 
-                                            onChange={(e) => handleDownloadChange(index, 'url', e.target.value)}
-                                            placeholder="Document URL"
-                                        />
+                                        <div className="file-upload-section">
+                                            <input 
+                                                type="file" 
+                                                accept=".pdf"
+                                                onChange={(e) => handlePdfUpload(e, index)}
+                                                style={{ display: 'none' }}
+                                                id={`pdf-upload-${index}`}
+                                            />
+                                            <label 
+                                                htmlFor={`pdf-upload-${index}`}
+                                                className="file-upload-btn"
+                                                style={{
+                                                    display: 'inline-block',
+                                                    padding: '8px 16px',
+                                                    backgroundColor: '#007bff',
+                                                    color: 'white',
+                                                    borderRadius: '4px',
+                                                    cursor: 'pointer',
+                                                    fontSize: '14px',
+                                                    textAlign: 'center',
+                                                    minWidth: '120px',
+                                                    marginTop: '8px'
+                                                }}
+                                            >
+                                                {isPdfUploading ? 'Uploading...' : 'Upload PDF'}
+                                            </label>
+                                            {download.url && (
+                                                <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                                                    <a href={download.url} target="_blank" rel="noopener noreferrer">
+                                                        📄 View uploaded PDF
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <button 
                                         type="button" 
