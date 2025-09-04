@@ -5,6 +5,7 @@ import { formNotifications } from '../utils/notificationHelper';
 import { publicClientMethods, privateClientMethods } from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
 import { openWhatsAppProductEnquiry } from '../utils/whatsappHelper';
+import CustomDropdown from './CustomDropdown';
 
 const ProductModal = ({ productName, onClose }) => {
     const { isAuthenticated } = useAuth();
@@ -182,20 +183,13 @@ const ProductModal = ({ productName, onClose }) => {
 
                     <div className="form-group-single">
                         <label htmlFor="enquiryType">Enquiry Type</label>
-                        <select
-                            id="enquiryType"
-                            name="enquiryType"
+                        <CustomDropdown
+                            options={enquiryTypes}
                             value={formData.enquiryType}
-                            onChange={handleChange}
-                            required
-                            aria-required="true"
-                        >
-                            {enquiryTypes.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={(value) => setFormData(prev => ({ ...prev, enquiryType: value }))}
+                            placeholder="Select enquiry type..."
+                            className="enquiry-type-dropdown"
+                        />
                     </div>
 
                     <div className="form-actions">

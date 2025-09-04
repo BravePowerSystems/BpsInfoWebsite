@@ -510,20 +510,39 @@ function ContentForm({ content, options, onSave, onCancel }) {
                             
                             <div className="form-group">
                                 <label htmlFor="featuredImage">Featured Image</label>
-                                <input
-                                    type="file"
-                                    id="featuredImage"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    disabled={isImageUploading}
-                                />
+                                <div className="featured-image-input-group">
+                                    <input
+                                        type="file"
+                                        id="featuredImage"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        className="featured-image-input"
+                                        disabled={isImageUploading}
+                                    />
+                                    <label 
+                                        htmlFor="featuredImage" 
+                                        className="featured-image-upload-btn"
+                                    >
+                                        {formData.featuredImage ? 'Change Image' : 'Upload Image'}
+                                    </label>
+                                    {formData.featuredImage && (
+                                        <button
+                                            type="button"
+                                            className="remove-featured-image-btn"
+                                            onClick={() => setFormData(prev => ({ ...prev, featuredImage: '' }))}
+                                            title="Remove Image"
+                                        >
+                                            ×
+                                        </button>
+                                    )}
+                                </div>
                                 {isImageUploading && (
                                     <div className="upload-status">
                                         <span>Uploading image...</span>
                                     </div>
                                 )}
                                 {formData.featuredImage && (
-                                    <div className="image-preview">
+                                    <div className="featured-image-preview">
                                         <img src={formData.featuredImage} alt="Featured Image Preview" />
                                     </div>
                                 )}
