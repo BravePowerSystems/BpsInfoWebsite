@@ -7,6 +7,7 @@ import userRoutes from './routes/userRoutes.js';
 import enquiryRoutes from './routes/enquiryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
+import contentRoutes from './routes/contentRoutes.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -67,6 +68,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/content', contentRoutes);
 
 // Environment check endpoint
 app.get('/api/debug/env', (req, res) => {

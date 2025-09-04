@@ -3,23 +3,96 @@
 @import "../../base/mixins";
 
 .enquiry-management {
-  padding: 2rem;
-  color: $primary-text-color;
+  padding: 1.5rem;
+  background: $background-color;
+  min-height: 100vh;
 
-  h2 {
-    font-size: 2rem;
+  .enquiry-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 2rem;
-    background: linear-gradient(90deg, #678df6, #8f94fb);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    gap: 1rem;
+    @include glass-card;
+    padding: 1.5rem;
+    border-radius: 12px;
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+      background: linear-gradient(90deg, #678df6, #8f94fb);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
-  .product-grid {
-    margin-bottom: 2rem;
+  .enquiry-status-tabs {
     display: flex;
-    gap: 1rem;
-    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .enquiry-status-tab {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+      }
+
+      &:hover {
+        color: rgba(255, 255, 255, 0.9);
+        border-color: rgba(103, 141, 246, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(103, 141, 246, 0.2);
+
+        &::before {
+          left: 100%;
+        }
+      }
+
+      &.active {
+        background: linear-gradient(90deg, #678df6, #8f94fb);
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 15px rgba(103, 141, 246, 0.3);
+        transform: translateY(-2px);
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 20px rgba(103, 141, 246, 0.4);
+        }
+      }
+    }
   }
 
   .enquiry-cards {
@@ -172,6 +245,27 @@
     // Status change selector specific styles
     .status-change-selector {
       min-width: 140px;
+      padding: 0.5rem 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: $primary-text-color;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #678df6;
+        box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.2);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      option {
+        background: rgba(12, 24, 40, 0.95);
+        color: $primary-text-color;
+      }
     }
   }
   
@@ -249,13 +343,36 @@
     border-radius: 8px;
     text-align: center;
     font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
   }
-}
 
-// Responsive design
-@media (max-width: 768px) {
-  .enquiry-management {
+  // Mobile-first responsive design
+  @media (max-width: 719px) {
     padding: 1rem;
+
+    .enquiry-management-header {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+      gap: 1.5rem;
+
+      h2 {
+        font-size: 1.25rem;
+        order: 1;
+      }
+    }
+
+    .enquiry-status-tabs {
+      margin-bottom: 1.5rem;
+      padding: 0.25rem;
+      gap: 0.25rem;
+
+      .enquiry-status-tab {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+      }
+    }
 
     .enquiry-cards {
       grid-template-columns: 1fr;
@@ -265,6 +382,51 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0.5rem;
+    }
+  }
+}
+
+@include tablet {
+  .enquiry-management {
+    padding: 2rem;
+
+    .enquiry-management-header {
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      gap: 1rem;
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .enquiry-status-tabs {
+      .enquiry-status-tab {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    .enquiry-cards {
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+  }
+}
+
+@include desktop {
+  .enquiry-management {
+    padding: 2.5rem;
+
+    .enquiry-status-tabs {
+      .enquiry-status-tab {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+      }
+    }
+
+    .enquiry-cards {
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     }
   }
 } 

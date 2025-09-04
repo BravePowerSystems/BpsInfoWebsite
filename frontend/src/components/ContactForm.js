@@ -5,6 +5,7 @@ import { publicClientMethods } from '../services/apiClient';
 import { formNotifications } from '../utils/notificationHelper';
 import { openWhatsAppGeneralEnquiry } from '../utils/whatsappHelper';
 import { validateIndianPhone, formatIndianPhoneInput } from '../utils/phoneValidation';
+import CustomDropdown from './CustomDropdown';
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({
@@ -188,20 +189,13 @@ const ContactForm = () => {
 
                 <div className="form-group-single">
                     <label htmlFor="enquiryType" className="visually-hidden">Enquiry Type</label>
-                    <select 
-                        id="enquiryType"
-                        name="enquiryType" 
+                    <CustomDropdown
+                        options={enquiryTypes}
                         value={formData.enquiryType}
-                        onChange={handleChange}
-                        required 
-                        aria-required="true"
-                    >
-                        {enquiryTypes.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={(value) => setFormData(prev => ({ ...prev, enquiryType: value }))}
+                        placeholder="Select enquiry type..."
+                        className="enquiry-type-dropdown"
+                    />
                 </div>
 
                 <div className="form-group-single">

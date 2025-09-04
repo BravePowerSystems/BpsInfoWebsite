@@ -1,38 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../scss/components/Breadcrumbs.scss";
+import "../scss/components/ContentCard.scss";
 import "../scss/pages/Home.scss";
 import HeroSection from "../components/HeroSection";
 import CategoryCarousel from "../components/CategoryCarousel";
 import ContactForm from "../components/ContactForm";
+import ContentCard from "../components/ContentCard";
+import { productService } from "../services/productService";
+import { ContentService } from "../services/contentService";
 
-// Sample featured products data for home page
-const featuredProducts = [
-    {
-        title: "Gas Flow Pulse Transmitter",
-        description: "Advanced IoT transmitter for precise gas flow monitoring",
-        imageUrl: "/gasFlowPulseTransmitter.png",
-        link: "/products/gas-flow-transmitter"
-    },
-    {
-        title: "Water Flow Transmitter",
-        description: "Smart water flow monitoring solution",
-        imageUrl: "/25-WFT25.jpg",
-        link: "/products/water-flow-transmitter"
-    },
-    {
-        title: "Temperature & Humidity Transmitter",
-        description: "Environmental monitoring for industrial applications",
-        imageUrl: "/31-THT31.jpg",
-        link: "/products/temperature-humidity-transmitter"
-    },
-    {
-        title: "CO2 Transmitter",
-        description: "Air quality monitoring and control",
-        imageUrl: "/34-CO234.jpg",
-        link: "/products/co2-transmitter"
-    }
-];
 
 // Company values data
 const companyValues = [
@@ -54,25 +31,80 @@ const companyValues = [
     }
 ];
 
-// Featured case studies data
-const featuredCaseStudies = [
-    {
-        id: 1,
-        title: "Industrial IoT Implementation for Manufacturing",
-        summary: "How we helped a manufacturing company reduce downtime by 35% through IoT sensors and predictive maintenance.",
-        image: "/pic1.jpeg",
-        slug: "industrial-iot-implementation"
-    },
-    {
-        id: 2,
-        title: "Smart Energy Monitoring System",
-        summary: "Implementing a comprehensive energy monitoring solution that reduced energy costs by 28% for a commercial building complex.",
-        image: "/pic2.jpg",
-        slug: "smart-energy-monitoring"
-    }
-];
 
 function Home() {
+    const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [featuredCaseStudies, setFeaturedCaseStudies] = useState([]);
+    const [caseStudiesLoading, setCaseStudiesLoading] = useState(true);
+
+    // Fetch featured products (transmitters and IOT-and-PLC-Modules)
+    useEffect(() => {
+        const fetchFeaturedProducts = async () => {
+            try {
+                setLoading(true);
+                const [transmittersResponse, iotModulesResponse] = await Promise.all([
+                    productService.getProductsByCategory('Transmitters'),
+                    productService.getProductsByCategory('IOT-and-PLC-Modules')
+                ]);
+
+                // Combine and limit to 4 products for featured section
+                const allProducts = [
+                    ...transmittersResponse.data,
+                    ...iotModulesResponse.data
+                ];
+
+                // Transform products to match the expected format for CategoryCarousel
+                const transformedProducts = allProducts.slice(0, 4).map(product => ({
+                    title: product.title,
+                    description: product.description,
+                    imageUrl: product.imageUrl,
+                    link: product.link
+                }));
+
+                setFeaturedProducts(transformedProducts);
+            } catch (error) {
+                console.error('Error fetching featured products:', error);
+                // Fallback to empty array if fetch fails
+                setFeaturedProducts([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFeaturedProducts();
+    }, []);
+
+    // Fetch featured case studies
+    useEffect(() => {
+        const fetchFeaturedCaseStudies = async () => {
+            try {
+                setCaseStudiesLoading(true);
+                const response = await ContentService.getContentByType('case-study', 'published');
+                
+                // Transform case studies to match the expected format for ContentCard
+                const transformedCaseStudies = response.slice(0, 2).map(caseStudy => ({
+                    id: caseStudy._id,
+                    title: caseStudy.title,
+                    description: caseStudy.excerpt,
+                    image: caseStudy.featuredImage || "/pic1.jpeg", // fallback image
+                    link: `/case-studies/${caseStudy.slug}`,
+                    imageAlt: caseStudy.title
+                }));
+
+                setFeaturedCaseStudies(transformedCaseStudies);
+            } catch (error) {
+                console.error('Error fetching featured case studies:', error);
+                // Fallback to empty array if fetch fails
+                setFeaturedCaseStudies([]);
+            } finally {
+                setCaseStudiesLoading(false);
+            }
+        };
+
+        fetchFeaturedCaseStudies();
+    }, []);
+
     useEffect(() => {
         // Check if there's a hash in the URL (e.g., #contact)
         if (window.location.hash) {
@@ -125,10 +157,20 @@ function Home() {
                         <p className="section-subtitle">
                             Discover our latest IoT solutions and transmitters
                         </p>
-                        <CategoryCarousel 
-                            categoryName="Featured Products" 
-                            products={featuredProducts} 
-                        />
+                        {loading ? (
+                            <div className="loading-container">
+                                <p>Loading featured products...</p>
+                            </div>
+                        ) : featuredProducts.length > 0 ? (
+                            <CategoryCarousel 
+                                categoryName="Featured Products" 
+                                products={featuredProducts} 
+                            />
+                        ) : (
+                            <div className="no-products">
+                                <p>No featured products available at the moment.</p>
+                            </div>
+                        )}
                     </div>
                 </section>
 
@@ -151,31 +193,31 @@ function Home() {
                 </section>
 
                 {/* Case Studies Preview Section */}
-                <section className="case-studies-preview">
+                <section className="content-section">
                     <div className="container">
                         <h2>Success Stories</h2>
                         <p className="section-subtitle">
                             See how our solutions have transformed businesses
                         </p>
-                        <div className="case-studies-list">
-                            {featuredCaseStudies.map((caseStudy) => (
-                                <div key={caseStudy.id} className="case-study-card">
-                                    <div className="case-study-content">
-                                        <h3 className="case-study-title">{caseStudy.title}</h3>
-                                        <div className="hr"></div>
-                                        <p className="case-study-summary">{caseStudy.summary}</p>
-                                        <Link to={`/case-studies/${caseStudy.slug}`} className="read-more">
-                                            Read more
-                                        </Link>
-                                    </div>
-                                    <img 
-                                        src={caseStudy.image} 
-                                        alt={caseStudy.title} 
-                                        className="case-study-image"
+                        {caseStudiesLoading ? (
+                            <div className="loading-container">
+                                <p>Loading success stories...</p>
+                            </div>
+                        ) : featuredCaseStudies.length > 0 ? (
+                            <div className="content-section__list">
+                                {featuredCaseStudies.map((caseStudy, index) => (
+                                    <ContentCard
+                                        key={caseStudy.id}
+                                        {...caseStudy}
+                                        isReversed={index % 2 === 1}
                                     />
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="no-content">
+                                <p>No success stories available at the moment.</p>
+                            </div>
+                        )}
                     </div>
                 </section>
 

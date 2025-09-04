@@ -6,25 +6,26 @@
 .products-dropdown-container {
     position: relative;
     z-index: 1000;
-    padding: 0 4rem;
+    padding: 0 2rem;
     display: flex;
     justify-content: center; // Center the dropdown menu
 
     .dropdown-menu {
         position: absolute;
         top: 10%;
-        left: 50%; // Center horizontally
+        left: 30%; // Center horizontally
         transform: translateX(-50%); // Center the dropdown
         margin-top: 0.5rem;
         display: grid;
-        grid-template-columns: auto auto auto;
-        gap: 2rem; // Add consistent gap between columns
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem; // Flexible gap
         background: rgba(37, 36, 41, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
         border-radius: 12px;
         width: max-content;
-        min-width: 800px; // Ensure minimum width for proper spacing
+        min-width: auto; // Remove fixed minimum width
+        max-width: 90vw; // Prevent overflow on small screens
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
         a {
@@ -131,15 +132,15 @@
 // Media Queries
 @include tablet {
     .products-dropdown-container {
-        padding: 0 2rem; // Reduce padding on smaller screens
+        padding: 0 1rem; // Reduce padding on smaller screens
         
         .dropdown-menu {
-            min-width: 600px; // Reduce minimum width for tablets
-            gap: 1.5rem; // Reduce gap for smaller screens
+            gap: 1rem; // Reduce gap for smaller screens
+            max-width: 95vw; // Use more screen width on tablets
             
             ul.dropdown-category-list {
-                min-width: 180px; // Reduce minimum width for category lists
-                padding: 1rem; // Reduce padding
+                min-width: 160px; // Flexible minimum width
+                padding: 0.75rem; // Reduce padding
             }
         }
     }
@@ -148,8 +149,8 @@
 @include desktop {
     .products-dropdown-container {
         .dropdown-menu {
-            gap: 2rem;
-            min-width: 900px; // Increase minimum width for larger screens
+            gap: 1.5rem;
+            max-width: 85vw; // Use less screen width on desktop for better proportions
         }
     }
 }
@@ -157,26 +158,149 @@
 @include large_desktop {
     .products-dropdown-container {
         .dropdown-menu {
-            gap: 4rem;
-            min-width: 1000px; // Further increase for very large screens
+            gap: 2rem;
+            max-width: 80vw; // Use even less screen width on large desktop
 
-            ul.dropdown-category-list {
-                min-width: 250px; // Increase minimum width for category lists
+                ul.dropdown-category-list {
+                    min-width: 200px; // Flexible minimum width
+                    
+                    .dropdown-category-link {
+                        font-size: large;
+                    }
+
+                    li .dropdown-product-link {
+                        font-size: medium;
+                    }
+                }
+        }
+
+            &.is-admin {
+                .dropdown-menu {
+                    left: 40%;
+                    ul.dropdown-category-list {
+                            min-width: 200px; // Flexible minimum width
+                        
+                            .dropdown-category-link {
+                                font-size: large;
+                            }
+                    
+                            li .dropdown-product-link {
+                                font-size: medium;
+                            }
+                        }
+                }
+            }
+            
+            &.is-user {
+                .dropdown-menu {
+                    left: 40%;
+                }
+                                ul.dropdown-category-list {
+                                    min-width: 200px; // Flexible minimum width
                 
-                .dropdown-category-link {
-                    font-size: large;
+                                    .dropdown-category-link {
+                                        font-size: large;
+                                    }
+                
+                                    li .dropdown-product-link {
+                                        font-size: medium;
+                                    }
+                                }
+
+            }
+            
+            &.logged-out {
+                .dropdown-menu {
+                    left: 35%;
+                    transform: translateX(-50%);
                 }
 
-                li .dropdown-product-link {
-                    font-size: medium;
+                                ul.dropdown-category-list {
+                                    min-width: 200px; // Flexible minimum width
+                
+                                    .dropdown-category-link {
+                                        font-size: large;
+                                    }
+                
+                                    li .dropdown-product-link {
+                                        font-size: medium;
+                                    }
+                                }
+            }
+        
+    }
+}
+
+// Resources Dropdown
+.resources-dropdown-container {
+    position: relative;
+    z-index: 1000;
+
+    .dropdown-menu {
+        position: absolute;
+        top: 10%;
+        left: 0;
+        margin-top: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        background: rgba(37, 36, 41, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        width: max-content;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 1rem;
+            margin: 0;
+            list-style: none;
+
+            li {
+                a {
+                    text-decoration: none;
+                    color: $primary-text-color;
+
+                    &:hover {
+                        color: red;
+                    }
                 }
             }
         }
     }
+}
 
+// Media Queries for Resources Dropdown
+@include large_desktop {
     .resources-dropdown-container {
+        // Default styles for logged-out users
         .dropdown-menu {
-            left: 38%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        // Styles for admin users
+        &.is-admin {
+            .dropdown-menu {
+                left: 45%;
+            }
+        }
+        
+        // Styles for regular users
+        &.is-user {
+            .dropdown-menu {
+                left: 42%;
+            }
+        }
+        
+        // Styles for logged-out users
+        &.logged-out {
+            .dropdown-menu {
+                left: 35%;
+                transform: translateX(-50%);
+            }
         }
     }
 }

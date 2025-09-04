@@ -1,8 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import ContentCard from "../components/ContentCard";
+import "../scss/components/ContentCard.scss";
 import { motion } from "framer-motion";
-import "../scss/pages/CaseStudiesPreview.scss";
 import { fadeInUpVariants } from "../components/HeroSection";
+import { ContentService } from "../services/contentService";
+import Loading from "../components/Loading";
 
 const motionConfig = {
     headerContainer: {
@@ -11,7 +13,7 @@ const motionConfig = {
         animate: "visible",
         transition: { duration: 0.8, delay: 0.4 },
     },
-    caseStudiesContainer: {
+    contentList: {
         variants: fadeInUpVariants,
         initial: "hidden",
         animate: "visible",
@@ -19,82 +21,98 @@ const motionConfig = {
     },
 };
 
-// Sample case studies data - in a real app, this would come from an API
-const caseStudiesData = [
-    {
-        id: 1,
-        title: "Industrial IoT Implementation for Manufacturing",
-        summary: "How we helped a manufacturing company reduce downtime by 35% through IoT sensors and predictive maintenance.",
-        image: "../case1.jpg",
-        slug: "industrial-iot-implementation"
-    },
-    {
-        id: 2,
-        title: "Smart Energy Monitoring System",
-        summary: "Implementing a comprehensive energy monitoring solution that reduced energy costs by 28% for a commercial building complex.",
-        image: "../case2.jpg",
-        slug: "smart-energy-monitoring"
-    },
-    {
-        id: 3,
-        title: "Water Management Solution for Agriculture",
-        summary: "Developing an automated irrigation system that improved water efficiency by 40% for a large agricultural operation.",
-        image: "../case3.jpg",
-        slug: "water-management-agriculture"
-    },
-    {
-        id: 4,
-        title: "Remote Asset Tracking for Logistics",
-        summary: "Creating a GPS-based asset tracking system that improved delivery times and reduced lost shipments by 65%.",
-        image: "../case4.jpg",
-        slug: "remote-asset-tracking"
-    }
-];
-
 function CaseStudiesPreview() {
+    const [caseStudiesData, setCaseStudiesData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchCaseStudies();
+    }, []);
+
+    const fetchCaseStudies = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            const content = await ContentService.getContentByType('case-study', 'published');
+            
+            const transformedContent = content.map(item => ({
+                id: item._id,
+                title: item.title,
+                description: item.excerpt,
+                image: item.featuredImage || "/pic1.jpeg", 
+                link: `/case-studies/${item.slug}`,
+                imageAlt: item.title
+            }));
+            
+            setCaseStudiesData(transformedContent);
+        } catch (err) {
+            console.error('Error fetching case studies:', err);
+            setError('Failed to load case studies. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+    if (loading) {
+        return <Loading text="Loading case studies..." />;
+    }
+
+    if (error) {
+        return (
+            <div className="content-section">
+                <div className="error-message">
+                    <h2>Oops! Something went wrong</h2>
+                    <p>{error}</p>
+                    <button onClick={fetchCaseStudies} className="retry-btn">
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="case-studies-preview-container">
+        <div className="content-section">
             <motion.div 
-                className="case-studies-header"
+                className="content-section__header"
                 {...motionConfig.headerContainer}
             >
-                <h1 className="case-studies-title">Case Studies</h1>
-                <p className="case-studies-subtitle">Explore our successful implementations</p>
-                <p className="case-studies-description">
+                <h1 className="content-section__title">Case Studies</h1>
+                <p className="content-section__subtitle">Explore our successful implementations</p>
+                <p className="content-section__description">
                     Discover how our solutions have helped businesses across various industries 
                     overcome challenges and achieve significant improvements in efficiency, 
                     productivity, and cost savings.
                 </p>
             </motion.div>
 
-            <motion.div 
-                className="case-studies-list"
-                {...motionConfig.caseStudiesContainer}
-            >
-                {caseStudiesData.map((caseStudy) => (
-                    <React.Fragment key={caseStudy.id}>
-                        <div className="case-study-card">
-                            <div className="case-study-content">
-                                <h3 className="case-study-title">{caseStudy.title}</h3>
-                                <div className="hr"></div>
-                                <p className="case-study-summary">{caseStudy.summary}</p>
-                                <Link 
-                                    to={`/case-studies/${caseStudy.slug}`} 
-                                    className="read-more"
-                                >
-                                    Read more
-                                </Link>
-                            </div>
-                            <img 
-                                src={caseStudy.image} 
-                                alt={caseStudy.title} 
-                                className="case-study-image"
-                            />
-                        </div>
-                        <div className="case-study-breaker"></div>
-                    </React.Fragment>
-                ))}
-            </motion.div>
+            {caseStudiesData.length === 0 ? (
+                <div className="no-content">
+                    <h3>No case studies available</h3>
+                    <p>Check back later for new case studies!</p>
+                </div>
+            ) : (
+                <motion.div 
+                    className="content-section__list"
+                    {...motionConfig.contentList}
+                >
+                    {caseStudiesData.map((caseStudy, index) => (
+                        <ContentCard
+                            key={caseStudy.id}
+                            {...caseStudy}
+                            isReversed={index % 2 === 1}
+                            motionProps={{
+                                variants: fadeInUpVariants,
+                                initial: "hidden",
+                                whileInView: "visible",
+                                viewport: { once: true },
+                                transition: { duration: 0.8, delay: index * 0.2 }
+                            }}
+                        />
+                    ))}
+                </motion.div>
+            )}
         </div>
     );
 }

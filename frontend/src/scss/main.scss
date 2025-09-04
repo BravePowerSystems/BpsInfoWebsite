@@ -7,13 +7,15 @@ $body-bg: $background-color;
 @import "../scss/components/TopNav.scss";
 @import "../scss/components/BottomNav.scss";
 @import "../scss/components/DropdownMenu.scss";
+@import "../scss/components/CustomDropdown.scss";
 @import "../scss/components/ContactForm.scss";
 @import "../scss/components/SpecificationsAccordion.scss";
+@import "../scss/components/ContentCard.scss";
+@import "../scss/components/ContentLayout.scss";
 
 // Pages
 @import "../scss/pages/Home.scss";
 @import "../scss/pages/Products.scss";
-@import "../scss/pages/Blog.scss";
 @import "../scss/pages/About.scss";
 @import "../scss/pages/FAQ.scss";
 @import "../scss/pages/NotFound.scss";

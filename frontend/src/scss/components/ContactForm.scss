@@ -73,6 +73,62 @@
             }
         }
         
+        // Custom dropdown styles for ContactForm
+        .custom-dropdown {
+            width: 100%;
+            
+            .custom-dropdown__trigger {
+                padding: 0.8rem;
+                border-radius: 5px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                background-color: rgba(255, 255, 255, 0.05);
+                color: #ffffff;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                
+                &:hover:not(.is-disabled) {
+                    border-color: rgba(255, 255, 255, 0.2);
+                    background-color: rgba(255, 255, 255, 0.08);
+                }
+                
+                &:focus {
+                    outline: none;
+                    border-color: #678df6;
+                    box-shadow: 0 0 0 2px rgba(103, 141, 246, 0.2);
+                }
+                
+                &.is-open {
+                    border-color: #678df6;
+                    background-color: rgba(255, 255, 255, 0.08);
+                }
+            }
+            
+            .custom-dropdown__options {
+                background: rgba(37, 36, 41, 0.95);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 5px;
+                backdrop-filter: blur(15px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+            
+            .custom-dropdown__option {
+                color: #ffffff;
+                font-size: 1rem;
+                padding: 0.8rem;
+                
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: #678df6;
+                }
+                
+                &.is-selected {
+                    background: rgba(103, 141, 246, 0.2);
+                    color: #678df6;
+                    font-weight: 500;
+                }
+            }
+        }
+        
         .error-message {
             color: #ff6b6b;
             font-size: 0.8rem;

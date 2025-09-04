@@ -1,247 +1,199 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import '../scss/components/CustomDropdown.scss';
 
-const CustomDropdown = ({ 
-    options, 
-    selectedValue, 
-    onSelect, 
-    placeholder = "Select option",
-    className = "",
+const CustomDropdown = ({
+    options = [],
+    value = '',
+    onChange = () => {},
+    placeholder = 'Categories',
     disabled = false,
-    width = "auto",
-    allowCreate = false,
-    onCreateNew = null,
-    createPlaceholder = "Create new..."
+    multiSelect = false,
+    className = '',
+    triggerClassName = '',
+    dropdownClassName = '',
+    optionClassName = '',
+    ...props
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isCreating, setIsCreating] = useState(false);
-    const [newItemText, setNewItemText] = useState('');
-    const [filteredOptions, setFilteredOptions] = useState(options);
-    const [searchTerm, setSearchTerm] = useState('');
-    const inputRef = useRef(null);
+    const [selectedValues, setSelectedValues] = useState(
+        multiSelect ? (Array.isArray(value) ? value : []) : value
+    );
+    const dropdownRef = useRef(null);
+    const triggerRef = useRef(null);
 
-    // Update filtered options when options change
-    useEffect(() => {
-        if (searchTerm) {
-            const filtered = options.filter(option => 
-                option.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setFilteredOptions(filtered);
-        } else {
-            setFilteredOptions(options);
-        }
-    }, [options, searchTerm]);
-
-    const handleToggle = () => {
-        if (!disabled) {
-            setIsOpen(!isOpen);
-            if (!isOpen) {
-                setSearchTerm('');
-                setFilteredOptions(options);
-            }
-        }
-    };
-
-    const handleSelect = (option) => {
-        onSelect(option);
-        setIsOpen(false);
-        setSearchTerm('');
-        setIsCreating(false);
-        setNewItemText('');
-    };
-
-    const handleCreateNew = () => {
-        if (newItemText.trim() && onCreateNew) {
-            onCreateNew(newItemText.trim());
-            setNewItemText('');
-            setIsCreating(false);
-            setIsOpen(false);
-        }
-    };
-
-    const handleStartCreate = () => {
-        setIsCreating(true);
-        setNewItemText('');
-        setTimeout(() => {
-            if (inputRef.current) {
-                inputRef.current.focus();
-            }
-        }, 100);
-    };
-
-    const handleCancelCreate = () => {
-        setIsCreating(false);
-        setNewItemText('');
-        setSearchTerm('');
-        setFilteredOptions(options);
-    };
-
-    const handleSearchChange = (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
-        
-        if (value) {
-            const filtered = options.filter(option => 
-                option.toLowerCase().includes(value.toLowerCase())
-            );
-            setFilteredOptions(filtered);
-        } else {
-            setFilteredOptions(options);
-        }
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            if (isCreating) {
-                handleCreateNew();
-            }
-        } else if (e.key === 'Escape') {
-            if (isCreating) {
-                handleCancelCreate();
-            } else {
-                setIsOpen(false);
-            }
-        }
-    };
-
-    // Close dropdown when clicking outside
+    // Handle click outside to close dropdown
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (!event.target.closest('.custom-dropdown')) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false);
-                setIsCreating(false);
-                setNewItemText('');
-                setSearchTerm('');
             }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, []);
 
-    // Close dropdown on escape key
-    useEffect(() => {
-        const handleEscape = (event) => {
-            if (event.key === 'Escape') {
-                if (isCreating) {
-                    handleCancelCreate();
-                } else {
-                    setIsOpen(false);
-                }
-            }
-        };
+    // Handle keyboard navigation
+    const handleKeyDown = (event) => {
+        if (disabled) return;
 
-        if (isOpen) {
-            document.addEventListener('keydown', handleEscape);
-            return () => document.removeEventListener('keydown', handleEscape);
+        switch (event.key) {
+            case 'Enter':
+            case ' ':
+                event.preventDefault();
+                setIsOpen(!isOpen);
+                break;
+            case 'Escape':
+                setIsOpen(false);
+                break;
+            case 'ArrowDown':
+                event.preventDefault();
+                if (!isOpen) {
+                    setIsOpen(true);
+                }
+                break;
+            case 'ArrowUp':
+                event.preventDefault();
+                if (!isOpen) {
+                    setIsOpen(true);
+                }
+                break;
+            default:
+                break;
         }
-    }, [isOpen, isCreating]);
+    };
+
+    const handleOptionClick = (option) => {
+        if (multiSelect) {
+            const newValues = selectedValues.includes(option.value)
+                ? selectedValues.filter(v => v !== option.value)
+                : [...selectedValues, option.value];
+            
+            setSelectedValues(newValues);
+            onChange(newValues);
+        } else {
+            setSelectedValues(option.value);
+            onChange(option.value);
+            setIsOpen(false);
+        }
+    };
+
+    const getDisplayText = () => {
+        if (multiSelect) {
+            if (selectedValues.length === 0) return placeholder;
+            if (selectedValues.length === 1) {
+                const option = options.find(opt => opt.value === selectedValues[0]);
+                return option ? option.label : placeholder;
+            }
+            return `${selectedValues.length} selected`;
+        } else {
+            const option = options.find(opt => opt.value === selectedValues);
+            return option ? option.label : placeholder;
+        }
+    };
+
+    const isSelected = (optionValue) => {
+        if (multiSelect) {
+            return selectedValues.includes(optionValue);
+        }
+        return selectedValues === optionValue;
+    };
+
+    const dropdownVariants = {
+        hidden: {
+            opacity: 0,
+            y: -10,
+            scale: 0.95,
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+                duration: 0.2,
+                ease: 'easeOut',
+            },
+        },
+        exit: {
+            opacity: 0,
+            y: -10,
+            scale: 0.95,
+            transition: {
+                duration: 0.15,
+                ease: 'easeIn',
+            },
+        },
+    };
 
     return (
-        <div className={`custom-dropdown ${className} ${disabled ? 'disabled' : ''}`} style={{ width }}>
-            <button 
-                className="custom-dropdown__trigger"
-                onClick={handleToggle}
-                aria-expanded={isOpen}
-                aria-haspopup="listbox"
-                disabled={disabled}
+        <div 
+            className={`custom-dropdown ${className}`}
+            ref={dropdownRef}
+            {...props}
+        >
+            {/* Trigger Button */}
+            <button
+                ref={triggerRef}
                 type="button"
+                className={`custom-dropdown__trigger ${triggerClassName} ${isOpen ? 'is-open' : ''} ${disabled ? 'is-disabled' : ''}`}
+                onClick={() => !disabled && setIsOpen(!isOpen)}
+                onKeyDown={handleKeyDown}
+                disabled={disabled}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                aria-label={placeholder}
             >
-                <span className="custom-dropdown__selected">
-                    {selectedValue || placeholder}
+                <span className="custom-dropdown__trigger-text">
+                    {getDisplayText()}
                 </span>
-                <span className={`custom-dropdown__arrow ${isOpen ? 'rotated' : ''}`}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 9L12 15L18 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                <span className={`custom-dropdown__arrow ${isOpen ? 'is-open' : ''}`}>
+                    ▼
                 </span>
             </button>
-            
-            {isOpen && (
-                <div className="custom-dropdown__dropdown">
-                    {/* Search input */}
-                    <div className="custom-dropdown__search">
-                        <input
-                            ref={inputRef}
-                            type="text"
-                            placeholder="Search..."
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            onKeyDown={handleKeyDown}
-                            className="custom-dropdown__search-input"
-                        />
-                    </div>
 
-                    {/* Create new option */}
-                    {allowCreate && onCreateNew && (
-                        <div className="custom-dropdown__create-section">
-                            {isCreating ? (
-                                <div className="custom-dropdown__create-form">
-                                    <input
-                                        type="text"
-                                        placeholder={createPlaceholder}
-                                        value={newItemText}
-                                        onChange={(e) => setNewItemText(e.target.value)}
-                                        onKeyDown={handleKeyDown}
-                                        className="custom-dropdown__create-input"
-                                        autoFocus
-                                    />
-                                    <div className="custom-dropdown__create-actions">
-                                        <button 
-                                            onClick={handleCreateNew}
-                                            disabled={!newItemText.trim()}
-                                            className="custom-dropdown__create-btn"
-                                        >
-                                            Create
-                                        </button>
-                                        <button 
-                                            onClick={handleCancelCreate}
-                                            className="custom-dropdown__cancel-btn"
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <button
-                                    onClick={handleStartCreate}
-                                    className="custom-dropdown__create-trigger"
-                                >
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
-                                    {createPlaceholder}
-                                </button>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Options list */}
-                    <ul className="custom-dropdown__list" role="listbox">
-                        {filteredOptions.length > 0 ? (
-                            filteredOptions.map((option) => (
-                                <li key={option} role="option">
-                                    <button
-                                        className={`custom-dropdown__option ${
-                                            selectedValue === option ? 'selected' : ''
-                                        }`}
-                                        onClick={() => handleSelect(option)}
-                                        role="option"
-                                        aria-selected={selectedValue === option}
-                                    >
-                                        {option}
-                                    </button>
-                                </li>
-                            ))
+            {/* Dropdown Options */}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        className={`custom-dropdown__options ${dropdownClassName}`}
+                        variants={dropdownVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        role="listbox"
+                        aria-label="Dropdown options"
+                    >
+                        {options.length === 0 ? (
+                            <div className="custom-dropdown__no-options">
+                                No options available
+                            </div>
                         ) : (
-                            <li className="custom-dropdown__no-results">
-                                <span>No options found</span>
-                            </li>
+                            options.map((option, index) => (
+                                <div
+                                    key={option.value}
+                                    className={`custom-dropdown__option ${optionClassName} ${isSelected(option.value) ? 'is-selected' : ''}`}
+                                    onClick={() => handleOptionClick(option)}
+                                    role="option"
+                                    aria-selected={isSelected(option.value)}
+                                    tabIndex={-1}
+                                >
+                                    {multiSelect && (
+                                        <span className="custom-dropdown__checkbox">
+                                            {isSelected(option.value) ? '✓' : ''}
+                                        </span>
+                                    )}
+                                    <span className="custom-dropdown__option-text">
+                                        {option.label}
+                                    </span>
+                                </div>
+                            ))
                         )}
-                    </ul>
-                </div>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

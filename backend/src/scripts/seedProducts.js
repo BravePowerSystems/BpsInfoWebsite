@@ -9,8 +9,7 @@ const products = [
         title: "Gas Flow Pulse Transmitter",
         modelNumber: "GFT21",
         category: "Transmitters",
-        description:
-            "Advanced gas flow pulse transmitter for accurate monitoring of various gases",
+        description: "Advanced gas flow pulse transmitter for accurate monitoring",
         specifications: [
             { name: "Brand", value: "BRAVE" },
             { name: "Model Number", value: "GFT21" },
@@ -83,8 +82,7 @@ const products = [
         title: "CO2 Transmitter",
         modelNumber: "CO224",
         category: "Transmitters",
-        description:
-            "Advanced CO2 monitoring transmitter for various applications",
+        description: "Advanced CO2 monitoring transmitter for various applications",
         specifications: [
             { name: "Brand", value: "BRAVE" },
             { name: "Model Number", value: "CO224" },
@@ -161,8 +159,7 @@ const products = [
         title: "IR HVAC Air Conditioner Transmitter",
         modelNumber: "IRAC24",
         category: "Transmitters",
-        description:
-            "Temperature and humidity transmitter for HVAC applications",
+        description: "Temperature and humidity transmitter for HVAC applications",
         specifications: [
             { name: "Brand", value: "BRAVE" },
             { name: "Model Number", value: "IRAC24" },
@@ -198,8 +195,7 @@ const products = [
         title: "Humidity & Temperature Transmitter",
         modelNumber: "HT24",
         category: "Transmitters",
-        description:
-            "Combined humidity and temperature transmitter for various applications",
+        description: "Combined humidity and temperature transmitter for various apps",
         specifications: [
             { name: "Brand", value: "BRAVE" },
             { name: "Model Number", value: "HT24" },
@@ -442,6 +438,7 @@ const products = [
 async function seedProducts() {
     try {
         // Connect to MongoDB
+        console.log(process.env.MONGO_URI);
         const connect = await mongoose.connect(process.env.MONGO_URI);
         console.log(
             `MongoDB connected: ${connect.connection.host}, ${connect.connection.name}`

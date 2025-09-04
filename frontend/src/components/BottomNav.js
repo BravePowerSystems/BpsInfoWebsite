@@ -19,15 +19,7 @@ export default function BottomNav() {
                             <Link to="/about">Our Story</Link>
                         </li>
                         <li>
-                            <button 
-                    className="nav-link-button"
-                    onClick={() => {
-                        // Navigate to home page first
-                        window.location.href = '/#contact';
-                    }}
-                >
-                    Contact Us
-                </button>
+                            <a href="/#contact" >Contact Us</a>
                         </li>
                     </ul>
                 </div>

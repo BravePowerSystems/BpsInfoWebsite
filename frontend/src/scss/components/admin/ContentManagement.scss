@@ -1,12 +1,12 @@
 @import "../../base/variables";
 @import "../../base/mixins";
 
-.product-management {
+.content-management {
     padding: 1.5rem;
     background: $background-color;
     min-height: 100vh;
 
-    .product-management-header {
+    .content-management-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -25,12 +25,12 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .product-controls {
+        .content-controls {
             display: flex;
             gap: 1rem;
             align-items: center;
 
-            .add-product-btn {
+            .add-content-btn {
                 background: linear-gradient(90deg, #678df6, #8f94fb);
                 color: white;
                 border: none;
@@ -48,7 +48,7 @@
         }
     }
 
-    .category-tabs {
+    .content-type-tabs {
         display: flex;
         gap: 0.5rem;
         margin-bottom: 2rem;
@@ -65,7 +65,7 @@
             display: none;
         }
 
-        .category-tab {
+        .content-type-tab {
             background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.7);
@@ -116,21 +116,17 @@
         }
     }
 
-    .product-grid {
+    .content-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 1.5rem;
     }
 
-    // Loading component is now imported from ../components/Loading
-}
-
-// Mobile-first responsive design
-@media (max-width: 719px) {
-    .product-management {
+    // Mobile-first responsive design
+    @media (max-width: 719px) {
         padding: 1rem;
 
-        .product-management-header {
+        .content-management-header {
             flex-direction: column;
             align-items: stretch;
             text-align: center;
@@ -141,30 +137,30 @@
                 order: 1;
             }
 
-            .product-controls {
+            .content-controls {
                 flex-direction: row;
                 justify-content: flex-end;
                 gap: 1rem;
                 order: 2;
 
-                .add-product-btn {
+                .add-content-btn {
                     padding: 1rem 1.5rem;
                 }
             }
         }
 
-        .category-tabs {
+        .content-type-tabs {
             margin-bottom: 1.5rem;
             padding: 0.25rem;
             gap: 0.25rem;
 
-            .category-tab {
+            .content-type-tab {
                 padding: 0.5rem 1rem;
                 font-size: 0.8rem;
             }
         }
 
-        .product-grid {
+        .content-grid {
             grid-template-columns: 1fr;
             gap: 1rem;
         }
@@ -172,10 +168,10 @@
 }
 
 @include tablet {
-    .product-management {
+    .content-management {
         padding: 2rem;
 
-        .product-management-header {
+        .content-management-header {
             flex-direction: row;
             align-items: center;
             text-align: left;
@@ -185,45 +181,43 @@
                 font-size: 1.5rem;
             }
 
-            .product-controls {
+            .content-controls {
                 flex-direction: row;
                 gap: 1rem;
 
-                .add-product-btn {
+                .add-content-btn {
                     width: auto;
                     padding: 0.75rem 1.5rem;
                 }
             }
         }
 
-        .category-tabs {
-            .category-tab {
+        .content-type-tabs {
+            .content-type-tab {
                 padding: 0.75rem 1.25rem;
                 font-size: 0.9rem;
             }
         }
 
-        .product-grid {
+        .content-grid {
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         }
     }
 }
 
 @include desktop {
-    .product-management {
+    .content-management {
         padding: 2.5rem;
 
-        .category-tabs {
-            .category-tab {
+        .content-type-tabs {
+            .content-type-tab {
                 padding: 0.875rem 1.5rem;
                 font-size: 1rem;
             }
         }
 
-        .product-grid {
+        .content-grid {
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
         }
     }
 }
-
-
