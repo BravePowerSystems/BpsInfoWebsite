@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useProducts } from "../../context/ProductsContext";
 import { useModal } from "../../context/ModalContext";
-import CustomDropdown from "../CustomDropdown";
 import "../../scss/components/admin/ProductManagement.scss";
 import ProductCard from "./ProductCard";
 import Notify from "simple-notify";
@@ -102,13 +101,6 @@ function ProductManagement({ onShowProductForm }) {
             <div className="product-management-header">
                 <h2>Product Management</h2>
                 <div className="product-controls">
-                    <CustomDropdown
-                        options={categoryNames.map(name => ({ value: name, label: name }))}
-                        value={selectedCategory}
-                        onChange={setSelectedCategory}
-                        placeholder="Categories"
-                        className="custom-dropdown--small"
-                    />
                     <button 
                         id="add-product-button"
                         className="add-product-btn" 
@@ -117,6 +109,24 @@ function ProductManagement({ onShowProductForm }) {
                         Add New Product
                     </button>
                 </div>
+            </div>
+
+            <div className="category-tabs">
+                <button 
+                    className={`category-tab ${selectedCategory === 'All' ? 'active' : ''}`}
+                    onClick={() => setSelectedCategory('All')}
+                >
+                    All Products
+                </button>
+                {categoryNames.filter(cat => cat !== 'All').map(category => (
+                    <button 
+                        key={category}
+                        className={`category-tab ${selectedCategory === category ? 'active' : ''}`}
+                        onClick={() => setSelectedCategory(category)}
+                    >
+                        {category}
+                    </button>
+                ))}
             </div>
 
             {loading ? (

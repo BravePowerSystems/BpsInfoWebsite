@@ -355,20 +355,7 @@ function ContentForm({ content, options, onSave, onCancel }) {
                                     />
                                 </div>
                                 
-                                <div className="form-group">
-                                    <label htmlFor="status">Status *</label>
-                                    <select
-                                        id="status"
-                                        name="status"
-                                        value={formData.status}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="draft">Draft</option>
-                                        <option value="published">Published</option>
-                                        <option value="archived">Archived</option>
-                                    </select>
-                                </div>
+                            
                             </div>
                             
                             <div className="form-group">

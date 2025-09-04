@@ -15,11 +15,10 @@ import { ContentService } from '../services/contentService';
 
 function AdminDashboard() {
     const { user, loading } = useAuth();
-    const { addProduct, updateProduct } = useProducts();
+    const { addProduct, updateProduct, addCategory, categories } = useProducts();
     const [activeTab, setActiveTab] = useState('products');
     const [showProductForm, setShowProductForm] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [productCategories, setProductCategories] = useState([]);
     const [showContentForm, setShowContentForm] = useState(false);
     const [editingContent, setEditingContent] = useState(null);
     const [contentOptions, setContentOptions] = useState({});
@@ -33,9 +32,8 @@ function AdminDashboard() {
         return <Loading text="Loading..." />;
     }
 
-    const handleShowProductForm = (product, categories) => {
+    const handleShowProductForm = (product) => {
         setEditingProduct(product);
-        setProductCategories(categories);
         setShowProductForm(true);
     };
 
@@ -201,9 +199,13 @@ function AdminDashboard() {
                 {showProductForm && (
                     <ProductForm
                         product={editingProduct}
-                        categories={productCategories}
+                        categories={categories ? categories.map(cat => {
+                            const [catName] = Object.entries(cat)[0];
+                            return catName;
+                        }) : []}
                         onSave={handleSaveProduct}
                         onCancel={handleHideProductForm}
+                        onAddCategory={addCategory}
                     />
                 )}
                 {showContentForm && (

@@ -15,7 +15,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        height: 100%;
         width: 100%;
         background-color: white;
         z-index: 0;
@@ -36,12 +37,16 @@
         .card-content {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
 
             p {
                 font-size: 10px;
                 min-height: 30px;
                 max-height: 30px;
+                text-align: center;
+                margin: 0;
+                padding: 0;
             }
 
             .card-actions {
@@ -50,7 +55,7 @@
                 gap: 0.5rem;
                 align-items: center;
 
-                a {
+                .explore-btn {
                     height: 30px;
                     width: 70px;
                     font-size: 1rem;
@@ -70,27 +75,7 @@
                     }
                 }
 
-                .whatsapp-btn {
-                    height: 30px;
-                    width: 70px;
-                    font-size: 0.8rem;
-                    text-align: center;
-                    padding: 0%;
-                    background: linear-gradient(45deg, #25D366, #128C7E);
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: all 0.3s ease;
-
-                    &:hover {
-                        background: linear-gradient(45deg, #128C7E, #25D366);
-                        transform: translateY(-1px);
-                    }
-                }
+        
             }
         }
 
@@ -126,13 +111,7 @@
 
     }
 
-    .card-body {
 
-        .card-title,
-        .card-content {
-            color: $primary-text-color;
-        }
-    }
 
     transform: translate(5px, -5px);
 
@@ -146,15 +125,28 @@
         max-height: 300px;
 
         .card-body {
+            height: 100%;
             .card-title {
                 min-height: 20px;
             }
             
             .card-content {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+
+                p {
+                    min-height: 20px;
+                    max-height: 50px;
+                    font-size: 14px;
+                }
+
                 .card-actions {
                     gap: 0.75rem;
                     
-                    a, .whatsapp-btn {
+                    .explore-btn {
                         height: 35px;
                         width: 80px;
                         font-size: 1.1rem;
@@ -172,18 +164,19 @@
         max-height: 320px;
 
         .card-body {
+            height: 100%;
             .card-content {
-                .card-text {
-                    font-size: 14px;
-                    min-height: 40px;
-                    max-height: 55px;
-                }
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+
                 
                 .card-actions {
                     gap: 1rem;
                     
-                    a, .whatsapp-btn {
-                        height: 40px;
+                    .explore-btn{
+                        height: 35px;
                         width: 90px;
                         font-size: 1.2rem;
                     }

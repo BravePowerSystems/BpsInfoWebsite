@@ -9,11 +9,12 @@ function ProductsCard({ image, title, description, link }) {
         <div className="card">
             <div className="card-body">
                 <img src={image} className="card-img-top" alt={title} />
-                <h5 className="card-title">{title}</h5>
+                
                 <div className="card-content">
+                    <h5 className="card-title">{title}</h5>
                     <p className="card-text">{description}</p>
                     <div className="card-actions">
-                        <Link to={link} className="btn">
+                        <Link to={link} className="explore-btn">
                             Explore
                         </Link>
                     </div>

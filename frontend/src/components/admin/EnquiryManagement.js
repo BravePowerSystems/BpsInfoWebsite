@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { enquiryService } from '../../services/enquiryService';
-import CustomDropdown from '../CustomDropdown';
 import '../../scss/components/admin/EnquiryManagement.scss';
 import Loading from '../Loading';
 
-const statusOptions = ['new', 'in-progress', 'completed', 'archived'];
+const statusOptions = ['new', 'in-progress', 'completed'];
 
 function EnquiryManagement() {
     const [enquiries, setEnquiries] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filter, setFilter] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState("All");
     const [wishlists, setWishlists] = useState({}); // { enquiryId: [wishlistItems] }
     const [responseMessages, setResponseMessages] = useState({}); // { enquiryId: message }
     const [savingResponse, setSavingResponse] = useState({}); // { enquiryId: bool }
@@ -89,21 +88,35 @@ function EnquiryManagement() {
         }
     };
 
-    const filteredEnquiries = filter
-        ? enquiries.filter(enq => enq.status === filter)
-        : enquiries;
+    // Filter enquiries based on selected status
+    const filteredEnquiries = selectedStatus === "All" 
+        ? enquiries 
+        : enquiries.filter(enq => enq.status === selectedStatus);
 
     return (
-        <div className="enquiry-management clean-admin">
-            <h2>All Enquiries</h2>
-            <div className="product-controls">
-                <CustomDropdown
-                    options={statusOptions.map(status => ({ value: status, label: status }))}
-                    value={filter}
-                    onChange={setFilter}
-                    placeholder="All Statuses"
-                />
+        <div className="enquiry-management">
+            <div className="enquiry-management-header">
+                <h2>Enquiry Management</h2>
             </div>
+
+            <div className="enquiry-status-tabs">
+                <button 
+                    className={`enquiry-status-tab ${selectedStatus === 'All' ? 'active' : ''}`}
+                    onClick={() => setSelectedStatus('All')}
+                >
+                    All Enquiries
+                </button>
+                {statusOptions.map(status => (
+                    <button 
+                        key={status}
+                        className={`enquiry-status-tab ${selectedStatus === status ? 'active' : ''}`}
+                        onClick={() => setSelectedStatus(status)}
+                    >
+                        {status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ')}
+                    </button>
+                ))}
+            </div>
+
             {loading ? (
                 <Loading text="Loading enquiries..." />
             ) : error ? (
@@ -145,12 +158,17 @@ function EnquiryManagement() {
                             )}
                             <div className="enquiry-actions">
                                 <label>Status: </label>
-                                <CustomDropdown
-                                    options={statusOptions.map(status => ({ value: status, label: status }))}
+                                <select
                                     value={enq.status}
-                                    onChange={(newStatus) => handleStatusChange(enq._id, newStatus)}
+                                    onChange={(e) => handleStatusChange(enq._id, e.target.value)}
                                     className="status-change-selector"
-                                />
+                                >
+                                    {statusOptions.map(status => (
+                                        <option key={status} value={status}>
+                                            {status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ')}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="enquiry-response">
                                 <label>Admin Response:</label>

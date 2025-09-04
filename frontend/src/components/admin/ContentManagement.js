@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useModal } from "../../context/ModalContext";
-import CustomDropdown from "../CustomDropdown";
 import "../../scss/components/admin/ContentManagement.scss";
 import ContentCard from "./ContentCard";
 import Notify from "simple-notify";
@@ -12,11 +11,9 @@ function ContentManagement({ onShowContentForm }) {
     const [content, setContent] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedType, setSelectedType] = useState("All");
-    const [selectedStatus, setSelectedStatus] = useState("All");
 
-    // Content types and statuses
+    // Content types only (no status filtering)
     const contentTypes = ["All", "blog", "case-study"];
-    const contentStatuses = ["All", "draft", "published", "archived"];
 
 
 
@@ -99,38 +96,18 @@ function ContentManagement({ onShowContentForm }) {
         );
     };
 
-    // Filter content based on selected filters
+    // Filter content based on selected type only
     const filteredContent = useMemo(() => {
         return content.filter(item => {
-            const typeMatch = selectedType === "All" || item.type === selectedType;
-            const statusMatch = selectedStatus === "All" || item.status === selectedStatus;
-            
-            return typeMatch && statusMatch;
+            return selectedType === "All" || item.type === selectedType;
         });
-    }, [content, selectedType, selectedStatus]);
+    }, [content, selectedType]);
 
     return (
         <div className="content-management">
             <div className="content-management-header">
                 <h2>Content Management</h2>
                 <div className="content-controls">
-                    <div className="filter-controls">
-                        <CustomDropdown
-                            options={contentTypes.map(type => ({ value: type, label: type }))}
-                            value={selectedType}
-                            onChange={setSelectedType}
-                            placeholder="Filter by type..."
-                            className="custom-dropdown--small"
-                        />
-                        <CustomDropdown
-                            options={contentStatuses.map(status => ({ value: status, label: status }))}
-                            value={selectedStatus}
-                            onChange={setSelectedStatus}
-                            placeholder="Filter by status..."
-                            className="custom-dropdown--small"
-                        />
-
-                    </div>
                     <button 
                         id="add-content-button"
                         className="add-content-btn" 
@@ -141,6 +118,38 @@ function ContentManagement({ onShowContentForm }) {
                 </div>
             </div>
 
+            <div className="content-type-tabs">
+                <button 
+                    className={`content-type-tab ${selectedType === 'All' ? 'active' : ''}`}
+                    onClick={() => setSelectedType('All')}
+                >
+                    All Content
+                </button>
+                {contentTypes.filter(type => type !== 'All').map(type => (
+                    <button 
+                        key={type}
+                        className={`content-type-tab ${selectedType === type ? 'active' : ''}`}
+                        onClick={() => setSelectedType(type)}
+                    >
+                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </button>
+                ))}
+            </div>
+
+            {loading ? (
+                <Loading text="Loading content..." />
+            ) : (
+                <div className="content-grid">
+                    {filteredContent.map((contentItem) => (
+                        <ContentCard
+                            key={contentItem._id}
+                            content={contentItem}
+                            onEdit={() => handleEditContent(contentItem)}
+                            onDelete={() => handleDeleteContent(contentItem._id)}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
