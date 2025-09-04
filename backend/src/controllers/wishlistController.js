@@ -6,15 +6,12 @@ import mongoose from 'mongoose';
 export const getUserWishlist = async (req, res) => {
     try {
         const userId = req.user.id;
-        console.log('Fetching wishlist for user:', userId); // Debug log
-        
+ 
         // Find all wishlist items for this user and populate product details
         const wishlistItems = await WishlistItem.find({ userId })
             .populate('productId')
             .sort({ addedAt: -1 });
-            
-        console.log('Raw wishlist items from DB:', wishlistItems); // Debug log
-            
+              
         // Transform the data to match frontend expectations
         const formattedItems = wishlistItems.map(item => {
             // Ensure the item has the required structure
@@ -30,8 +27,7 @@ export const getUserWishlist = async (req, res) => {
             };
         }).filter(Boolean); // Remove any null items
         
-        console.log('Formatted wishlist items:', formattedItems); // Debug log
-        
+ 
         res.status(200).json(formattedItems);
     } catch (error) {
         console.error('Error fetching wishlist:', error);
