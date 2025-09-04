@@ -149,11 +149,11 @@ const storage = multer.diskStorage({
 
 // Add file filter and size limits
 const fileFilter = (req, file, cb) => {
-  // Accept only image files
-  if (file.mimetype.startsWith('image/')) {
+  // Accept image files and PDF files
+  if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
     cb(null, true);
   } else {
-    cb(new Error('Only image files are allowed'), false);
+    cb(new Error('Only image files and PDF files are allowed'), false);
   }
 };
 
@@ -188,10 +188,10 @@ app.post('/api/upload', (req, res, next) => {
         });
       }
       
-      if (err.message === 'Only image files are allowed') {
+      if (err.message === 'Only image files and PDF files are allowed') {
         return res.status(400).json({ 
           error: 'Invalid file type', 
-          details: 'Only image files are allowed' 
+          details: 'Only image files and PDF files are allowed' 
         });
       }
       
@@ -209,8 +209,11 @@ app.post('/api/upload', (req, res, next) => {
     }
     
     try {
-      // Return full URL
-      const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+      // Return full URL - use environment variable for production base URL
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://bps-backend-mq7g.onrender.com'
+        : `${req.protocol}://${req.get('host')}`;
+      const fileUrl = `${baseUrl}/uploads/${req.file.filename}`;
       console.log('File uploaded successfully:', {
         url: fileUrl,
         filename: req.file.filename,
