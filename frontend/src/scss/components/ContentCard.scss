@@ -59,7 +59,7 @@
         font-weight: 600;
         transition: color 0.3s ease;
         position: relative;
-        
+        width: fit-content;
         &::after {
             content: '';
             position: absolute;

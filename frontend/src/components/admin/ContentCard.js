@@ -15,16 +15,6 @@ function ContentCard({ content, onEdit, onDelete }) {
         }
     };
 
-    const getTypeIcon = (type) => {
-        switch (type) {
-            case 'blog':
-                return '📝';
-            case 'case-study':
-                return '📊';
-            default:
-                return '📄';
-        }
-    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -35,7 +25,7 @@ function ContentCard({ content, onEdit, onDelete }) {
         });
     };
 
-    const truncateText = (text, maxLength = 100) => {
+    const truncateText = (text, maxLength = 50) => {
         if (text.length <= maxLength) return text;
         return text.substring(0, maxLength) + '...';
     };
@@ -43,9 +33,7 @@ function ContentCard({ content, onEdit, onDelete }) {
     return (
         <div className="admin-content-card">
             <div className="content-header">
-                <div className="content-type-icon">
-                    {getTypeIcon(content.type)}
-                </div>
+               
                 <div className="content-status">
                     <span className={`status-badge ${getStatusColor(content.status)}`}>
                         {content.status}
@@ -85,14 +73,9 @@ function ContentCard({ content, onEdit, onDelete }) {
                 </div>
                 
                 <div className="content-excerpt">
-                    <strong>Excerpt:</strong> {truncateText(content.excerpt, 80)}
+                    <strong>Excerpt:</strong> {truncateText(content.excerpt, 50)}
                 </div>
                 
-
-                
-                <div className="content-stats">
-                    <span className="view-count">👁️ {content.viewCount || 0} views</span>
-                </div>
             </div>
             
             <div className="content-actions">

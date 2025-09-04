@@ -1,9 +1,18 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import dbConnect from '../src/config/dbConnect.js';
 import Content from '../src/models/Content.js';
 
-// Load environment variables
+// Load environment variables first
 dotenv.config();
+
+// Debug environment variables
+console.log('Environment variables loaded:');
+console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Set' : 'Not set');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('Current working directory:', process.cwd());
+
+
 
 // Sample content data
 const sampleContent = [
@@ -83,7 +92,7 @@ const sampleContent = [
 // Connect to MongoDB
 async function connectDB() {
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        await dbConnect();
         console.log('Connected to MongoDB');
     } catch (error) {
         console.error('MongoDB connection error:', error);

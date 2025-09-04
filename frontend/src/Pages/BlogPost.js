@@ -1,51 +1,90 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ContentLayout from "../components/ContentLayout";
 import "../scss/components/ContentLayout.scss";
+import { ContentService } from "../services/contentService";
+import Loading from "../components/Loading";
 
 function BlogPost() {
     const { slug } = useParams();
+    const [blogPostData, setBlogPostData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+        fetchBlogPost();
+    }, [slug]);
 
-    // This would normally fetch the specific blog post data based on the slug
-    // For now, we'll use sample data
-    const blogPostData = {
-        title: "The Future of Industrial IoT: Smart Manufacturing Solutions",
-        heroImage: "../pic1.jpeg",
-        sections: [
-            {
-                id: 1,
-                title: "INTRODUCTION",
-                description: "The manufacturing industry is undergoing a revolutionary transformation through the integration of Industrial Internet of Things (IIoT) technologies. Smart sensors, connected devices, and advanced analytics are creating unprecedented opportunities for operational efficiency and predictive maintenance. This technological evolution represents a fundamental shift from traditional reactive maintenance approaches to proactive, data-driven decision-making processes that can significantly reduce downtime and operational costs while improving product quality and worker safety.",
-                images: ["../pic2.jpg"],
-                theme: "light"
-            },
-            {
-                id: 2,
-                title: "KEY TECHNOLOGIES",
-                description: "Modern IIoT solutions encompass a comprehensive ecosystem including wireless sensors, edge computing devices, cloud platforms, and machine learning algorithms. These technologies work together to provide real-time monitoring, data analysis, and automated decision-making capabilities. Wireless sensor networks collect critical data on temperature, vibration, pressure, and other operational parameters, while edge computing devices process this information locally to reduce latency and bandwidth requirements. Cloud platforms provide scalable storage and advanced analytics capabilities, enabling manufacturers to leverage historical data for predictive modeling and optimization.",
-                images: ["../pic3.jpeg"],
-                theme: "dark"
-            },
-            {
-                id: 3,
-                title: "IMPLEMENTATION BENEFITS",
-                description: "Organizations implementing IIoT solutions typically experience 25-40% reduction in unplanned downtime, 20-30% improvement in energy efficiency, and 15-25% increase in overall equipment effectiveness. The data-driven insights enable proactive maintenance and optimized production schedules, leading to significant cost savings and improved operational performance. Beyond these quantitative benefits, IIoT implementation also provides qualitative improvements such as enhanced worker safety through real-time monitoring of hazardous conditions, improved product quality through continuous process monitoring, and better compliance with regulatory requirements through automated data collection and reporting.",
-                images: ["../pic4.jpg"],
-                theme: "light"
-            },
-            {
-                id: 4,
-                title: "FUTURE OUTLOOK",
-                description: "As 5G networks become more prevalent and edge computing capabilities advance, we can expect even more sophisticated IIoT applications. The integration of artificial intelligence and digital twins will further enhance predictive capabilities and autonomous operations. Digital twins, which are virtual representations of physical assets and processes, will enable manufacturers to simulate and optimize operations before implementing changes in the real world. Advanced AI algorithms will provide increasingly accurate predictions about equipment failures, maintenance requirements, and production optimization opportunities.",
-                images: ["../pic1.jpeg"],
-                theme: "dark"
+    const fetchBlogPost = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            const content = await ContentService.getContentBySlug(slug);
+            
+            if (!content) {
+                setError('Blog post not found');
+                return;
             }
-        ]
+            
+            const transformedData = {
+                title: content.title,
+                heroImage: content.featuredImage || "/pic1.jpeg",
+                sections: content.sections?.map((section, index) => ({
+                    id: index + 1,
+                    title: section.title.toUpperCase(),
+                    description: section.content,
+                    images: section.image ? [section.image] : [],
+                    theme: index % 2 === 0 ? "light" : "dark"
+                })) || [
+                    {
+                        id: 1,
+                        title: "CONTENT",
+                        description: content.content,
+                        images: [],
+                        theme: "light"
+                    }
+                ]
+            };
+            
+            setBlogPostData(transformedData);
+        } catch (err) {
+            console.error('Error fetching blog post:', err);
+            setError('Failed to load blog post. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (loading) {
+        return <Loading text="Loading blog post..." />;
+    }
+
+    if (error) {
+        return (
+            <div className="content-section">
+                <div className="error-message">
+                    <h2>Oops! Something went wrong</h2>
+                    <p>{error}</p>
+                    <button onClick={fetchBlogPost} className="retry-btn">
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (!blogPostData) {
+        return (
+            <div className="content-section">
+                <div className="no-content">
+                    <h2>Blog post not found</h2>
+                    <p>The blog post you're looking for doesn't exist or has been removed.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <ContentLayout

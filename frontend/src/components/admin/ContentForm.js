@@ -2,21 +2,18 @@ import React, { useState, useEffect } from 'react';
 import CustomDropdown from '../CustomDropdown';
 import '../../scss/components/admin/ContentForm.scss';
 import { motion } from 'framer-motion';
+import { privateClientMethods } from '../../services/apiClient';
 import { ContentService } from '../../services/contentService';
 
 function ContentForm({ content, options, onSave, onCancel }) {
     const [formData, setFormData] = useState({
         title: '',
         type: 'blog',
-        content: '',
         excerpt: '',
         author: '',
         status: 'draft',
         featuredImage: '',
         publishDate: '',
-        metaDescription: '',
-        slug: '',
-        seoTitle: '',
         sections: []
     });
     
@@ -50,7 +47,12 @@ function ContentForm({ content, options, onSave, onCancel }) {
     useEffect(() => {
         if (content) {
             setFormData({
-                ...content,
+                title: content.title || '',
+                type: content.type || 'blog',
+                excerpt: content.excerpt || '',
+                author: content.author || '',
+                status: content.status || 'draft',
+                featuredImage: content.featuredImage || '',
                 publishDate: content.publishDate ? new Date(content.publishDate).toISOString().split('T')[0] : '',
                 sections: content.sections?.length ? content.sections : getSectionTemplate(content.type)
             });
@@ -71,10 +73,21 @@ function ContentForm({ content, options, onSave, onCancel }) {
     
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+        
+        // Auto-generate slug when title changes
+        if (name === 'title') {
+            const slug = ContentService.generateSlug(value);
+            setFormData(prev => ({
+                ...prev,
+                [name]: value,
+                slug: slug
+            }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            }));
+        }
     };
     
     const handleSectionChange = (index, field, value) => {
@@ -167,14 +180,114 @@ function ContentForm({ content, options, onSave, onCancel }) {
         setIsSubmitting(true);
         
         try {
+            // Debug: Log form data to see what's being submitted
+            console.log('Form data before validation:', formData);
+            console.log('Title:', formData.title, 'Length:', formData.title?.length);
+            console.log('Content:', formData.content, 'Length:', formData.content?.length);
+            console.log('Excerpt:', formData.excerpt, 'Length:', formData.excerpt?.length);
+            console.log('Author:', formData.author, 'Length:', formData.author?.length);
+            
+            // Basic validation
+            if (!formData.title || !formData.title.trim()) {
+                alert('Please enter a title');
+                setIsSubmitting(false);
+                return;
+            }
+            
+            // Validate that we have at least one section with content
+            const validSections = formData.sections.filter(section => 
+                section.title && section.title.trim() && section.content && section.content.trim()
+            );
+            
+            if (validSections.length === 0) {
+                alert('Please add at least one content section with both title and content');
+                setIsSubmitting(false);
+                return;
+            }
+            
+            if (!formData.excerpt || !formData.excerpt.trim()) {
+                alert('Please enter an excerpt');
+                setIsSubmitting(false);
+                return;
+            }
+            
+            if (!formData.author || !formData.author.trim()) {
+                alert('Please enter an author');
+                setIsSubmitting(false);
+                return;
+            }
+            
+            // Ensure slug is generated from title
+            const slug = ContentService.generateSlug(formData.title);
+            
+            // Clean sections to ensure they have required fields
+            const cleanedSections = formData.sections.filter(section => 
+                section.title && section.title.trim() && section.content && section.content.trim()
+            ).map(section => ({
+                title: section.title.trim(),
+                content: section.content.trim(),
+                type: section.type || 'text',
+                image: section.image || ''
+            }));
+            
+            // Generate main content from sections
+            const mainContent = cleanedSections.map(section => 
+                `## ${section.title}\n\n${section.content}`
+            ).join('\n\n');
+
             const cleanedData = {
-                ...formData,
-                publishDate: formData.publishDate || new Date().toISOString()
+                title: formData.title.trim(),
+                type: formData.type,
+                content: mainContent, // Generated from sections
+                excerpt: formData.excerpt.trim(),
+                author: formData.author.trim(),
+                status: formData.status || 'draft',
+                featuredImage: formData.featuredImage || '',
+                publishDate: formData.publishDate || new Date().toISOString(),
+                slug: slug,
+                // Add required fields that might be missing
+                metaDescription: formData.excerpt.trim() || '', // Use excerpt as meta description
+                seoTitle: formData.title.trim() || '', // Use title as SEO title
+                sections: cleanedSections
             };
+            
+            console.log('Submitting content data:', cleanedData);
+            console.log('Sections count:', cleanedSections.length);
+            console.log('Sections data:', cleanedSections);
+            
+            // Validate required fields one more time
+            if (!cleanedData.title) {
+                throw new Error('Title is required');
+            }
+            if (!cleanedData.type) {
+                throw new Error('Content type is required');
+            }
+            if (!mainContent || mainContent.trim().length === 0) {
+                throw new Error('Content is required');
+            }
+            if (!cleanedData.excerpt) {
+                throw new Error('Excerpt is required');
+            }
+            if (!cleanedData.author) {
+                throw new Error('Author is required');
+            }
+            if (!cleanedData.slug) {
+                throw new Error('Slug is required');
+            }
             
             await onSave(cleanedData);
         } catch (error) {
             console.error('Error saving content:', error);
+            
+            // Show more specific error messages
+            let errorMessage = 'Unknown error occurred';
+            if (error.message) {
+                errorMessage = error.message;
+            } else if (error.response && error.response.data) {
+                errorMessage = error.response.data.message || error.response.data.error || 'Server error';
+            }
+            
+            alert('Error saving content: ' + errorMessage);
         } finally {
             setIsSubmitting(false);
         }
@@ -201,34 +314,42 @@ function ContentForm({ content, options, onSave, onCancel }) {
         formDataObj.append('file', file);
         
         try {
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: formDataObj
-            });
+            console.log('Uploading file:', file.name, 'Size:', file.size, 'Type:', file.type);
+            const response = await privateClientMethods.post('/upload', formDataObj);
             
-            if (response.ok) {
-                const data = await response.json();
-                setFormData(prev => ({ ...prev, featuredImage: data.url }));
+            if (response && response.data && response.data.url) {
+                // The backend now returns full URLs, so use directly
+                setFormData(prev => ({ ...prev, featuredImage: response.data.url }));
+                console.log('Image uploaded successfully:', response.data.url);
             } else {
-                throw new Error('Image upload failed');
+                console.error('Upload response missing URL:', response);
+                alert('Image upload failed: Invalid response from server');
             }
         } catch (err) {
             console.error('Image upload error:', err);
-            alert('Image upload failed. Please try again.');
+            
+            // Provide more specific error messages
+            if (err.response) {
+                const errorData = err.response.data;
+                if (errorData.error === 'File too large') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else if (errorData.error === 'Invalid file type') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else if (errorData.error === 'No file uploaded') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else {
+                    alert(`Upload failed: ${errorData.error} - ${errorData.details || 'Unknown error'}`);
+                }
+            } else if (err.message) {
+                alert(`Upload failed: ${err.message}`);
+            } else {
+                alert('Image upload failed: Unknown error occurred');
+            }
         } finally {
             setIsImageUploading(false);
         }
     };
     
-    const generateSlug = () => {
-        if (formData.title.trim()) {
-            const slug = ContentService.generateSlug(formData.title);
-            setFormData(prev => ({ ...prev, slug }));
-        }
-    };
     
     // Handle section image upload
     const handleSectionImageUpload = async (e, sectionIndex) => {
@@ -247,27 +368,44 @@ function ContentForm({ content, options, onSave, onCancel }) {
             return;
         }
         
+        setIsImageUploading(true);
         const formDataObj = new FormData();
         formDataObj.append('file', file);
         
         try {
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: formDataObj
-            });
+            console.log('Uploading section image:', file.name, 'Size:', file.size, 'Type:', file.type);
+            const response = await privateClientMethods.post('/upload', formDataObj);
             
-            if (response.ok) {
-                const data = await response.json();
-                handleSectionChange(sectionIndex, 'image', data.url);
+            if (response && response.data && response.data.url) {
+                // The backend now returns full URLs, so use directly
+                handleSectionChange(sectionIndex, 'image', response.data.url);
+                console.log('Section image uploaded successfully:', response.data.url);
             } else {
-                throw new Error('Image upload failed');
+                console.error('Upload response missing URL:', response);
+                alert('Image upload failed: Invalid response from server');
             }
         } catch (err) {
             console.error('Section image upload error:', err);
-            alert('Image upload failed. Please try again.');
+            
+            // Provide more specific error messages
+            if (err.response) {
+                const errorData = err.response.data;
+                if (errorData.error === 'File too large') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else if (errorData.error === 'Invalid file type') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else if (errorData.error === 'No file uploaded') {
+                    alert(`Upload failed: ${errorData.details}`);
+                } else {
+                    alert(`Upload failed: ${errorData.error} - ${errorData.details || 'Unknown error'}`);
+                }
+            } else if (err.message) {
+                alert(`Upload failed: ${err.message}`);
+            } else {
+                alert('Image upload failed: Unknown error occurred');
+            }
+        } finally {
+            setIsImageUploading(false);
         }
     };
     
@@ -307,12 +445,6 @@ function ContentForm({ content, options, onSave, onCancel }) {
                     >
                         Content
                     </button>
-                    <button 
-                        className={currentTab === 'seo' ? 'active' : ''} 
-                        onClick={() => setCurrentTab('seo')}
-                    >
-                        SEO & Settings
-                    </button>
                 </div>
                 
                 <form onSubmit={handleSubmit} className="content-form">
@@ -329,6 +461,11 @@ function ContentForm({ content, options, onSave, onCancel }) {
                                     required
                                     placeholder="Enter content title..."
                                 />
+                                {formData.title && (
+                                    <div className="slug-preview">
+                                        <small>URL will be: <code>/{formData.type === 'case-study' ? 'case-studies' : 'blog'}/{ContentService.generateSlug(formData.title)}</code></small>
+                                    </div>
+                                )}
                             </div>
                             
                             <div className="form-group">
@@ -390,6 +527,25 @@ function ContentForm({ content, options, onSave, onCancel }) {
                                         <img src={formData.featuredImage} alt="Featured Image Preview" />
                                     </div>
                                 )}
+                            </div>
+                            
+                            <div className="form-group">
+                                <label htmlFor="status">Status *</label>
+                                <CustomDropdown
+                                    options={[
+                                        { value: 'draft', label: 'Draft' },
+                                        { value: 'published', label: 'Published' },
+                                        { value: 'archived', label: 'Archived' }
+                                    ]}
+                                    value={formData.status}
+                                    onChange={(status) => setFormData(prev => ({ ...prev, status }))}
+                                    placeholder="Select status..."
+                                />
+                                <small className="help-text">
+                                    <strong>Draft:</strong> Only visible in admin dashboard<br/>
+                                    <strong>Published:</strong> Visible on public website<br/>
+                                    <strong>Archived:</strong> Hidden from public view
+                                </small>
                             </div>
                             
                             <div className="form-group">
@@ -526,55 +682,6 @@ function ContentForm({ content, options, onSave, onCancel }) {
                         </div>
                     )}
                     
-                    {currentTab === 'seo' && (
-                        <div className="tab-content seo-tab">
-                            <div className="form-group">
-                                <label htmlFor="slug">URL Slug *</label>
-                                <div className="slug-input-group">
-                                    <input
-                                        type="text"
-                                        id="slug"
-                                        name="slug"
-                                        value={formData.slug}
-                                        onChange={handleChange}
-                                        placeholder="Enter URL slug..."
-                                        required
-                                    />
-                                    <button 
-                                        type="button" 
-                                        className="generate-slug-btn"
-                                        onClick={generateSlug}
-                                    >
-                                        Generate
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <div className="form-group">
-                                <label htmlFor="seoTitle">SEO Title</label>
-                                <input
-                                    type="text"
-                                    id="seoTitle"
-                                    name="seoTitle"
-                                    value={formData.seoTitle}
-                                    onChange={handleChange}
-                                    placeholder="Enter SEO title..."
-                                />
-                            </div>
-                            
-                            <div className="form-group">
-                                <label htmlFor="metaDescription">Meta Description</label>
-                                <textarea
-                                    id="metaDescription"
-                                    name="metaDescription"
-                                    value={formData.metaDescription}
-                                    onChange={handleChange}
-                                    placeholder="Enter meta description..."
-                                    rows="3"
-                                />
-                            </div>
-                        </div>
-                    )}
                     
                     <div className="form-actions">
                         <button 

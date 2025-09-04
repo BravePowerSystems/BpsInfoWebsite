@@ -13,6 +13,10 @@ const ContentCard = ({
     motionProps = {},
     showDivider = true 
 }) => {
+    const truncateText = (text, maxLength = 50) => {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    };
     return (
         <>
             <motion.div 
@@ -22,7 +26,7 @@ const ContentCard = ({
                 <div className="content-card__content">
                     <h3 className="content-card__title">{title}</h3>
                     {showDivider && <div className="content-card__divider"></div>}
-                    <p className="content-card__description">{description}</p>
+                    <p className="content-card__description">{truncateText(description, 50)}</p>
                     <Link to={link} className="content-card__link">
                         Read more
                     </Link>

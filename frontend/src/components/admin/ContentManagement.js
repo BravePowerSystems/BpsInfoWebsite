@@ -6,7 +6,7 @@ import Notify from "simple-notify";
 import Loading from "../Loading";
 import { ContentService } from "../../services/contentService";
 
-function ContentManagement({ onShowContentForm }) {
+function ContentManagement({ onShowContentForm, refreshTrigger }) {
     const { openConfirmationModal, closeConfirmationModal } = useModal();
     const [content, setContent] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,10 +21,21 @@ function ContentManagement({ onShowContentForm }) {
         fetchContent();
     }, []);
 
+    // Refresh content when refreshTrigger changes
+    useEffect(() => {
+        if (refreshTrigger > 0) {
+            console.log('Refresh trigger activated:', refreshTrigger);
+            fetchContent();
+        }
+    }, [refreshTrigger]);
+
     const fetchContent = async () => {
         try {
             setLoading(true);
-            const data = await ContentService.getAllContent();
+            // Fetch all content including drafts for admin dashboard
+            console.log('Fetching content with status: all');
+            const data = await ContentService.getAllContent({ status: 'all' });
+            console.log('Fetched content:', data);
             setContent(data);
         } catch (error) {
             console.error('Error fetching content:', error);
@@ -51,10 +62,7 @@ function ContentManagement({ onShowContentForm }) {
         onShowContentForm(contentItem, { types: contentTypes });
     };
 
-    // Refresh content after operations
-    const refreshContent = () => {
-        fetchContent();
-    };
+
 
     const handleDeleteContent = async (contentId) => {
         openConfirmationModal(

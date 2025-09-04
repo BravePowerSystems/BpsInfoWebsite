@@ -22,6 +22,7 @@ function AdminDashboard() {
     const [showContentForm, setShowContentForm] = useState(false);
     const [editingContent, setEditingContent] = useState(null);
     const [contentOptions, setContentOptions] = useState({});
+    const [contentRefreshTrigger, setContentRefreshTrigger] = useState(0);
     
     // Redirect if not admin
     if (!loading && (!user || user.role !== 'admin')) {
@@ -128,12 +129,8 @@ function AdminDashboard() {
                 });
             }
             handleHideContentForm();
-            // Refresh content list
-            if (activeTab === 'content') {
-                // Trigger refresh by changing activeTab temporarily
-                setActiveTab('products');
-                setTimeout(() => setActiveTab('content'), 100);
-            }
+            // Trigger content refresh
+            setContentRefreshTrigger(prev => prev + 1);
         } catch (error) {
             console.error('Error saving content:', error);
             new Notify({
@@ -190,6 +187,7 @@ function AdminDashboard() {
                 {activeTab === 'content' && 
                     <ContentManagement 
                         onShowContentForm={handleShowContentForm}
+                        refreshTrigger={contentRefreshTrigger}
                     />
                 }
                 {/* {activeTab === 'users' && <UserManagement />} */}

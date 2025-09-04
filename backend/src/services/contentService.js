@@ -6,22 +6,31 @@ export class ContentService {
         try {
             let query = {};
             
-            if (filters.type) {
-                query.type = filters.type;
+            // Default to published content if no status filter is provided
+            if (filters.status) {
+                if (filters.status === 'all') {
+                    // Don't filter by status - return all content
+                } else {
+                    query.status = filters.status;
+                }
+            } else {
+                query.status = 'published';
             }
             
-            if (filters.status) {
-                query.status = filters.status;
+            if (filters.type) {
+                query.type = filters.type;
             }
             
             if (filters.author) {
                 query.author = filters.author;
             }
             
+            console.log('Content query:', JSON.stringify(query, null, 2));
             const content = await Content.find(query)
-                .sort({ createdAt: -1 })
+                .sort({ publishDate: -1, createdAt: -1 })
                 .populate('relatedContent', 'title type');
-                
+            
+            console.log('Found content count:', content.length);
             return content;
         } catch (error) {
             throw new Error(`Failed to fetch content: ${error.message}`);
@@ -81,15 +90,39 @@ export class ContentService {
     // Create new content
     static async createContent(contentData) {
         try {
+            console.log('Creating content with data:', JSON.stringify(contentData, null, 2));
+            
             // Generate slug if not provided
             if (!contentData.slug) {
                 contentData.slug = this.generateSlug(contentData.title);
             }
             
+            // Validate required fields
+            if (!contentData.title) {
+                throw new Error('Title is required');
+            }
+            if (!contentData.type) {
+                throw new Error('Content type is required');
+            }
+            if (!contentData.content) {
+                throw new Error('Content is required');
+            }
+            if (!contentData.excerpt) {
+                throw new Error('Excerpt is required');
+            }
+            if (!contentData.author) {
+                throw new Error('Author is required');
+            }
+            if (!contentData.slug) {
+                throw new Error('Slug is required');
+            }
+            
             const newContent = new Content(contentData);
             const savedContent = await newContent.save();
+            console.log('Content created successfully:', savedContent._id);
             return savedContent;
         } catch (error) {
+            console.error('Error creating content:', error);
             throw new Error(`Failed to create content: ${error.message}`);
         }
     }

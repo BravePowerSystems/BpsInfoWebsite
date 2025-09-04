@@ -27,7 +27,8 @@ const contentSchema = new mongoose.Schema(
             {
                 title: { type: String, required: true },
                 content: { type: String, required: true },
-                type: { type: String, default: 'text' }
+                type: { type: String, default: 'text' },
+                image: { type: String }
             }
         ],
         relatedContent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Content' }]
