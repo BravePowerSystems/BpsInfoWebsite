@@ -75,9 +75,9 @@ export default function BottomNav() {
                         <img src="/facebook.png" alt="Facebook" />
                     </a>
                     <a
-                        href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
+                        href="https://wa.me/919441734282?text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F"
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noopener noreferrer"   
                         className="whatsapp-link"
                         title="Contact us on WhatsApp"
                     >

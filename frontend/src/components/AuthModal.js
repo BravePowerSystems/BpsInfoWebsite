@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import "../scss/components/AuthModal.scss";
 import { publicClientMethods } from "../services/apiClient";
+import { authService } from "../services/authService";
 
 function AuthModal({ onClose, initialMode = "login" }) {
     const [mode, setMode] = useState(initialMode); // 'login' or 'register'
     const [formData, setFormData] = useState({
-        username: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -36,9 +36,10 @@ function AuthModal({ onClose, initialMode = "login" }) {
         setIsLoading(true);
 
         try {
-            await publicClientMethods.post('/auth/forgot-password', { email: formData.email });
-
-            setShowForgotPassword(false);
+            await authService.forgotPassword(formData.email);
+            setError(""); // Clear any previous errors
+            // Show success message instead of hiding the form
+            setError("Password reset link sent! Check your email.");
         } catch (err) {
             const errorMessage =
                 err.response?.data?.error || "Password reset request failed";
@@ -61,7 +62,7 @@ function AuthModal({ onClose, initialMode = "login" }) {
 
                 // Use the register function from AuthContext
                 await register({
-                    username: formData.username,
+                    username: formData.email, // Use email as username for now
                     email: formData.email,
                     password: formData.password,
                 });
@@ -72,7 +73,7 @@ function AuthModal({ onClose, initialMode = "login" }) {
             }
 
             // For login mode
-            await login(formData.username, formData.password);
+            await login(formData.email, formData.password);
             handleClose();
         } catch (err) {
             console.error("Auth error:", err);
@@ -103,7 +104,11 @@ function AuthModal({ onClose, initialMode = "login" }) {
                     </button>
 
                     <h2>Reset Password</h2>
-                    {error && <div className="error-message">{error}</div>}
+                    {error && (
+                        <div className={error.includes("sent") ? "success-message" : "error-message"}>
+                            {error}
+                        </div>
+                    )}
 
                     <form onSubmit={handleForgotPassword} autoComplete="off">
                         <div className="form-group">
@@ -167,32 +172,17 @@ function AuthModal({ onClose, initialMode = "login" }) {
 
                 <form onSubmit={handleSubmit} autoComplete="off">
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="email">Email</label>
                         <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={formData.username}
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
                             onChange={handleChange}
                             required
                             autoComplete="off"
                         />
                     </div>
-
-                    {mode === "register" && (
-                        <div className="form-group">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                                autoComplete="off"
-                            />
-                        </div>
-                    )}
 
                     <div className="form-group">
                         <label htmlFor="password">Password</label>

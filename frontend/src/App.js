@@ -14,6 +14,7 @@ import CategoryPage from "./Pages/CategoryPage";
 import About from "./Pages/About";
 import FAQ from "./Pages/FAQ";
 import UserProfile from "./Pages/UserProfile";
+import ResetPassword from "./Pages/ResetPassword";
 import NotFound from "./Pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -46,6 +47,7 @@ function App() {
                                 <Route path="/blog/:slug" element={<BlogPost />} />
                                 <Route path="/about" element={<About />} />
                                 <Route path="/faqs" element={<FAQ />} />
+                                <Route path="/reset-password" element={<ResetPassword />} />
                                 <Route
                                     path="/case-studies"
                                     element={<CaseStudiesPreview />}

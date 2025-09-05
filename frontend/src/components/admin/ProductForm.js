@@ -4,7 +4,7 @@ import '../../scss/components/admin/ProductForm.scss';
 import { motion } from 'framer-motion';
 import { privateClientMethods } from '../../services/apiClient';
 
-function ProductForm({ product, categories, onSave, onCancel }) {
+function ProductForm({ product, categories, onSave, onCancel, onAddCategory }) {
     const [formData, setFormData] = useState({
         title: '',
         modelNumber: '',
@@ -12,7 +12,7 @@ function ProductForm({ product, categories, onSave, onCancel }) {
         description: '',
         specifications: [{ name: '', value: '' }],
         applications: [''],
-        downloads: [{ name: '', url: '' }],
+        downloads: [{ name: '', type: 'PDF', url: '' }],
         imageUrl: ''
     });
     
@@ -21,6 +21,8 @@ function ProductForm({ product, categories, onSave, onCancel }) {
     const [isImageUploading, setIsImageUploading] = useState(false);
     const [isPdfUploading, setIsPdfUploading] = useState(false);
     const [descriptionError, setDescriptionError] = useState('');
+    const [showAddCategory, setShowAddCategory] = useState(false);
+    const [newCategory, setNewCategory] = useState('');
     
     const MAX_DESCRIPTION_LENGTH = 60;
     
@@ -32,7 +34,7 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                 ...product,
                 specifications: product.specifications?.length ? product.specifications : [{ name: '', value: '' }],
                 applications: product.applications?.length ? product.applications : [''],
-                downloads: product.downloads?.length ? product.downloads : [{ name: '', url: '' }]
+                downloads: product.downloads?.length ? product.downloads : [{ name: '', type: 'PDF', url: '' }]
             });
         }
     }, [product]);
@@ -60,6 +62,18 @@ function ProductForm({ product, categories, onSave, onCancel }) {
             ...prev,
             [name]: value
         }));
+    };
+
+    const handleAddCategory = () => {
+        if (newCategory.trim() && onAddCategory) {
+            onAddCategory(newCategory.trim());
+            setFormData(prev => ({
+                ...prev,
+                category: newCategory.trim()
+            }));
+            setNewCategory('');
+            setShowAddCategory(false);
+        }
     };
     
     const handleSpecChange = (index, field, value) => {
@@ -134,7 +148,7 @@ function ProductForm({ product, categories, onSave, onCancel }) {
     const addDownload = () => {
         setFormData(prev => ({
             ...prev,
-            downloads: [...prev.downloads, { name: '', url: '' }]
+            downloads: [...prev.downloads, { name: '', type: 'PDF', url: '' }]
         }));
     };
     
@@ -158,12 +172,25 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                 ...formData,
                 specifications: formData.specifications.filter(spec => spec.name.trim() && spec.value.trim()),
                 applications: formData.applications.filter(app => app.trim()),
-                downloads: formData.downloads.filter(dl => dl.name.trim() && dl.url.trim())
+                downloads: formData.downloads.filter(dl => dl.name.trim() && dl.type.trim() && dl.url.trim())
             };
+            
+            // Debug: Log the data being sent
+            console.log('Product data being sent:', cleanedData);
+            
+            // Validate required fields
+            const requiredFields = ['title', 'modelNumber', 'category', 'description', 'imageUrl'];
+            const missingFields = requiredFields.filter(field => !cleanedData[field] || cleanedData[field].trim() === '');
+            
+            if (missingFields.length > 0) {
+                throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+            }
             
             await onSave(cleanedData);
         } catch (error) {
             console.error('Error saving product:', error);
+            // Show user-friendly error message
+            alert(`Error saving product: ${error.message}`);
         } finally {
             setIsSubmitting(false);
         }
@@ -370,12 +397,55 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="category">Category</label>
-                                <CustomDropdown
-                                    options={categories.map(cat => ({ value: cat, label: cat }))}
-                                    value={formData.category}
-                                    onChange={(category) => setFormData(prev => ({ ...prev, category }))}
-                                    placeholder="Categories"
-                                />
+                                <div className="category-dropdown-container">
+                                    <CustomDropdown
+                                        options={categories.map(cat => ({ value: cat, label: cat }))}
+                                        value={formData.category}
+                                        onChange={(category) => setFormData(prev => ({ ...prev, category }))}
+                                        placeholder="Select or add a category"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="add-category-btn"
+                                        onClick={() => setShowAddCategory(!showAddCategory)}
+                                    >
+                                        {showAddCategory ? '✕ Cancel' : '+ Add New'}
+                                    </button>
+                                </div>
+                                {showAddCategory && (
+                                    <div className="add-category-form">
+                                        <div className="add-category-input-group">
+                                            <input
+                                                type="text"
+                                                value={newCategory}
+                                                onChange={(e) => setNewCategory(e.target.value)}
+                                                placeholder="Enter new category name"
+                                                className="new-category-input"
+                                                autoFocus
+                                            />
+                                            <div className="add-category-actions">
+                                                <button
+                                                    type="button"
+                                                    className="save-category-btn"
+                                                    onClick={handleAddCategory}
+                                                    disabled={!newCategory.trim()}
+                                                >
+                                                    ✓ Add Category
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="cancel-category-btn"
+                                                    onClick={() => {
+                                                        setShowAddCategory(false);
+                                                        setNewCategory('');
+                                                    }}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <div className="description-field">
                                 <label htmlFor="description">Product Description</label>
@@ -511,6 +581,18 @@ function ProductForm({ product, categories, onSave, onCancel }) {
                                             onChange={(e) => handleDownloadChange(index, 'name', e.target.value)}
                                             placeholder="Document name (e.g., Product Manual, Datasheet)"
                                         />
+                                        <select 
+                                            value={download.type} 
+                                            onChange={(e) => handleDownloadChange(index, 'type', e.target.value)}
+                                            className="download-type-select"
+                                        >
+                                            <option value="PDF">PDF</option>
+                                            <option value="DOC">DOC</option>
+                                            <option value="DOCX">DOCX</option>
+                                            <option value="XLS">XLS</option>
+                                            <option value="XLSX">XLSX</option>
+                                            <option value="TXT">TXT</option>
+                                        </select>
                                         <div className="file-upload-section">
                                             <input 
                                                 type="file" 

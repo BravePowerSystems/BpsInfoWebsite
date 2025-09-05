@@ -4,7 +4,7 @@ import { verifyToken, requireRole } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/', verifyToken, createEnquiryController);
+router.post('/', createEnquiryController);
 
 router.get('/', verifyToken, requireRole('admin'), getEnquiriesController);
 router.patch('/:id/status', verifyToken, requireRole('admin'), updateEnquiryStatusController);

@@ -15,6 +15,39 @@ import { ImageService } from './services/imageService.js';
 // Load environment variables first
 dotenv.config();
 
+// Validate required environment variables
+console.log('🔧 Environment validation...');
+const requiredEnvVars = [
+    'MONGODB_URI',
+    'JWT_SECRET', 
+    'JWT_REFRESH_SECRET',
+    'SENDGRID_KEY'
+];
+
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+if (missingEnvVars.length > 0) {
+    console.error('❌ Missing required environment variables:', missingEnvVars);
+    console.error('❌ Please set the following environment variables:');
+    missingEnvVars.forEach(envVar => {
+        console.error(`   - ${envVar}`);
+    });
+    console.error('❌ Application will not function properly without these variables');
+} else {
+    console.log('✅ All required environment variables are set');
+}
+
+// Log environment status
+console.log('📊 Environment status:', {
+    NODE_ENV: process.env.NODE_ENV || 'development',
+    PORT: process.env.PORT || '5000',
+    MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
+    JWT_SECRET: process.env.JWT_SECRET ? 'Set' : 'Not set',
+    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ? 'Set' : 'Not set',
+    SENDGRID_KEY: process.env.SENDGRID_KEY ? 'Set' : 'Not set',
+    SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL || 'Using default',
+    FRONTEND_URL: process.env.FRONTEND_URL || 'Using default'
+});
+
 const app = express();
 
 const allowedOrigins = [
@@ -78,8 +111,31 @@ app.get('/api/debug/env', (req, res) => {
     MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
     JWT_SECRET: process.env.JWT_SECRET ? 'Set' : 'Not set',
     JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ? 'Set' : 'Not set',
+    SENDGRID_KEY: process.env.SENDGRID_KEY ? 'Set' : 'Not set',
+    SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL || 'Using default',
+    FRONTEND_URL: process.env.FRONTEND_URL || 'Using default',
     timestamp: new Date().toISOString()
   });
+});
+
+// SendGrid test endpoint
+app.get('/api/debug/sendgrid', async (req, res) => {
+  try {
+    const { EmailService } = await import('./services/emailService.js');
+    const result = await EmailService.testSendGridConnection();
+    res.json({ success: true, result });
+  } catch (error) {
+    console.error('SendGrid test error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      details: {
+        hasKey: !!process.env.SENDGRID_KEY,
+        keyLength: process.env.SENDGRID_KEY?.length,
+        startsWithSG: process.env.SENDGRID_KEY?.startsWith('SG.')
+      }
+    });
+  }
 });
 
 // Add request logging middleware

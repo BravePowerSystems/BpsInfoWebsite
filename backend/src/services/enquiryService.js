@@ -65,15 +65,24 @@ export class EnquiryService {
         if (!userId) return [];
         const wishlistItems = await WishlistItem.find({ userId }).populate('productId');
         // Map to product details
-        return wishlistItems.map(item => {
-            const product = item.productId;
-            return {
-                id: product._id,
-                title: product.title,
-                modelNumber: product.modelNumber,
-                imageUrl: product.imageUrl,
-                category: product.category
-            };
-        });
+          const orphanedItems = wishlistItems.filter(item => item.productId === null);
+        if (orphanedItems.length > 0) {
+            console.log(`Cleaning up ${orphanedItems.length} orphaned wishlist items for user ${userId}`);
+            await WishlistItem.deleteMany({ 
+                _id: { $in: orphanedItems.map(item => item._id) } 
+            });
+        }
+       return wishlistItems
+            .filter(item => item.productId !== null) // Filter out items with deleted products
+            .map(item => {
+                const product = item.productId;
+                return {
+                    id: product._id,
+                    title: product.title,
+                    modelNumber: product.modelNumber,
+                    imageUrl: product.imageUrl,
+                    category: product.category
+                };
+            });
     }
 }

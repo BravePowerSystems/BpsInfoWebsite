@@ -15,6 +15,7 @@ import { useProducts } from "../context/ProductsContext";
 import SpecificationsAccordion from "../components/SpecificationsAccordion";
 import UnauthorizedPage from "./UnauthorizedPage";
 import Loading from "../components/Loading";
+import ShareButton from "../components/ShareButton";
 // Loading component is now imported from ../components/Loading
 const motionConfig = {
     product: {
@@ -54,6 +55,87 @@ export default function Product() {
         return [];
     }, [categories, categoryName]);
 
+    // Function to update meta tags for social sharing
+    const updateMetaTags = (product) => {
+        if (!product) return;
+        
+        // Generate absolute image URL
+        const generateImageUrl = (imageUrl) => {
+            if (!imageUrl) return 'https://bps-info-website.vercel.app/bpsCompanyIcon.png';
+            
+            if (imageUrl.startsWith('http')) {
+                return imageUrl;
+            }
+            
+            const baseUrl = 'https://bps-info-website.vercel.app';
+            const absoluteUrl = imageUrl.startsWith('/') 
+                ? `${baseUrl}${imageUrl}`
+                : `${baseUrl}/${imageUrl}`;
+            
+            // Test if image is accessible
+            const img = new Image();
+            img.onload = () => console.log('Image loaded successfully:', absoluteUrl);
+            img.onerror = () => console.log('Image failed to load:', absoluteUrl);
+            img.src = absoluteUrl;
+            
+            return absoluteUrl;
+        };
+
+        const productUrl = `https://bps-info-website.vercel.app/Products/${product.category?.replace(/\s+/g, '-').toLowerCase() || 'products'}/${product.slug || product.title?.replace(/\s+/g, '-').toLowerCase()}`;
+        const productImage = generateImageUrl(product.imageUrl);
+        const productDescription = product.description?.substring(0, 160) || 'Check out this product from Brave Power Systems';
+
+        // Update document title
+        document.title = `${product.title} - Brave Power Systems`;
+
+        // Update or create meta tags
+        const updateMetaTag = (property, content) => {
+            let meta = document.querySelector(`meta[property="${property}"]`) || 
+                      document.querySelector(`meta[name="${property}"]`);
+            
+            if (!meta) {
+                meta = document.createElement('meta');
+                if (property.startsWith('og:')) {
+                    meta.setAttribute('property', property);
+                } else {
+                    meta.setAttribute('name', property);
+                }
+                document.head.appendChild(meta);
+            }
+            meta.setAttribute('content', content);
+        };
+
+        // Update Open Graph tags
+        updateMetaTag('og:type', 'product');
+        updateMetaTag('og:title', product.title);
+        updateMetaTag('og:description', productDescription);
+        updateMetaTag('og:image', productImage);
+        updateMetaTag('og:url', productUrl);
+        updateMetaTag('og:site_name', 'Brave Power Systems');
+        
+        // Update Twitter Card tags
+        updateMetaTag('twitter:card', 'summary_large_image');
+        updateMetaTag('twitter:title', product.title);
+        updateMetaTag('twitter:description', productDescription);
+        updateMetaTag('twitter:image', productImage);
+        
+        // Update description
+        updateMetaTag('description', productDescription);
+        
+        // Debug logging
+        console.log('Meta Tags Updated:');
+        console.log('Product Title:', product.title);
+        console.log('Product Image:', productImage);
+        console.log('Product URL:', productUrl);
+        console.log('Product Description:', productDescription);
+        
+        // Log the actual meta tags
+        const ogImage = document.querySelector('meta[property="og:image"]');
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        console.log('OG Image Meta:', ogImage?.getAttribute('content'));
+        console.log('OG Title Meta:', ogTitle?.getAttribute('content'));
+    };
+
     useEffect(() => {
         if (!categoryName || !productName) {
             setProduct(null);
@@ -80,6 +162,9 @@ export default function Product() {
                 
                 const productData = response.data;
                 setProduct(productData);
+                
+                // Update meta tags for social sharing
+                updateMetaTags(productData);
             } catch (err) {
                 setError("Failed to load product");
                 console.error(err);
@@ -212,7 +297,12 @@ export default function Product() {
                         >
                             Enquire Now
                         </button>
-                        <button className="share">Share</button>
+                        <ShareButton 
+                            product={product}
+                            variant="outline"
+                            size="medium"
+                            showText={true}
+                        />
                     </div>
                 </section>
                 <section className="product-features">

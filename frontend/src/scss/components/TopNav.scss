@@ -29,6 +29,8 @@
             .brave {
                 display: flex;
                 align-items: center;
+                justify-content: space-between;
+                width: 100%;
 
                 img {
                     position: relative;
@@ -214,13 +216,21 @@
 
             .logo {
                 .brave {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+
                     img {
                         height: 1.75rem; // Adjust image size
                         width: auto;
                     }
 
                     span {
-                        font-size: 1.25rem;
+                        font-size: 1.35rem;
+                        letter-spacing: 0.15cap;
+                        padding: 0;
+                        margin: 0;
 
                     }
                 }
