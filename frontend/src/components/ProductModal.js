@@ -5,6 +5,7 @@ import { formNotifications } from '../utils/notificationHelper';
 import { publicClientMethods, privateClientMethods } from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
 import { openWhatsAppProductEnquiry } from '../utils/whatsappHelper';
+import { validateIndianPhone, formatIndianPhoneInput } from '../utils/phoneValidation';
 import CustomDropdown from './CustomDropdown';
 
 const ProductModal = ({ productName, onClose }) => {
@@ -15,9 +16,11 @@ const ProductModal = ({ productName, onClose }) => {
         email: "",
         company: "",
         phone: "",
+        message: "",
         enquiryType: "general",
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [phoneError, setPhoneError] = useState("");
 
     const enquiryTypes = [
         { value: "general", label: "General Enquiry" },
@@ -25,6 +28,12 @@ const ProductModal = ({ productName, onClose }) => {
         { value: "quote", label: "Request a Quote" },
         { value: "custom", label: "Custom Solution" },
     ];
+
+    const validatePhone = (phone) => {
+        // Use Indian phone validation utility
+        const validation = validateIndianPhone(phone);
+        return validation.error;
+    };
 
     // Handle Escape key press
     useEffect(() => {
@@ -49,6 +58,12 @@ const ProductModal = ({ productName, onClose }) => {
             ...prev,
             [name]: value,
         }));
+
+        // Validate phone number on change
+        if (name === "phone") {
+            const error = validatePhone(value);
+            setPhoneError(error);
+        }
     };
 
     const submitEnquiry = async (enquiryData) => {
@@ -70,6 +85,13 @@ const ProductModal = ({ productName, onClose }) => {
         e.preventDefault();
         
         if (isSubmitting) return;
+        
+        // Validate phone number before submission
+        const phoneValidationError = validatePhone(formData.phone);
+        if (phoneValidationError) {
+            setPhoneError(phoneValidationError);
+            return;
+        }
         
         setIsSubmitting(true);
         try {
@@ -171,13 +193,32 @@ const ProductModal = ({ productName, onClose }) => {
 
                         <div className="form-group">
                             <label htmlFor="phone">Phone Number</label>
-                            <input
-                                type="tel"
-                                id="phone"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                            />
+                            <div className={`phone-input-container ${phoneError ? "error" : ""}`}>
+                                <span className="phone-prefix">+91</span>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    value={formData.phone.replace('+91', '')}
+                                    onChange={(e) => {
+                                        const { name, value } = e.target;
+                                        const formattedPhone = formatIndianPhoneInput(value);
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            [name]: formattedPhone
+                                        }));
+                                        
+                                        // Validate phone number on change
+                                        const error = validatePhone(formattedPhone);
+                                        setPhoneError(error);
+                                    }}
+                                    placeholder="Enter 10 digit mobile number"
+                                    required
+                                    aria-required="true"
+                                    maxLength="10"
+                                />
+                            </div>
+                            {phoneError && <span className="error-message">{phoneError}</span>}
                         </div>
                     </div>
 
@@ -192,6 +233,21 @@ const ProductModal = ({ productName, onClose }) => {
                         />
                     </div>
 
+                    <div className="form-group-single">
+                        <label htmlFor="message">Enquiry</label>
+                        <textarea 
+                            id="message"
+                            name="message" 
+                            value={formData.message}
+                            onChange={handleChange}
+                            placeholder="Your Enquiry *" 
+                            required 
+                            aria-required="true"
+                            rows="4"
+                            className="enquiry-textarea"
+                        />
+                    </div>
+
                     <div className="form-actions">
                         <button 
                             type="submit" 
@@ -203,7 +259,7 @@ const ProductModal = ({ productName, onClose }) => {
                         <button 
                             type="button"
                             className="whatsapp-btn"
-                            onClick={() => openWhatsAppProductEnquiry(productName)}
+                            onClick={() => openWhatsAppProductEnquiry(productName, '', '', window.location.href)}
                             title="Contact us on WhatsApp"
                         >
                             WhatsApp Enquiry

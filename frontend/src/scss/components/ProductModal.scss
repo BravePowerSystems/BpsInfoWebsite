@@ -117,6 +117,54 @@
                             padding: 0.8rem; // Add some padding
                         }
                     }
+
+                    // Phone input container styling
+                    .phone-input-container {
+                        display: flex;
+                        align-items: center;
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        border-radius: 4px;
+                        transition: all 0.3s ease;
+
+                        &.error {
+                            border-color: #e74c3c;
+                            box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+                        }
+
+                        &:focus-within {
+                            outline: none;
+                            border-color: #678df6;
+                            background: rgba(255, 255, 255, 0.1);
+                            box-shadow: 0 0 10px rgba(103, 141, 246, 0.2);
+                        }
+
+                        .phone-prefix {
+                            padding: 0.8rem 0.5rem 0.8rem 0.8rem;
+                            color: rgba(255, 255, 255, 0.7);
+                            font-size: 0.9rem;
+                            border-right: 1px solid rgba(255, 255, 255, 0.1);
+                        }
+
+                        input {
+                            flex: 1;
+                            border: none;
+                            background: transparent;
+                            padding: 0.8rem 0.8rem 0.8rem 0.5rem;
+                            color: $primary-text-color;
+                            outline: none;
+
+                            &::placeholder {
+                                color: rgba(255, 255, 255, 0.5);
+                            }
+                        }
+                    }
+
+                    .error-message {
+                        color: #e74c3c;
+                        font-size: 0.8rem;
+                        margin-top: 0.25rem;
+                    }
                 }
             }
 
@@ -132,7 +180,8 @@
                 }
 
                 input,
-                select {
+                select,
+                textarea {
                     width: 100%;
                     padding: 0.8rem;
                     background: rgba(255, 255, 255, 0.05);
@@ -152,6 +201,25 @@
                         background-color: #1a2635;
                         color: $primary-text-color;
                         padding: 0.8rem;
+                    }
+                }
+
+                // Enquiry textarea specific styling
+                .enquiry-textarea {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                    color: $primary-text-color !important;
+                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    resize: vertical;
+                    min-height: 100px;
+
+                    &:focus {
+                        background: rgba(255, 255, 255, 0.1) !important;
+                        border-color: #678df6 !important;
+                        box-shadow: 0 0 10px rgba(103, 141, 246, 0.2) !important;
+                    }
+
+                    &::placeholder {
+                        color: rgba(255, 255, 255, 0.5);
                     }
                 }
 

@@ -199,7 +199,7 @@ export default function TopNav() {
                                {!isAdmin && (
                                     <div className="whatsapp-icon">
                                         <a
-                                            href="https://api.whatsapp.com/send/?phone=917942701967&text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F&type=phone_number&app_absent=0"
+                                            href="https://wa.me/917942701967?text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             title="Contact us on WhatsApp"

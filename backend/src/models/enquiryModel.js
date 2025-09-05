@@ -44,6 +44,11 @@ const enquirySchema = new mongoose.Schema(
             ref: 'User',
             required: false // Only required if user is logged in
         },
+        message: {
+            type: String,
+            required: true,
+            trim: true,
+        },
         responseMessage: {
             type: String,
             default: '',

@@ -82,7 +82,9 @@
         padding: 1rem;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 0.5rem;
         
         button {
             padding: 0.5rem 1rem;
@@ -113,5 +115,6 @@
                 }
             }
         }
+
     }
 }

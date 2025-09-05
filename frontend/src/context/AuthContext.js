@@ -35,10 +35,10 @@ export const AuthProvider = ({ children }) => {
         checkAuth();
     }, []);
 
-    const login = async (username, password, showNotification = true) => {
+    const login = async (email, password, showNotification = true) => {
         try {
             setError(null);
-            const response = await authService.login(username, password);
+            const response = await authService.login(email, password);
             
             // Store tokens in localStorage
             const { accessToken, refreshToken, user: userData } = response.data;
