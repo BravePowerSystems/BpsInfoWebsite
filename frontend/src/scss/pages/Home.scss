@@ -120,6 +120,7 @@
             margin-top: 2rem;
 
             .value-card {
+                width: 100%;
                 background: rgba(12, 24, 40, 0.6);
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(103, 141, 246, 0.2);
@@ -273,11 +274,13 @@
             margin: 2rem 1rem;
 
             .values-grid {
-                grid-template-columns: repeat(2, 1fr);
+                display: flex;
+                flex-direction: column;
                 gap: 2rem;
                 margin-top: 2.5rem;
 
                 .value-card {
+                    width: 100%;
                     padding: 2rem;
 
                     h3 {
@@ -410,15 +413,13 @@
 
                 .values-grid {
                 display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                flex-wrap: wrap;
+                flex-direction: column;
                 gap: 2.5rem;
                 margin-top: 3rem;
 
                 .value-card {
+                    width: 100%;
                     padding: 2.5rem;
-                    width:45%;
                     h3 {
                         font-size: 1.4rem;
                     }
@@ -546,13 +547,12 @@
 
             .values-grid {
                 display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                flex-wrap: wrap;
+                flex-direction: column;
                 gap: 3rem;
                 margin-top: 3.5rem;
 
                 .value-card {
+                    width: 100%;
                     padding: 3rem;
 
                     h3 {

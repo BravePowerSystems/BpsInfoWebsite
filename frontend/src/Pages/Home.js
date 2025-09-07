@@ -55,12 +55,19 @@ function Home() {
                 ];
 
                 // Transform products to match the expected format for CategoryCarousel
-                const transformedProducts = allProducts.slice(0, 4).map(product => ({
-                    title: product.title,
-                    description: product.description,
-                    imageUrl: product.imageUrl,
-                    link: product.link
-                }));
+                const transformedProducts = allProducts.slice(0, 4).map(product => {
+                    // Create proper link based on category and product title
+                    const categoryName = product.category || 'Products';
+                    const productSlug = product.title.replace(/\s+/g, '-');
+                    const link = `/Products/${categoryName}/${productSlug}`;
+                    
+                    return {
+                        title: product.title,
+                        description: product.description,
+                        imageUrl: product.imageUrl,
+                        link: link
+                    };
+                });
 
                 setFeaturedProducts(transformedProducts);
             } catch (error) {
