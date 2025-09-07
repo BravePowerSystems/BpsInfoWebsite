@@ -199,7 +199,7 @@ export default function TopNav() {
                                 )}
                                {!isAdmin && (
                                     <div className="whatsapp-icon">
-                                        <button
+                                        <a
                                             onClick={() => openWhatsAppGeneralEnquiry()}
                                             title="Contact us on WhatsApp"
                                             style={{ 
@@ -214,7 +214,7 @@ export default function TopNav() {
                                                 src="../../whatsapp.png"
                                                 alt="WhatsApp"
                                             />
-                                        </button>
+                                        </a>
                                     </div>
                                 )}
 
