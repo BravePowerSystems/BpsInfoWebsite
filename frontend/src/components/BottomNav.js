@@ -2,6 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { openWhatsAppGeneralEnquiry } from "../utils/whatsappHelper";
 
 export default function BottomNav() {
     return (
@@ -74,15 +75,19 @@ export default function BottomNav() {
                     >
                         <img src="/facebook.png" alt="Facebook" />
                     </a>
-                    <a
-                        href="https://wa.me/919441734282?text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F"
-                        target="_blank"
-                        rel="noopener noreferrer"   
+                    <button
+                        onClick={() => openWhatsAppGeneralEnquiry()}
                         className="whatsapp-link"
                         title="Contact us on WhatsApp"
+                        style={{ 
+                            background: 'none',
+                            border: 'none',
+                            padding: 0,
+                            cursor: 'pointer'
+                        }}
                     >
                         <img src="/whatsapp.png" alt="WhatsApp" />
-                    </a>
+                    </button>
                     <a
                         href="https://www.youtube.com"
                         target="_blank"
