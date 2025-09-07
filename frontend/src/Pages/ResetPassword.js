@@ -17,6 +17,7 @@ const ResetPassword = () => {
     const [isValidToken, setIsValidToken] = useState(false);
     const [error, setError] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [retryCount, setRetryCount] = useState(0);
 
     useEffect(() => {
         validateToken();
@@ -30,11 +31,36 @@ const ResetPassword = () => {
         }
 
         try {
+            console.log('🔍 Validating reset token on frontend...');
             const response = await authService.validateResetToken(token);
-            setIsValidToken(true);
-            setUserEmail(response.data.email);
+            console.log('✅ Token validation response received');
+            
+            // Check if the response indicates success
+            if (response.data && response.data.success && response.data.valid) {
+                setIsValidToken(true);
+                setUserEmail(response.data.email);
+                console.log('✅ Token is valid');
+            } else {
+                throw new Error('Invalid token response');
+            }
         } catch (error) {
-            setError('Invalid or expired reset link');
+            console.error('❌ Token validation failed:', error);
+            
+            // Handle different types of errors
+            let errorMessage = 'Invalid or expired reset link';
+            
+            if (error.response) {
+                // Server responded with error status
+                errorMessage = error.response.data?.error || error.message || errorMessage;
+            } else if (error.request) {
+                // Network error - no response received
+                errorMessage = 'Network error. Please check your internet connection and try again.';
+            } else {
+                // Other error
+                errorMessage = error.message || errorMessage;
+            }
+            
+            setError(errorMessage);
             setIsValidToken(false);
         } finally {
             setIsValidating(false);
@@ -48,6 +74,13 @@ const ResetPassword = () => {
         });
         // Clear error when user starts typing
         if (error) setError('');
+    };
+
+    const retryValidation = () => {
+        setRetryCount(prev => prev + 1);
+        setError('');
+        setIsValidating(true);
+        validateToken();
     };
 
     const handleSubmit = async (e) => {
@@ -73,12 +106,43 @@ const ResetPassword = () => {
         setIsLoading(true);
 
         try {
-            await authService.resetPassword(token, formData.password);
-            systemNotifications.success('Password reset successfully! You can now log in with your new password.');
-            navigate('/login');
+            console.log('🔄 Submitting password reset request...');
+            const response = await authService.resetPassword(token, formData.password);
+            console.log('✅ Password reset response received');
+            
+            // Check if the response indicates success
+            if (response.data && response.data.success) {
+                console.log('✅ Password reset successful');
+                systemNotifications.success('Password reset successfully! You can now log in with your new password.');
+                // Clear form data
+                setFormData({ password: '', confirmPassword: '' });
+                // Navigate to home page after a short delay
+                setTimeout(() => {
+                    navigate('/');
+                }, 2000);
+            } else {
+                throw new Error('Invalid response from server');
+            }
         } catch (error) {
-            const errorMessage = error.response?.data?.error || 'Failed to reset password';
+            console.error('❌ Password reset failed:', error);
+            
+            // Handle different types of errors
+            let errorMessage = 'Failed to reset password. Please try again.';
+            
+            if (error.response) {
+                // Server responded with error status
+                errorMessage = error.response.data?.error || error.message || errorMessage;
+            } else if (error.request) {
+                // Network error - no response received
+                errorMessage = 'Network error. Please check your internet connection and try again.';
+                systemNotifications.networkError();
+            } else {
+                // Other error
+                errorMessage = error.message || errorMessage;
+            }
+            
             setError(errorMessage);
+            systemNotifications.error(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -110,12 +174,23 @@ const ResetPassword = () => {
                         <div className="error-icon">⚠️</div>
                         <h2>Invalid Reset Link</h2>
                         <p>{error}</p>
-                        <button 
-                            className="btn-primary"
-                            onClick={() => navigate('/login')}
-                        >
-                            Back to Login
-                        </button>
+                        <div className="error-actions">
+                            {retryCount < 3 && (
+                                <button 
+                                    className="btn-secondary"
+                                    onClick={retryValidation}
+                                    disabled={isValidating}
+                                >
+                                    {isValidating ? 'Retrying...' : 'Try Again'}
+                                </button>
+                            )}
+                            <button 
+                                className="btn-primary"
+                                onClick={() => navigate('/')}
+                            >
+                                Back to Home
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
             </div>
@@ -187,9 +262,9 @@ const ResetPassword = () => {
                         Remember your password?{' '}
                         <button 
                             className="link-button"
-                            onClick={() => navigate('/login')}
+                            onClick={() => navigate('/')}
                         >
-                            Back to Login
+                            Back to Home
                         </button>
                     </p>
                 </div>

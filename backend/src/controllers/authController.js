@@ -139,7 +139,6 @@ export const updateProfile = async (req, res) => {
 export const forgotPassword = async (req, res) => {
     try {
         console.log('🔐 Forgot password request received');
-        console.log('📧 Request body:', { email: req.body.email });
         
         const { email } = req.body;
         
@@ -151,7 +150,7 @@ export const forgotPassword = async (req, res) => {
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            console.log('❌ Invalid email format:', email);
+            console.log('❌ Invalid email format');
             return res.status(400).json({ error: 'Invalid email format' });
         }
 
@@ -172,40 +171,86 @@ export const forgotPassword = async (req, res) => {
 // Reset password with token
 export const resetPassword = async (req, res) => {
     try {
+        console.log('🔐 Reset password request received');
+        
         const { token, password } = req.body;
         
         if (!token || !password) {
-            return res.status(400).json({ error: 'Token and password are required' });
+            console.log('❌ Missing required fields');
+            return res.status(400).json({ 
+                success: false,
+                error: 'Token and password are required' 
+            });
         }
 
         // Validate password strength
         if (password.length < 6) {
+            console.log('❌ Password too short');
             return res.status(400).json({ 
+                success: false,
                 error: 'Password must be at least 6 characters long' 
             });
         }
 
+        console.log('🔄 Calling AuthService.resetPassword...');
         const result = await AuthService.resetPassword(token, password);
-        res.status(200).json(result);
+        
+        console.log('✅ Password reset successful');
+        res.status(200).json({
+            success: true,
+            message: result.message,
+            data: result
+        });
     } catch (error) {
-        console.error('Reset password error:', error);
-        res.status(400).json({ error: error.message });
+        console.error('❌ Reset password error:', error);
+        console.error('❌ Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
+        
+        res.status(400).json({ 
+            success: false,
+            error: error.message 
+        });
     }
 };
 
 // Validate reset token
 export const validateResetToken = async (req, res) => {
     try {
+        console.log('🔍 Validate reset token request received');
         const { token } = req.params;
         
         if (!token) {
-            return res.status(400).json({ error: 'Token is required' });
+            console.log('❌ No token provided');
+            return res.status(400).json({ 
+                success: false,
+                error: 'Token is required' 
+            });
         }
 
+        console.log('🔄 Calling AuthService.validateResetToken...');
         const result = await AuthService.validateResetToken(token);
-        res.status(200).json(result);
+        
+        console.log('✅ Token validation successful');
+        res.status(200).json({
+            success: true,
+            valid: result.valid,
+            email: result.email,
+            message: 'Token is valid'
+        });
     } catch (error) {
-        console.error('Validate token error:', error);
-        res.status(400).json({ error: error.message });
+        console.error('❌ Validate token error:', error);
+        console.error('❌ Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
+        
+        res.status(400).json({ 
+            success: false,
+            error: error.message 
+        });
     }
 };

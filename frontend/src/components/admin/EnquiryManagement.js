@@ -140,22 +140,7 @@ function EnquiryManagement() {
                                 <div><strong>Phone:</strong> {enq.phone || 'N/A'}</div>
                                 <div><strong>Submitted:</strong> {new Date(enq.createdAt).toLocaleString()}</div>
                             </div>
-                            {enq.userId && wishlists[enq._id] && (
-                                <div className="enquiry-wishlist">
-                                    <strong>User Wishlist:</strong>
-                                    {wishlists[enq._id].length === 0 ? (
-                                        <div>No wishlist items.</div>
-                                    ) : (
-                                        <ul>
-                                            {wishlists[enq._id].map(item => (
-                                                <li key={item.id}>
-                                                    {item.title} ({item.modelNumber})
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            )}
+                         
                             <div className="enquiry-actions">
                                 <label>Status: </label>
                                 <select

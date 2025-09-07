@@ -1,4 +1,5 @@
 import { EnquiryService } from '../services/enquiryService.js';
+import { EmailService } from '../services/emailService.js';
 
 export const createEnquiryController = async (req, res) => {
     try {
@@ -7,6 +8,15 @@ export const createEnquiryController = async (req, res) => {
             enquiryData.userId = req.user._id;
         }
         const enquiry = await EnquiryService.createEnquiryService(enquiryData);
+        
+        // Send email notification to admin
+        try {
+            await EmailService.sendEnquiryNotification(enquiry);
+            console.log('✅ Enquiry notification email sent successfully');
+        } catch (emailError) {
+            console.error('❌ Failed to send enquiry notification email:', emailError.message);
+            // Don't fail the enquiry creation if email fails
+        }
         
         res.status(201).json({
             success: true,

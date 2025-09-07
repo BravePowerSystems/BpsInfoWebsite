@@ -424,8 +424,8 @@
 }
 
 .loading-spinner {
-    width: 32px;
-    height: 32px;
+    width: 1.5rem;
+    height: 1.5rem;
     border: 3px solid rgba(255, 255, 255, 0.1);
     border-top: 3px solid #678df6;
     border-radius: 50%;
@@ -581,7 +581,7 @@
         .nav-link {
             color: $primary-text-color;
             text-decoration: none;
-            padding: 0.5rem ;
+            padding: 0.35rem ;
             border-radius: 8px;
             transition: all 0.3s ease;
             font-weight: 500;
@@ -626,7 +626,7 @@
             background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
             border: none;
             color: white;
-            padding: 0.5rem 0.75rem;
+            padding: 0.4rem;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
