@@ -145,6 +145,17 @@ export const adminNotifications = {
 
 // System notifications
 export const systemNotifications = {
+    success: (message) => {
+        new Notify({
+            ...defaultOptions,
+            status: 'success',
+            title: 'Success',
+            text: message,
+            customIcon: '✅',
+            autotimeout: 4000
+        });
+    },
+
     error: (message) => {
         new Notify({
             ...defaultOptions,

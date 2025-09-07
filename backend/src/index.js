@@ -20,8 +20,7 @@ console.log('🔧 Environment validation...');
 const requiredEnvVars = [
     'MONGODB_URI',
     'JWT_SECRET', 
-    'JWT_REFRESH_SECRET',
-    'SENDGRID_KEY'
+    'JWT_REFRESH_SECRET'
 ];
 
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
@@ -37,16 +36,7 @@ if (missingEnvVars.length > 0) {
 }
 
 // Log environment status
-console.log('📊 Environment status:', {
-    NODE_ENV: process.env.NODE_ENV || 'development',
-    PORT: process.env.PORT || '5000',
-    MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
-    JWT_SECRET: process.env.JWT_SECRET ? 'Set' : 'Not set',
-    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ? 'Set' : 'Not set',
-    SENDGRID_KEY: process.env.SENDGRID_KEY ? 'Set' : 'Not set',
-    SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL || 'Using default',
-    FRONTEND_URL: process.env.FRONTEND_URL || 'Using default'
-});
+console.log('📊 Environment configuration loaded');
 
 const app = express();
 
@@ -103,40 +93,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/content', contentRoutes);
 
-// Environment check endpoint
-app.get('/api/debug/env', (req, res) => {
-  res.json({
-    NODE_ENV: process.env.NODE_ENV,
-    PORT: process.env.PORT,
-    MONGODB_URI: process.env.MONGODB_URI ? 'Set' : 'Not set',
-    JWT_SECRET: process.env.JWT_SECRET ? 'Set' : 'Not set',
-    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET ? 'Set' : 'Not set',
-    SENDGRID_KEY: process.env.SENDGRID_KEY ? 'Set' : 'Not set',
-    SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL || 'Using default',
-    FRONTEND_URL: process.env.FRONTEND_URL || 'Using default',
-    timestamp: new Date().toISOString()
-  });
-});
+// Debug endpoint removed for security
 
-// SendGrid test endpoint
-app.get('/api/debug/sendgrid', async (req, res) => {
-  try {
-    const { EmailService } = await import('./services/emailService.js');
-    const result = await EmailService.testSendGridConnection();
-    res.json({ success: true, result });
-  } catch (error) {
-    console.error('SendGrid test error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: error.message,
-      details: {
-        hasKey: !!process.env.SENDGRID_KEY,
-        keyLength: process.env.SENDGRID_KEY?.length,
-        startsWithSG: process.env.SENDGRID_KEY?.startsWith('SG.')
-      }
-    });
-  }
-});
 
 // Add request logging middleware
 app.use((req, res, next) => {
@@ -146,7 +104,6 @@ app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   console.log(`  Origin: ${origin || 'No Origin'}`);
   console.log(`  User-Agent: ${userAgent || 'No User-Agent'}`);
-  console.log(`  NODE_ENV: ${process.env.NODE_ENV}`);
   
   next();
 });
@@ -306,5 +263,5 @@ app.post('/api/admin/cleanup-images', async (req, res) => {
 
 // Start the server
 app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+    console.log('Server is running');
 });

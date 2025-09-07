@@ -47,7 +47,7 @@ function App() {
                                 <Route path="/blog/:slug" element={<BlogPost />} />
                                 <Route path="/about" element={<About />} />
                                 <Route path="/faqs" element={<FAQ />} />
-                                <Route path="/reset-password" element={<ResetPassword />} />
+                                <Route path="/reset-password/:token" element={<ResetPassword />} />
                                 <Route
                                     path="/case-studies"
                                     element={<CaseStudiesPreview />}

@@ -14,6 +14,17 @@
         background: rgba(12, 24, 40, 0.8);
     }
 
+    .content-management-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        h2{
+            width:fit-content;
+        }
+    }
+
     .content-header {
         display: flex;
         justify-content: space-between;
@@ -108,7 +119,6 @@
             color: $primary-text-color;
             line-height: 1.4;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -158,39 +168,42 @@
     }
 
     .content-actions {
-        padding: 20px;
+        padding: 0.6rem;
         display: flex;
-        gap: 12px;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         background: rgba(255, 255, 255, 0.02);
 
         button {
-            flex: 1;
-            padding: 10px 16px;
+            padding: 0.5rem 0.75rem;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 14px;
 
             &.edit-btn {
-                background: #007bff;
+                background: linear-gradient(90deg, #678df6, #8f94fb);
                 color: white;
-
+                width: fit-content;
                 &:hover {
-                    background: #0056b3;
-                    transform: translateY(-1px);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(103, 141, 246, 0.3);
                 }
             }
 
             &.delete-btn {
-                background: #dc3545;
-                color: white;
-
+                background-color: rgba(255, 255, 255, 0.05);
+                color: #ff6b6b;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                width: fit-content;
                 &:hover {
-                    background: #c82333;
-                    transform: translateY(-1px);
+                    background-color: rgba(255, 59, 59, 0.1);
+                    transform: translateY(-2px);
                 }
             }
 
@@ -200,37 +213,33 @@
         }
     }
 
-    // Responsive design
-    @media (max-width: 480px) {
-        .content-header {
-            padding: 12px 15px;
+}
 
 
-        }
-
-        .content-info {
-            padding: 15px;
-
-            .content-title {
-                font-size: 16px;
-            }
-
-            .content-meta p {
-                font-size: 12px;
-
-                strong {
-                    min-width: 70px;
-                }
-            }
-        }
-
+@include tablet {
+    .admin-content-card {
         .content-actions {
-            padding: 15px;
-            flex-direction: column;
+            flex-direction: row ;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .content-management-header {
 
-            button {
-                font-size: 13px;
+            h2{
+                width:fit-content;
             }
+        }
+    }
+}
+
+@include desktop {
+    .admin-content-card {
+        .content-actions {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
     }
 }

@@ -1,21 +1,44 @@
-import sgMail from '@sendgrid/mail';
+import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
-// Initialize SendGrid
-console.log('📧 Initializing SendGrid email service...');
-console.log('📧 SendGrid API Key status:', process.env.SENDGRID_KEY ? 'Set' : 'Not set');
+// Initialize Nodemailer
+console.log('📧 Initializing Nodemailer email service...');
 
-if (!process.env.SENDGRID_KEY) {
-    console.error('❌ SENDGRID_KEY environment variable is not set!');
-    console.error('❌ Please set SENDGRID_KEY in your environment variables');
-} else {
-    sgMail.setApiKey(process.env.SENDGRID_KEY);
-    console.log('✅ SendGrid API Key configured');
-}
+// Create transporter
+const createTransporter = () => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            type: 'OAuth2',
+            user: process.env.MAIL_USERNAME,
+            clientId: process.env.OAUTH_CLIENTID,
+            clientSecret: process.env.OAUTH_CLIENT_SECRET,
+            refreshToken: process.env.OAUTH_REFRESH_TOKEN
+        }
+    });
+    
+    return transporter;
+};
+
+// Test transporter connection
+const testConnection = async () => {
+    try {
+        const transporter = createTransporter();
+        await transporter.verify();
+        console.log('✅ Nodemailer connection verified');
+        return true;
+    } catch (error) {
+        console.error('❌ Nodemailer connection failed:', error.message);
+        return false;
+    }
+};
+
+// Initialize connection
+testConnection();
 
 export class EmailService {
     static async sendPasswordResetEmail(email, resetToken, firstName = '') {
-        console.log('📧 Preparing password reset email for:', email);
+        console.log('📧 Preparing password reset email');
         
         // Validate required parameters
         if (!email) {
@@ -25,25 +48,28 @@ export class EmailService {
             throw new Error('Reset token is required');
         }
         
-        // Check if SendGrid is properly configured
-        if (!process.env.SENDGRID_KEY) {
-            console.error('❌ SendGrid API key is not configured');
-            console.error('❌ Please set SENDGRID_KEY environment variable');
-            throw new Error('SendGrid API key is not configured. Please contact administrator.');
+        // Check if OAuth2 credentials are properly configured
+        if (!process.env.MAIL_USERNAME || !process.env.OAUTH_CLIENTID || !process.env.OAUTH_CLIENT_SECRET || !process.env.OAUTH_REFRESH_TOKEN) {
+            console.error('❌ OAuth2 credentials are not configured');
+            console.error('❌ Please set the following environment variables:');
+            console.error('   - MAIL_USERNAME');
+            console.error('   - OAUTH_CLIENTID');
+            console.error('   - OAUTH_CLIENT_SECRET');
+            console.error('   - OAUTH_REFRESH_TOKEN');
+            throw new Error('OAuth2 credentials are not configured. Please contact administrator.');
         }
         
-        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
-        console.log('🔗 Reset URL generated:', resetUrl);
+        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password/${resetToken}`;
+        console.log('🔗 Reset URL generated');
         
-        const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'casoto4386@certve.com';
-        console.log('📤 From email:', fromEmail);
+        const fromEmail = process.env.MAIL_USERNAME;
+        console.log('📤 Preparing to send email');
         
-        const msg = {
+        const transporter = createTransporter();
+        
+        const mailOptions = {
+            from: `"BPS Info" <${fromEmail}>`,
             to: email,
-            from: {
-                email: fromEmail,
-                name: 'BPS Info'
-            },
             subject: 'Password Reset Request - BPS Info',
             html: `
                 <!DOCTYPE html>
@@ -130,57 +156,36 @@ export class EmailService {
         };
 
         try {
-            console.log('📤 Sending email via SendGrid...');
-            console.log('📤 API Key (first 10 chars):', process.env.SENDGRID_KEY?.substring(0, 10) + '...');
+            console.log('📤 Sending email via Nodemailer...');
             console.log('📤 Message details:', {
-                to: msg.to,
-                from: msg.from,
-                subject: msg.subject,
-                hasHtml: !!msg.html,
-                hasText: !!msg.text
+                to: mailOptions.to,
+                from: mailOptions.from,
+                subject: mailOptions.subject,
+                hasHtml: !!mailOptions.html,
+                hasText: !!mailOptions.text
             });
             
-            const response = await sgMail.send(msg);
-            console.log('✅ Password reset email sent successfully to:', email);
-            console.log('✅ SendGrid response status:', response[0]?.statusCode);
-            console.log('✅ SendGrid response headers:', response[0]?.headers);
-            return { success: true };
+            const info = await transporter.sendMail(mailOptions);
+            console.log('✅ Password reset email sent successfully');
+            console.log('✅ Message ID:', info.messageId);
+            return { success: true, messageId: info.messageId };
         } catch (error) {
-            console.error('❌ SendGrid error details:', {
+            console.error('❌ Nodemailer error details:', {
                 message: error.message,
                 code: error.code,
-                response: error.response?.body,
-                statusCode: error.response?.statusCode,
-                headers: error.response?.headers
+                response: error.response
             });
             
-            // Log the full error response for debugging
-            if (error.response?.body?.errors) {
-                console.error('❌ SendGrid error details:', error.response.body.errors);
-            }
-            
-            // Provide more specific error messages
-            if (error.code === 401) {
-                throw new Error('SendGrid API key is invalid or unauthorized');
-            } else if (error.code === 403) {
-                throw new Error('SendGrid API key does not have permission to send emails');
-            } else if (error.code === 400) {
-                throw new Error('Invalid email request: ' + (error.response?.body?.errors?.[0]?.message || error.message));
-            } else if (error.code === 413) {
-                throw new Error('Email content is too large');
-            } else {
-                throw new Error(`SendGrid error: ${error.message}`);
-            }
+            throw new Error(`Email sending failed: ${error.message}`);
         }
     }
 
     static async sendPasswordResetConfirmation(email, firstName = '') {
-        const msg = {
+        const transporter = createTransporter();
+        
+        const mailOptions = {
+            from: `"BPS Info" <${process.env.MAIL_USERNAME}>`,
             to: email,
-            from: {
-                email: process.env.SENDGRID_FROM_EMAIL || 'casoto4386@certve.com',
-                name: 'BPS Info'
-            },
             subject: 'Password Successfully Reset - BPS Info',
             html: `
                 <!DOCTYPE html>
@@ -244,11 +249,11 @@ export class EmailService {
         };
 
         try {
-            await sgMail.send(msg);
-            console.log(`Password reset confirmation email sent to ${email}`);
-            return { success: true };
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Password reset confirmation email sent');
+            return { success: true, messageId: info.messageId };
         } catch (error) {
-            console.error('SendGrid error:', error);
+            console.error('Nodemailer error:', error);
             // Don't throw error for confirmation email as password is already reset
             console.log('Failed to send confirmation email, but password was reset successfully');
         }
@@ -258,75 +263,175 @@ export class EmailService {
         return crypto.randomBytes(32).toString('hex');
     }
 
-    // Test function to debug SendGrid connection
-    static async testSendGridConnection() {
-        console.log('🧪 Testing SendGrid connection...');
-        console.log('🧪 API Key format check:', {
-            hasKey: !!process.env.SENDGRID_KEY,
-            keyLength: process.env.SENDGRID_KEY?.length,
-            startsWithSG: process.env.SENDGRID_KEY?.startsWith('SG.'),
-            first10Chars: process.env.SENDGRID_KEY?.substring(0, 10) + '...'
-        });
-
-        if (!process.env.SENDGRID_KEY) {
-            throw new Error('SENDGRID_KEY environment variable is not set');
+    // Send enquiry notification email to admin
+    static async sendEnquiryNotification(enquiryData) {
+        console.log('📧 Preparing enquiry notification email...');
+        
+        // Check if OAuth2 credentials are properly configured
+        if (!process.env.MAIL_USERNAME || !process.env.OAUTH_CLIENTID || !process.env.OAUTH_CLIENT_SECRET || !process.env.OAUTH_REFRESH_TOKEN) {
+            console.error('❌ OAuth2 credentials are not configured');
+            console.error('❌ Please set the following environment variables:');
+            console.error('   - MAIL_USERNAME');
+            console.error('   - OAUTH_CLIENTID');
+            console.error('   - OAUTH_CLIENT_SECRET');
+            console.error('   - OAUTH_REFRESH_TOKEN');
+            throw new Error('OAuth2 credentials are not configured. Please contact administrator.');
         }
 
-        if (!process.env.SENDGRID_KEY.startsWith('SG.')) {
-            throw new Error('SENDGRID_KEY does not start with "SG." - this might be incorrect format');
+        const adminEmail = process.env.ADMIN_EMAIL || process.env.MAIL_USERNAME;
+        const transporter = createTransporter();
+        
+        const mailOptions = {
+            from: `"BPS Info" <${process.env.MAIL_USERNAME}>`,
+            to: adminEmail,
+            subject: `New Enquiry Received - ${enquiryData.enquiryType} from ${enquiryData.firstName} ${enquiryData.lastName}`,
+            html: `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>New Enquiry Received</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                        .header { background: #678df6; color: white; padding: 20px; text-align: center; }
+                        .content { padding: 30px 20px; background: #f9f9f9; }
+                        .enquiry-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+                        .detail-row { margin: 10px 0; padding: 8px 0; border-bottom: 1px solid #eee; }
+                        .detail-label { font-weight: bold; color: #678df6; }
+                        .message-box { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                        .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>BPS Info</h1>
+                            <h2>New Enquiry Received</h2>
+                        </div>
+                        <div class="content">
+                            <p>Hello Admin,</p>
+                            
+                            <p>A new enquiry has been submitted through the BPS Info website. Here are the details:</p>
+                            
+                            <div class="enquiry-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Name:</span> ${enquiryData.firstName} ${enquiryData.lastName}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Email:</span> ${enquiryData.email}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Phone:</span> ${enquiryData.phone || 'Not provided'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Company:</span> ${enquiryData.company || 'Not provided'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Enquiry Type:</span> ${enquiryData.enquiryType}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Product:</span> ${enquiryData.productName || 'General Enquiry'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Submitted:</span> ${new Date(enquiryData.submittedAt || Date.now()).toLocaleString()}
+                                </div>
+                            </div>
+                            
+                            <div class="message-box">
+                                <strong>Message:</strong><br>
+                                ${enquiryData.message || 'No message provided'}
+                            </div>
+                            
+                            <p>Please respond to this enquiry as soon as possible.</p>
+                            
+                            <p>Best regards,<br>BPS Info System</p>
+                        </div>
+                        <div class="footer">
+                            <p>This email was sent from BPS Info. Please do not reply to this email.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `,
+            text: `
+                New Enquiry Received - BPS Info
+                
+                Hello Admin,
+                
+                A new enquiry has been submitted through the BPS Info website.
+                
+                Details:
+                - Name: ${enquiryData.firstName} ${enquiryData.lastName}
+                - Email: ${enquiryData.email}
+                - Phone: ${enquiryData.phone || 'Not provided'}
+                - Company: ${enquiryData.company || 'Not provided'}
+                - Enquiry Type: ${enquiryData.enquiryType}
+                - Product: ${enquiryData.productName || 'General Enquiry'}
+                - Submitted: ${new Date(enquiryData.submittedAt || Date.now()).toLocaleString()}
+                
+                Message:
+                ${enquiryData.message || 'No message provided'}
+                
+                Please respond to this enquiry as soon as possible.
+                
+                Best regards,
+                BPS Info System
+            `
+        };
+
+        try {
+            console.log('📤 Sending enquiry notification email...');
+            const info = await transporter.sendMail(mailOptions);
+            console.log('✅ Enquiry notification email sent successfully');
+            console.log('✅ Message ID:', info.messageId);
+            return { success: true, messageId: info.messageId };
+        } catch (error) {
+            console.error('❌ Failed to send enquiry notification:', error.message);
+            throw new Error(`Enquiry notification email failed: ${error.message}`);
+        }
+    }
+
+    // Test function to debug Nodemailer connection
+    static async testNodemailerConnection() {
+        console.log('🧪 Testing Nodemailer connection...');
+        
+        if (!process.env.MAIL_USERNAME || !process.env.OAUTH_CLIENTID || !process.env.OAUTH_CLIENT_SECRET || !process.env.OAUTH_REFRESH_TOKEN) {
+            throw new Error('OAuth2 environment variables are not set. Please set MAIL_USERNAME, OAUTH_CLIENTID, OAUTH_CLIENT_SECRET, and OAUTH_REFRESH_TOKEN');
         }
 
         try {
-            // First test: Just check API key validity with a minimal request
-            console.log('🧪 Testing API key validity...');
-            
-            // Test with a simple email using a verified sender
-            const testMsg = {
-                to: 'test@example.com',
-                from: {
-                    email: 'casoto4386@certve.com', // Use the configured sender email
-                    name: 'BPS Info Test'
-                },
-                subject: 'SendGrid Connection Test',
-                text: 'This is a test email to verify SendGrid connection.',
-                html: '<p>This is a test email to verify SendGrid connection.</p>'
-            };
-
-            console.log('🧪 Sending test email...');
-            const response = await sgMail.send(testMsg);
-            console.log('✅ SendGrid connection test successful!');
-            console.log('✅ Response:', response[0]?.statusCode);
-            return { success: true, statusCode: response[0]?.statusCode };
+            const transporter = createTransporter();
+            await transporter.verify();
+            console.log('✅ Nodemailer connection test successful!');
+            return { success: true };
         } catch (error) {
-            console.error('❌ SendGrid connection test failed:', {
-                message: error.message,
-                code: error.code,
-                response: error.response?.body,
-                statusCode: error.response?.statusCode
-            });
-            
-            // Log detailed error information
-            if (error.response?.body?.errors) {
-                console.error('❌ Detailed SendGrid errors:', error.response.body.errors);
-                error.response.body.errors.forEach((err, index) => {
-                    console.error(`❌ Error ${index + 1}:`, {
-                        message: err.message,
-                        field: err.field,
-                        help: err.help
-                    });
-                });
-            }
-            
-            // Check for specific common issues
-            if (error.message === 'Unauthorized') {
-                console.error('❌ UNAUTHORIZED ERROR - Common causes:');
-                console.error('   1. API key does not have Mail Send permissions');
-                console.error('   2. API key is restricted to specific IPs (check your IP)');
-                console.error('   3. SendGrid account is suspended or has billing issues');
-                console.error('   4. API key has expired or been revoked');
-                console.error('   5. Sender email is not verified in SendGrid');
-            }
-            
+            console.error('❌ Nodemailer connection test failed:', error.message);
+            throw error;
+        }
+    }
+
+    // Simple test email function
+    static async sendTestEmail() {
+        console.log('🧪 Sending test email...');
+        
+        const transporter = createTransporter();
+        
+        const mailOptions = {
+            from: `"BPS Info" <${process.env.MAIL_USERNAME}>`,
+            to: process.env.MAIL_USERNAME,
+            subject: 'Nodemailer Project Test',
+            text: 'Hi from your nodemailer project - this is a test email!'
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('✅ Test email sent successfully!');
+            console.log('✅ Message ID:', info.messageId);
+            return { success: true, messageId: info.messageId };
+        } catch (error) {
+            console.error('❌ Test email failed:', error.message);
             throw error;
         }
     }

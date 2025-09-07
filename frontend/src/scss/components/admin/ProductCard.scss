@@ -79,7 +79,7 @@
     }
     
     .product-actions {
-        padding: 1rem;
+        padding: 0.6rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -87,7 +87,7 @@
         gap: 0.5rem;
         
         button {
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 4px;
             border: none;
             cursor: pointer;

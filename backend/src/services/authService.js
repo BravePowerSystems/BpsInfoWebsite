@@ -107,24 +107,24 @@ export class AuthService {
     }
 
     static async requestPasswordReset(email) {
-        console.log('🔐 Password reset requested for email:', email);
+        console.log('🔐 Password reset requested');
         
         const user = await User.findOne({ email });
         
         if (!user) {
-            console.log('❌ User not found for email:', email);
+            console.log('❌ User not found');
             // Don't reveal if email exists or not for security
             return { message: 'If an account with that email exists, a password reset link has been sent.' };
         }
 
-        console.log('✅ User found:', { id: user._id, username: user.username, email: user.email });
+        console.log('✅ User found for password reset');
 
         // Generate reset token
         const resetToken = EmailService.generateResetToken();
         const resetExpires = new Date(Date.now() + 3600000); // 1 hour from now
         
-        console.log('🔑 Generated reset token:', resetToken.substring(0, 10) + '...');
-        console.log('⏰ Token expires at:', resetExpires.toISOString());
+        console.log('🔑 Generated reset token');
+        console.log('⏰ Token expires in 1 hour');
 
         // Save reset token to user
         user.passwordResetToken = resetToken;
@@ -136,11 +136,7 @@ export class AuthService {
         // Send reset email
         try {
             console.log('📧 Attempting to send password reset email...');
-            console.log('📧 Email service configuration check:', {
-                SENDGRID_KEY: process.env.SENDGRID_KEY ? 'Set' : 'Not set',
-                SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL || 'Using default',
-                FRONTEND_URL: process.env.FRONTEND_URL || 'Using default'
-            });
+            console.log('📧 Email service configuration check');
             
             await EmailService.sendPasswordResetEmail(user.email, resetToken, user.firstName);
             console.log('✅ Password reset email sent successfully');
@@ -163,50 +159,103 @@ export class AuthService {
     }
 
     static async resetPassword(token, newPassword) {
+        console.log('🔐 Attempting password reset');
+        
+        // Validate inputs
+        if (!token || typeof token !== 'string') {
+            throw new Error('Invalid reset token');
+        }
+        
+        if (!newPassword || typeof newPassword !== 'string') {
+            throw new Error('Password is required');
+        }
+
+        if (newPassword.length < 6) {
+            throw new Error('Password must be at least 6 characters long');
+        }
+        
         const user = await User.findOne({
             passwordResetToken: token,
             passwordResetExpires: { $gt: Date.now() }
         });
 
         if (!user) {
-            throw new Error('Invalid or expired reset token');
+            console.log('❌ No user found with valid token');
+            // Let's check if there's a user with this token but expired
+            const expiredUser = await User.findOne({ passwordResetToken: token });
+            if (expiredUser) {
+                console.log('⚠️ Found user with expired token');
+                throw new Error('Reset token has expired. Please request a new password reset.');
+            } else {
+                console.log('❌ No user found with this token');
+                throw new Error('Invalid reset token');
+            }
         }
-
-        // Validate new password
-        if (!newPassword || newPassword.length < 6) {
-            throw new Error('Password must be at least 6 characters long');
-        }
-
-        // Hash new password
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
         
-        // Update user
-        user.password = hashedPassword;
-        user.passwordResetToken = null;
-        user.passwordResetExpires = null;
-        await user.save();
+        console.log('✅ User found with valid token');
 
-        // Send confirmation email
         try {
-            await EmailService.sendPasswordResetConfirmation(user.email, user.firstName);
-        } catch (error) {
-            // Don't fail the reset if confirmation email fails
-            console.log('Password reset successful, but confirmation email failed');
-        }
+            // Hash new password
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            
+            // Update user
+            user.password = hashedPassword;
+            user.passwordResetToken = null;
+            user.passwordResetExpires = null;
+            await user.save();
+            
+            console.log('✅ Password updated successfully');
 
-        return { message: 'Password has been reset successfully' };
+            // Send confirmation email (don't fail if this fails)
+            try {
+                await EmailService.sendPasswordResetConfirmation(user.email, user.firstName);
+                console.log('✅ Password reset confirmation email sent');
+            } catch (emailError) {
+                console.log('⚠️ Password reset successful, but confirmation email failed:', emailError.message);
+            }
+
+            return { 
+                success: true,
+                message: 'Password has been reset successfully',
+                email: user.email
+            };
+        } catch (error) {
+            console.error('❌ Error updating password:', error);
+            throw new Error('Failed to update password. Please try again.');
+        }
     }
 
     static async validateResetToken(token) {
+        console.log('🔍 Validating reset token');
+        
+        // Validate input
+        if (!token || typeof token !== 'string') {
+            throw new Error('Invalid reset token');
+        }
+        
         const user = await User.findOne({
             passwordResetToken: token,
             passwordResetExpires: { $gt: Date.now() }
         });
 
         if (!user) {
-            throw new Error('Invalid or expired reset token');
+            console.log('❌ No user found with valid token during validation');
+            // Let's check if there's a user with this token but expired
+            const expiredUser = await User.findOne({ passwordResetToken: token });
+            if (expiredUser) {
+                console.log('⚠️ Found user with expired token during validation');
+                throw new Error('Reset token has expired. Please request a new password reset.');
+            } else {
+                console.log('❌ No user found with this token during validation');
+                throw new Error('Invalid reset token');
+            }
         }
-
-        return { valid: true, email: user.email };
+        
+        console.log('✅ Token validation successful');
+        return { 
+            valid: true, 
+            email: user.email,
+            success: true
+        };
     }
 }
