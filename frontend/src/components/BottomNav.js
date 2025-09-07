@@ -75,7 +75,7 @@ export default function BottomNav() {
                     >
                         <img src="/facebook.png" alt="Facebook" />
                     </a>
-                    <button
+                    <a
                         onClick={() => openWhatsAppGeneralEnquiry()}
                         className="whatsapp-link"
                         title="Contact us on WhatsApp"
@@ -87,7 +87,7 @@ export default function BottomNav() {
                         }}
                     >
                         <img src="/whatsapp.png" alt="WhatsApp" />
-                    </button>
+                    </a>
                     <a
                         href="https://www.youtube.com"
                         target="_blank"
