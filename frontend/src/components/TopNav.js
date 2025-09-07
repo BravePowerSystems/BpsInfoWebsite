@@ -6,6 +6,7 @@ import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
 import { useProducts } from "../context/ProductsContext";
 import Sidebar from "./Sidebar";
+import { openWhatsAppGeneralEnquiry } from "../utils/whatsappHelper";
 
 const ProductsList = ({ onLinkClick, categories, loading, error }) => {
     // Memoize the cleaned categories to prevent unnecessary re-renders
@@ -198,18 +199,22 @@ export default function TopNav() {
                                 )}
                                {!isAdmin && (
                                     <div className="whatsapp-icon">
-                                        <a
-                                            href="https://wa.me/917942701967?text=Hi%21+I+have+a+enquiry.+Can+you+help+me%3F"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                        <button
+                                            onClick={() => openWhatsAppGeneralEnquiry()}
                                             title="Contact us on WhatsApp"
-                                            style={{ cursor: 'pointer', textDecoration: 'none' }}
+                                            style={{ 
+                                                cursor: 'pointer', 
+                                                textDecoration: 'none',
+                                                background: 'none',
+                                                border: 'none',
+                                                padding: 0
+                                            }}
                                         >
                                             <img
                                                 src="../../whatsapp.png"
                                                 alt="WhatsApp"
                                             />
-                                        </a>
+                                        </button>
                                     </div>
                                 )}
 
