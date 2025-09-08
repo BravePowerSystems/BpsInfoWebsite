@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../scss/components/ShareButton.scss';
 
@@ -12,6 +12,13 @@ const ShareButton = ({
 }) => {
     const [showShareModal, setShowShareModal] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
+
+    // Cleanup effect to restore body scroll when component unmounts
+    useEffect(() => {
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
     // Generate shareable URL
     const generateShareUrl = () => {
@@ -104,6 +111,15 @@ const ShareButton = ({
     // Handle share button click (open modal)
     const handleShareClick = () => {
         setShowShareModal(true);
+        // Prevent body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+    };
+
+    // Handle modal close
+    const handleClose = () => {
+        setShowShareModal(false);
+        // Restore body scroll when modal is closed
+        document.body.style.overflow = 'unset';
     };
 
     const buttonClass = `share-button share-button--${variant} share-button--${size} ${className}`;
@@ -131,14 +147,14 @@ const ShareButton = ({
 
             <AnimatePresence>
                 {showShareModal && (
-                                <ShareModal
-                product={product}
-                imageUrl={generateImageUrl()}
-                onClose={() => setShowShareModal(false)}
-                onCopy={copyToClipboard}
-                onWhatsApp={shareToWhatsApp}
-                copySuccess={copySuccess}
-            />
+                    <ShareModal
+                        product={product}
+                        imageUrl={generateImageUrl()}
+                        onClose={handleClose}
+                        onCopy={copyToClipboard}
+                        onWhatsApp={shareToWhatsApp}
+                        copySuccess={copySuccess}
+                    />
                 )}
             </AnimatePresence>
         </>
@@ -164,13 +180,13 @@ const ShareModal = ({ product, imageUrl, onClose, onCopy, onWhatsApp, copySucces
             >
                 <div className="share-modal-header">
                     <h3>Share Product</h3>
-                    <button
+                    <a
                         className="share-modal-close"
                         onClick={onClose}
                         aria-label="Close"
                     >
                         <img src="/close.png" alt="Close" />
-                    </button>
+                    </a>
                 </div>
 
                 <div className="share-modal-content">
